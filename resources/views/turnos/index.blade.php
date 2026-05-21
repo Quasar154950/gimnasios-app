@@ -242,7 +242,7 @@
                             <div style="border-radius:8px !important;"
                                  class="bg-stone-100 p-3 text-center border border-stone-300">
 
-                                <div class="text-[10px] uppercase font-black text-neutral-500">
+                                <div class="text-[9px] uppercase font-black text-neutral-500">
                                     Reservados
                                 </div>
 
