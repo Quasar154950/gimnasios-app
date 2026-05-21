@@ -186,10 +186,10 @@
         🏋️ Actividades y turnos
     </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
 
         <a href="/cliente/turnos"
-           class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer">
+           class="min-w-[280px] snap-start border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer">
 
             <div class="text-3xl mb-2">📅</div>
 
@@ -205,7 +205,7 @@
 
         <a
             href="{{ route('cliente.cuota') }}"
-            class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
+            class="min-w-[280px] snap-start border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
         >
 
             <div class="text-3xl mb-2">💳</div>
@@ -260,7 +260,7 @@
 
         <a
             href="{{ route('cliente.mi-qr') }}"
-            class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
+            class="min-w-[280px] snap-start border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
         >
 
             <div class="text-3xl mb-2">📱</div>
@@ -279,7 +279,7 @@
 
         </a>
 
-        <div class="border border-stone-300 bg-stone-100 rounded-xl p-5">
+        <div class="min-w-[280px] snap-start border border-stone-300 bg-stone-100 rounded-xl p-5">
 
             <div class="text-3xl mb-2">🏋️</div>
 
