@@ -356,4 +356,46 @@ Route::get('/crear-slug', function () {
     return 'Columna slug creada';
 });
 
+Route::get('/crear-turnos-demo', function () {
+
+    $horarios = [
+        '08:00',
+        '09:00',
+        '14:00',
+        '15:00',
+        '18:00',
+        '19:00',
+        '20:00',
+    ];
+
+    $actividades = [
+        'Spinning',
+        'Pilates',
+    ];
+
+    $fecha = now()->addDay();
+
+    foreach ($actividades as $actividad) {
+
+        foreach ($horarios as $hora) {
+
+            $inicio = \Carbon\Carbon::createFromFormat('H:i', $hora);
+
+            $fin = $inicio->copy()->addHour();
+
+            \App\Models\Turno::create([
+                'actividad' => $actividad,
+                'profesor' => 'Demo',
+                'fecha' => $fecha->format('Y-m-d'),
+                'hora_inicio' => $inicio->format('H:i:s'),
+                'hora_fin' => $fin->format('H:i:s'),
+                'cupo_maximo' => 10,
+                'activo' => true,
+            ]);
+        }
+    }
+
+    return 'Turnos demo creados correctamente';
+});
+
 require __DIR__ . '/settings.php';
