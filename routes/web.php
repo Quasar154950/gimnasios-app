@@ -95,6 +95,9 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         Route::get('asistencias', [\App\Http\Controllers\AsistenciaController::class, 'index'])
           ->name('asistencias.index');
 
+        Route::get('asistencias/escanear', [\App\Http\Controllers\AsistenciaController::class, 'escanear'])
+          ->name('asistencias.escanear');
+
         Route::post('asistencias/{cliente}/marcar', [\App\Http\Controllers\AsistenciaController::class, 'marcar'])
           ->name('asistencias.marcar');
 
@@ -121,6 +124,9 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/cuota', fun
     return view('cliente.cuota', compact('cliente'));
 
 })->name('cliente.cuota');
+
+Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/mi-qr', [\App\Http\Controllers\AsistenciaController::class, 'miQr'])
+    ->name('cliente.mi-qr');
 
 Route::middleware(['auth', 'role:cliente', 'activo'])->post('/cliente/turnos/{turno}/reservar', [TurnoController::class, 'reservar'])
     ->name('cliente.turnos.reservar');
@@ -356,7 +362,8 @@ Route::get('/crear-slug', function () {
     return 'Columna slug creada';
 });
 
-Route::get('/crear-turnos-demo', function () {
+// 🔄 Generar turnos automáticos próximos 7 días
+Route::get('/generar-turnos-semana', function () {
 
     $horarios = [
         '08:00',
@@ -405,7 +412,7 @@ Route::get('/crear-turnos-demo', function () {
         }
     }
 
-    return 'Turnos demo creados correctamente para los próximos 7 días hábiles';
+    return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
 require __DIR__ . '/settings.php';

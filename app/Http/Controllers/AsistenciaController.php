@@ -98,4 +98,27 @@ class AsistenciaController extends Controller
 
         return view('asistencias.qr', compact('cliente', 'qrSvg', 'url'));
     }
+
+    public function miQr()
+    {
+        $cliente = Cliente::where('user_id', auth()->id())->firstOrFail();
+
+        $url = route('asistencias.marcar', $cliente->id);
+
+        $renderer = new ImageRenderer(
+            new RendererStyle(260),
+            new SvgImageBackEnd()
+        );
+
+        $writer = new Writer($renderer);
+
+        $qrSvg = $writer->writeString($url);
+
+        return view('cliente.mi-qr', compact('cliente', 'qrSvg', 'url'));
+    }
+
+    public function escanear()
+    {
+        return view('asistencias.escanear');
+    }
 }

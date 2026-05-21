@@ -180,105 +180,126 @@
             </div>
 
             {{-- ACCIONES --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+<div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
-                <h2 class="text-xl font-bold text-zinc-800 mb-4">
-                    🏋️ Actividades y turnos
-                </h2>
+    <h2 class="text-xl font-bold text-zinc-800 mb-4">
+        🏋️ Actividades y turnos
+    </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-                    <a href="/cliente/turnos"
-                       class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer">
+        <a href="/cliente/turnos"
+           class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer">
 
-                        <div class="text-3xl mb-2">📅</div>
+            <div class="text-3xl mb-2">📅</div>
 
-                        <h3 class="font-bold text-zinc-800">
-                            Ver turnos
-                        </h3>
+            <h3 class="font-bold text-zinc-800">
+                Ver turnos
+            </h3>
 
-                        <p class="text-sm text-zinc-500 mt-1">
-                            Reservá clases y consultá horarios disponibles.
-                        </p>
+            <p class="text-sm text-zinc-500 mt-1">
+                Reservá clases y consultá horarios disponibles.
+            </p>
 
-                    </a>
+        </a>
 
-                    <a
-                        href="{{ route('cliente.cuota') }}"
-                        class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
-                    >
+        <a
+            href="{{ route('cliente.cuota') }}"
+            class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
+        >
 
-                        <div class="text-3xl mb-2">💳</div>
+            <div class="text-3xl mb-2">💳</div>
 
-                        <h3 class="font-bold text-zinc-800">
-                            Estado de cuota
-                        </h3>
+            <h3 class="font-bold text-zinc-800">
+                Estado de cuota
+            </h3>
 
-                        @if($cliente && $cliente->fecha_vencimiento_cuota)
+            @if($cliente && $cliente->fecha_vencimiento_cuota)
 
-                            @php
-                                $fechaVencimiento = \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota);
-                                $diasRestantes = now()->diffInDays($fechaVencimiento, false);
-                            @endphp
+                @php
+                    $fechaVencimiento = \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota);
+                    $diasRestantes = now()->diffInDays($fechaVencimiento, false);
+                @endphp
 
-                            @if($diasRestantes < 0)
+                @if($diasRestantes < 0)
 
-                                <div class="mt-3 inline-flex items-center rounded-xl bg-red-100 px-3 py-2 text-sm font-bold text-red-700">
-                                    ❌ Cuota vencida
-                                </div>
-
-                            @elseif($diasRestantes <= 5)
-
-                                <div class="mt-3 inline-flex items-center rounded-xl bg-yellow-100 px-3 py-2 text-sm font-bold text-yellow-700">
-                                    ⚠️ Vence pronto
-                                </div>
-
-                            @else
-
-                                <div class="mt-3 inline-flex items-center rounded-xl bg-green-100 px-3 py-2 text-sm font-bold text-green-700">
-                                    ✅ Cuota al día
-                                </div>
-
-                            @endif
-
-                            <p class="text-sm text-zinc-500 mt-3">
-                                Vencimiento:
-                                <span class="font-semibold text-zinc-700">
-                                    {{ $fechaVencimiento->format('d/m/Y') }}
-                                </span>
-                            </p>
-
-                        @else
-
-                            <p class="text-sm text-zinc-500 mt-2">
-                                Sin vencimiento cargado.
-                            </p>
-
-                        @endif
-
-                    </a>
-
-                    <div class="border border-stone-300 bg-stone-100 rounded-xl p-5">
-
-                        <div class="text-3xl mb-2">🏋️</div>
-
-                        <h3 class="font-bold text-zinc-800">
-                            Musculación ahora
-                        </h3>
-
-                        <div class="mt-3 inline-flex items-center rounded-xl bg-orange-500 px-3 py-2 text-sm font-bold text-white">
-                            👥 {{ $presentesAhora }} socios entrenando
-                        </div>
-
-                        <p class="text-sm text-zinc-500 mt-3">
-                            Cantidad actual de personas dentro del gimnasio.
-                        </p>
-
+                    <div class="mt-3 inline-flex items-center rounded-xl bg-red-100 px-3 py-2 text-sm font-bold text-red-700">
+                        ❌ Cuota vencida
                     </div>
 
-                </div>
+                @elseif($diasRestantes <= 5)
 
+                    <div class="mt-3 inline-flex items-center rounded-xl bg-yellow-100 px-3 py-2 text-sm font-bold text-yellow-700">
+                        ⚠️ Vence pronto
+                    </div>
+
+                @else
+
+                    <div class="mt-3 inline-flex items-center rounded-xl bg-green-100 px-3 py-2 text-sm font-bold text-green-700">
+                        ✅ Cuota al día
+                    </div>
+
+                @endif
+
+                <p class="text-sm text-zinc-500 mt-3">
+                    Vencimiento:
+                    <span class="font-semibold text-zinc-700">
+                        {{ $fechaVencimiento->format('d/m/Y') }}
+                    </span>
+                </p>
+
+            @else
+
+                <p class="text-sm text-zinc-500 mt-2">
+                    Sin vencimiento cargado.
+                </p>
+
+            @endif
+
+        </a>
+
+        <a
+            href="{{ route('cliente.mi-qr') }}"
+            class="border border-stone-300 bg-stone-100 rounded-xl p-5 hover:border-orange-500 hover:bg-orange-50 transition block cursor-pointer"
+        >
+
+            <div class="text-3xl mb-2">📱</div>
+
+            <h3 class="font-bold text-zinc-800">
+                Mi QR
+            </h3>
+
+            <div class="mt-3 inline-flex items-center rounded-xl bg-black px-3 py-2 text-sm font-bold text-white">
+                Mostrar QR
             </div>
+
+            <p class="text-sm text-zinc-500 mt-3">
+                Usá tu código QR para registrar ingresos y egresos.
+            </p>
+
+        </a>
+
+        <div class="border border-stone-300 bg-stone-100 rounded-xl p-5">
+
+            <div class="text-3xl mb-2">🏋️</div>
+
+            <h3 class="font-bold text-zinc-800">
+                Musculación ahora
+            </h3>
+
+            <div class="mt-3 inline-flex items-center rounded-xl bg-orange-500 px-3 py-2 text-sm font-bold text-white">
+                👥 {{ $presentesAhora }} socios entrenando
+            </div>
+
+            <p class="text-sm text-zinc-500 mt-3">
+                Cantidad actual de personas dentro del gimnasio.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
             {{-- MIS RESERVAS --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">

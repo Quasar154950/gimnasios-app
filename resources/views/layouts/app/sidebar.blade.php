@@ -116,14 +116,23 @@
                             Pagos / Cuotas
                         </flux:sidebar.item>
 
-                         <flux:sidebar.item
-                             icon="qr-code"
-                             :href="route('asistencias.index')"
-                             :current="request()->routeIs('asistencias.*')"
-                             wire:navigate
+                        <flux:sidebar.item
+                            icon="qr-code"
+                            :href="route('asistencias.index')"
+                            :current="request()->routeIs('asistencias.index')"
+                            wire:navigate
                         >
                             Asistencias
-                        </flux:sidebar.item>   
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
+                            icon="camera"
+                            :href="route('asistencias.escanear')"
+                            :current="request()->routeIs('asistencias.escanear')"
+                            
+                        >
+                            Escanear QR
+                        </flux:sidebar.item>
 
                     @endif
 
