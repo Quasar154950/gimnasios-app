@@ -134,7 +134,10 @@
         "reader",
         {
             fps: 10,
-            qrbox: 250
+            qrbox: 250,
+            videoConstraints: {
+                facingMode: { ideal: "environment" }
+            }
         },
         false
     );
