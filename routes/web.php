@@ -415,32 +415,4 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
-Route::get('/limpiar-turnos-duplicados', function () {
-
-    $duplicados = \App\Models\Turno::select('actividad', 'fecha', 'hora_inicio')
-        ->selectRaw('COUNT(*) as total')
-        ->groupBy('actividad', 'fecha', 'hora_inicio')
-        ->havingRaw('COUNT(*) > 1')
-        ->get();
-
-    $eliminados = 0;
-
-    foreach ($duplicados as $d) {
-        $turnos = \App\Models\Turno::where('actividad', $d->actividad)
-            ->whereDate('fecha', $d->fecha)
-            ->where('hora_inicio', $d->hora_inicio)
-            ->orderBy('id')
-            ->get();
-
-        $turnos->shift();
-
-        foreach ($turnos as $turno) {
-            $turno->delete();
-            $eliminados++;
-        }
-    }
-
-    return 'Turnos duplicados eliminados: ' . $eliminados;
-});
-
 require __DIR__ . '/settings.php';
