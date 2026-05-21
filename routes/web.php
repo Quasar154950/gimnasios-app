@@ -373,29 +373,39 @@ Route::get('/crear-turnos-demo', function () {
         'Pilates',
     ];
 
-    $fecha = now()->addDay();
+    for ($i = 1; $i <= 7; $i++) {
 
-    foreach ($actividades as $actividad) {
+        $fecha = now()->addDays($i);
 
-        foreach ($horarios as $hora) {
+        if ($fecha->isWeekend()) {
+            continue;
+        }
 
-            $inicio = \Carbon\Carbon::createFromFormat('H:i', $hora);
+        foreach ($actividades as $actividad) {
 
-            $fin = $inicio->copy()->addHour();
+            foreach ($horarios as $hora) {
 
-            \App\Models\Turno::create([
-                'actividad' => $actividad,
-                'profesor' => 'Demo',
-                'fecha' => $fecha->format('Y-m-d'),
-                'hora_inicio' => $inicio->format('H:i:s'),
-                'hora_fin' => $fin->format('H:i:s'),
-                'cupo_maximo' => 10,
-                'activo' => true,
-            ]);
+                $inicio = \Carbon\Carbon::createFromFormat('H:i', $hora);
+                $fin = $inicio->copy()->addHour();
+
+                \App\Models\Turno::updateOrCreate(
+                    [
+                        'actividad' => $actividad,
+                        'fecha' => $fecha->format('Y-m-d'),
+                        'hora_inicio' => $inicio->format('H:i:s'),
+                    ],
+                    [
+                        'profesor' => 'Demo',
+                        'hora_fin' => $fin->format('H:i:s'),
+                        'cupo_maximo' => 10,
+                        'activo' => true,
+                    ]
+                );
+            }
         }
     }
 
-    return 'Turnos demo creados correctamente';
+    return 'Turnos demo creados correctamente para los próximos 7 días hábiles';
 });
 
 require __DIR__ . '/settings.php';
