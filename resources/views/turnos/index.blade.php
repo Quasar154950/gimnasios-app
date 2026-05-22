@@ -80,16 +80,18 @@
         </div>
 
         {{-- FIN DE SEMANA --}}
-        @if(\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
+@if(\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
 
-            <div style="border-radius:8px !important;"
-                 class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
+    <div style="border-radius:8px !important;"
+         class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
 
-                🏖️ Gimnasio cerrado. No hay actividades disponibles sábados y domingos.
+        🏖️ Gimnasio cerrado. No hay actividades disponibles sábados y domingos.
 
-            </div>
+    </div>
 
-            @else
+@endif
+
+@if(!\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
 
         {{-- MUSCULACIÓN --}}
         <div style="border-radius:8px !important;"
@@ -159,6 +161,7 @@
             </div>
 
         </div>
+      
 
         {{-- LISTADO DE ACTIVIDADES --}}
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -330,7 +333,7 @@
 
                             @else
 
-                                <form method="POST" action="{{ route('cliente.turnos.reservar', $turno) }}">
+                                <form method="POST" action="{{ route('cliente.turnos.reservar', ['turno' => $turno->id]) }}">
                                     @csrf
 
                                     <button
@@ -363,6 +366,8 @@
 
         </div>
 
+        @endif
+        
     </div>
 
 </x-layouts::app>
