@@ -428,4 +428,14 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
+Route::get('/migrar-mp', function () {
+
+    Artisan::call('migrate', [
+        '--force' => true
+    ]);
+
+    return 'Migraciones Mercado Pago ejecutadas';
+
+});
+
 require __DIR__ . '/settings.php';
