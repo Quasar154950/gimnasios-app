@@ -89,7 +89,7 @@
 
             </div>
 
-        @endif
+            @else
 
         {{-- MUSCULACIÓN --}}
         <div style="border-radius:8px !important;"
