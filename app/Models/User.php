@@ -26,6 +26,11 @@ class User extends Authenticatable
         'role',
         'activo',
         'fecha_vencimiento',
+
+        'mercadopago_enabled',
+        'mercadopago_public_key',
+        'mercadopago_access_token',
+        'mercadopago_sandbox',
     ];
 
     /**
@@ -48,6 +53,9 @@ class User extends Authenticatable
             'password' => 'hashed',
             'fecha_vencimiento' => 'datetime',
             'activo' => 'boolean',
+
+            'mercadopago_enabled' => 'boolean',
+            'mercadopago_sandbox' => 'boolean',
         ];
     }
 

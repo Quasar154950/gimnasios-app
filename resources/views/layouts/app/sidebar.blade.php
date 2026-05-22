@@ -117,6 +117,15 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
+                            icon="credit-card"
+                            :href="route('mercadopago.index')"
+                            :current="request()->routeIs('mercadopago.*')"
+                            wire:navigate
+                        >
+                             Mercado Pago
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
                             icon="qr-code"
                             :href="route('asistencias.index')"
                             :current="request()->routeIs('asistencias.index')"

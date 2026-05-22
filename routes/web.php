@@ -9,6 +9,7 @@ use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\MercadoPagoController;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
@@ -52,6 +53,13 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         return view('pagos.index', compact('clientes'));
         })->name('pagos.index');
+
+        // 💳 MERCADO PAGO
+        Route::get('mercadopago', [MercadoPagoController::class, 'index'])
+        ->name('mercadopago.index');
+
+        Route::post('mercadopago', [MercadoPagoController::class, 'update'])
+        ->name('mercadopago.update');
         
         Route::get('clientes/{cliente}/pagos', [ClienteController::class, 'pagos'])
             ->name('clientes.pagos');
@@ -124,6 +132,11 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/cuota', fun
     return view('cliente.cuota', compact('cliente'));
 
 })->name('cliente.cuota');
+
+Route::middleware(['auth', 'role:cliente', 'activo'])->get(
+    '/cliente/pagar-cuota',
+    [MercadoPagoController::class, 'crearPago']
+)->name('cliente.pagar-cuota');
 
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/mi-qr', [\App\Http\Controllers\AsistenciaController::class, 'miQr'])
     ->name('cliente.mi-qr');

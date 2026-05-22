@@ -40,6 +40,18 @@
 
             </div>
 
+                @if(session('error'))
+    <div class="rounded-xl bg-red-100 text-red-700 font-bold px-4 py-3 mb-6">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="rounded-xl bg-green-100 text-green-700 font-bold px-4 py-3 mb-6">
+        {{ session('success') }}
+    </div>
+@endif
+
             {{-- ESTADO --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
@@ -103,25 +115,27 @@
 
             </div>
 
-            {{-- FUTURO PAGO ONLINE --}}
+                        {{-- PAGO ONLINE --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
                 <h2 class="text-lg font-black text-zinc-800">
-                    🚀 Próximamente
+                    💳 Pagar cuota online
                 </h2>
 
                 <p class="text-sm text-zinc-600 mt-3 leading-relaxed">
-                    Muy pronto vas a poder:
+                    Aboná tu cuota del gimnasio de forma online con Mercado Pago.
                 </p>
 
-                <ul class="mt-4 space-y-2 text-sm text-zinc-700">
+                <a
+                    href="{{ route('cliente.pagar-cuota') }}"
+                    class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-black text-white hover:bg-blue-700 transition"
+                >
+                    Pagar con Mercado Pago
+                </a>
 
-                    <li>✅ Pagar tu cuota online</li>
-                    <li>✅ Ver historial de pagos</li>
-                    <li>✅ Descargar comprobantes</li>
-                    <li>✅ Abonar con Mercado Pago</li>
-
-                </ul>
+                <p class="text-xs text-zinc-500 mt-3">
+                    Serás redirigido a Mercado Pago para completar el pago.
+                </p>
 
             </div>
 
