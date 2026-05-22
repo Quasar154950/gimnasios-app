@@ -191,7 +191,7 @@
             <div style="border-radius:10px !important;" class="border border-stone-300 p-5 bg-stone-200 shadow-sm font-sans">
 
                 <h2 class="text-lg font-black text-neutral-800 mb-4">
-                    📅 Próximas actividades
+                    📌 Próximas clases con reservas
                 </h2>
 
                 <div class="space-y-3">

@@ -42,7 +42,10 @@ class DashboardController extends Controller
               ->whereDate('fecha', '<=', $hoy->copy()->addDays(6));
         })->count();
 
-        $proximasActividades = Turno::whereDate('fecha', '>=', $hoy)
+        $proximasActividades = Turno::withCount('reservas')
+            ->whereDate('fecha', '>', $hoy)
+            ->whereDate('fecha', '<=', $hoy->copy()->addDays(6))
+            ->having('reservas_count', '>', 0)
             ->orderBy('fecha')
             ->orderBy('hora_inicio')
             ->take(10)
