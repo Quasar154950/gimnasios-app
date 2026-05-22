@@ -202,86 +202,86 @@
     @endif
 
     {{-- FORMULARIO RENOVACIÓN --}}
-    @if($clientePagoId)
+@if($clientePagoId)
 
-        <div class="mt-6 rounded-xl border border-stone-300 bg-stone-200 p-4 md:p-6 shadow-sm">
+    <div class="mt-6 rounded-xl border border-stone-300 bg-stone-200 p-4 md:p-6 shadow-sm">
 
-            <h2 class="text-lg font-bold text-green-700 mb-4">
-                💳 Registrar pago y renovar cuota
-            </h2>
+        <h2 class="text-lg font-bold text-orange-600 mb-4">
+            💳 Registrar pago y renovar cuota
+        </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                {{-- MONTO --}}
-                <div>
-                    <label class="block text-sm font-bold mb-1 text-neutral-700">
-                        Monto
-                    </label>
+            {{-- MONTO --}}
+            <div>
+                <label class="block text-sm font-bold mb-1 text-neutral-700">
+                    Monto
+                </label>
 
-                    <input
-                        type="number"
-                        wire:model="montoPago"
-                        class="w-full rounded-xl border border-stone-300 bg-stone-100"
-                        placeholder="Ej: 25000"
-                    >
-                </div>
-
-                {{-- MÉTODO --}}
-                <div>
-                    <label class="block text-sm font-bold mb-1 text-neutral-700">
-                        Método de pago
-                    </label>
-
-                    <select
-                        wire:model="metodoPago"
-                        class="w-full rounded-xl border border-stone-300 bg-stone-100"
-                    >
-                        <option>Efectivo</option>
-                        <option>Transferencia</option>
-                        <option>Débito</option>
-                        <option>Crédito</option>
-                        <option>Mercado Pago</option>
-                    </select>
-                </div>
-
-                {{-- OBSERVACIÓN --}}
-                <div>
-                    <label class="block text-sm font-bold mb-1 text-neutral-700">
-                        Observación
-                    </label>
-
-                    <input
-                        type="text"
-                        wire:model="observacionPago"
-                        class="w-full rounded-xl border border-stone-300 bg-stone-100"
-                        placeholder="Opcional"
-                    >
-                </div>
-
+                <input
+                    type="number"
+                    wire:model="montoPago"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="Ej: 25000"
+                >
             </div>
 
-            {{-- BOTONES --}}
-            <div class="mt-5 flex gap-2">
+            {{-- MÉTODO --}}
+            <div>
+                <label class="block text-sm font-bold mb-1 text-neutral-700">
+                    Método de pago
+                </label>
 
-                <button
-                    wire:click="renovarCuota"
-                    class="inline-flex items-center gap-2 rounded-xl bg-green-600 px-4 py-2 text-sm font-bold text-white hover:bg-green-700 transition"
+                <select
+                    wire:model="metodoPago"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
-                    ✅ Confirmar pago
-                </button>
+                    <option>Efectivo</option>
+                    <option>Transferencia</option>
+                    <option>Débito</option>
+                    <option>Crédito</option>
+                    <option>Mercado Pago</option>
+                </select>
+            </div>
 
-                <button
-                    wire:click="cancelarRenovacion"
-                    class="inline-flex items-center gap-2 rounded-xl bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 hover:bg-stone-300 transition border border-stone-300"
+            {{-- OBSERVACIÓN --}}
+            <div>
+                <label class="block text-sm font-bold mb-1 text-neutral-700">
+                    Observación
+                </label>
+
+                <input
+                    type="text"
+                    wire:model="observacionPago"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="Opcional"
                 >
-                    ❌ Cancelar
-                </button>
-
             </div>
 
         </div>
 
-    @endif
+        {{-- BOTONES --}}
+        <div class="mt-5 flex gap-2">
+
+            <button
+                wire:click="renovarCuota"
+                class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white hover:bg-orange-600 transition"
+            >
+                ✅ Confirmar pago
+            </button>
+
+            <button
+                wire:click="cancelarRenovacion"
+                class="inline-flex items-center gap-2 rounded-xl bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 hover:bg-stone-300 transition border border-stone-300"
+            >
+                ❌ Cancelar
+            </button>
+
+        </div>
+
+    </div>
+
+@endif
 
 </div>
 
