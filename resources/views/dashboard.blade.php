@@ -11,6 +11,7 @@
         $sociosActivos = $sociosActivos ?? $totalClientes ?? 0;
         $reservasHoy = $reservasHoy ?? 0;
         $cuposOcupadosHoy = $cuposOcupadosHoy ?? 0;
+        $proximasReservas = $proximasReservas ?? 0;
         $pagosPendientes = $pagosPendientes ?? 0;
         $presentesAhora = $presentesAhora ?? 0;
     @endphp
@@ -61,7 +62,7 @@
         </div>
 
         {{-- TARJETAS PRINCIPALES --}}
-        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
 
             <div style="border-radius:8px !important;" class="border border-stone-300 bg-stone-200 p-5 shadow-sm">
                 <div class="text-xs font-black uppercase text-blue-700">Socios activos</div>
@@ -72,13 +73,19 @@
             <div style="border-radius:8px !important;" class="border border-stone-300 bg-stone-200 p-5 shadow-sm">
                 <div class="text-xs font-black uppercase text-violet-700">Reservas de hoy</div>
                 <div class="mt-3 text-3xl font-black text-neutral-800">{{ $reservasHoy }}</div>
-                <div class="mt-1 text-xs text-neutral-600">Turnos reservados para el día.</div>
+                <div class="mt-1 text-xs text-neutral-600">Turnos reservados para hoy.</div>
             </div>
 
             <div style="border-radius:8px !important;" class="border border-stone-300 bg-stone-200 p-5 shadow-sm">
-                <div class="text-xs font-black uppercase text-green-700">Cupos ocupados</div>
+                <div class="text-xs font-black uppercase text-green-700">Cupos ocupados hoy</div>
                 <div class="mt-3 text-3xl font-black text-neutral-800">{{ $cuposOcupadosHoy }}</div>
-                <div class="mt-1 text-xs text-neutral-600">Ocupación total de clases del día.</div>
+                <div class="mt-1 text-xs text-neutral-600">Ocupación total de clases de hoy.</div>
+            </div>
+
+            <div style="border-radius:8px !important;" class="border border-stone-300 bg-stone-200 p-5 shadow-sm">
+                <div class="text-xs font-black uppercase text-orange-700">Próximas reservas</div>
+                <div class="mt-3 text-3xl font-black text-neutral-800">{{ $proximasReservas }}</div>
+                <div class="mt-1 text-xs text-neutral-600">Reservas de los próximos 6 días.</div>
             </div>
 
             <div style="border-radius:8px !important;" class="border border-stone-300 bg-stone-200 p-5 shadow-sm">
@@ -164,6 +171,15 @@
 
                 @endif
 
+                @if(Route::has('asistencias.escanear'))
+
+                    <a href="{{ route('asistencias.escanear') }}"
+                       style="background:black;color:white;border-radius:14px;padding:10px 16px;font-size:14px;font-weight:bold;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+                        📷 Escanear QR
+                    </a>
+
+                @endif
+
             </div>
 
         </div>
@@ -175,29 +191,36 @@
             <div style="border-radius:10px !important;" class="border border-stone-300 p-5 bg-stone-200 shadow-sm font-sans">
 
                 <h2 class="text-lg font-black text-neutral-800 mb-4">
-                    📅 Próximas reservas / actividades
+                    📅 Próximas actividades
                 </h2>
 
                 <div class="space-y-3">
 
-                    @forelse($proximosRecordatorios ?? [] as $recordatorio)
+                    @forelse($proximasActividades ?? [] as $actividad)
 
                         <div style="border-radius:10px !important;" class="p-3 border border-stone-300 bg-stone-100">
 
                             <div class="flex justify-between items-center">
 
-                                <span class="text-sm font-bold">
-                                    {{ $recordatorio->cliente->nombre ?? 'Socio sin nombre' }}
+                                <span class="text-sm font-bold text-neutral-800">
+                                    {{ $actividad->actividad }}
                                 </span>
 
-                                <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-orange-500 text-white">
-                                    {{ str_replace('_', ' ', $recordatorio->estado ?? 'pendiente') }}
+                                <span class="text-[10px] font-black uppercase px-2 py-1 rounded bg-orange-500 text-white">
+                                    {{ \Carbon\Carbon::parse($actividad->fecha)->format('d/m') }}
                                 </span>
 
                             </div>
 
-                            <p class="text-xs text-neutral-500 mt-2 italic">
-                                "{{ $recordatorio->descripcion ?? 'Actividad programada' }}"
+                            <p class="text-xs text-neutral-600 mt-2">
+                                🕒
+                                {{ \Carbon\Carbon::parse($actividad->hora_inicio)->format('H:i') }}
+                                -
+                                {{ \Carbon\Carbon::parse($actividad->hora_fin)->format('H:i') }}
+                            </p>
+
+                            <p class="text-xs text-neutral-500 mt-1">
+                                👨‍🏫 {{ $actividad->profesor ?? 'Profesor a confirmar' }}
                             </p>
 
                         </div>

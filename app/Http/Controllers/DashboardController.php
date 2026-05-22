@@ -8,21 +8,19 @@ use App\Models\Seguimiento;
 use App\Models\MensajeCliente;
 use App\Models\ReservaTurno;
 use App\Models\Asistencia;
+use App\Models\Turno;
 use Carbon\Carbon;
-
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 🔴 REDIRIGIR SOPORTE AL PANEL DE SOPORTE
         if (auth()->user()->email === 'soporte@tuempresa.com') {
             return redirect('/soporte');
         }
 
         $hoy = Carbon::today();
         $abogadoId = auth()->id();
-
         $usuario = auth()->user();
 
         $diasRestantes = $usuario->fecha_vencimiento
@@ -33,15 +31,22 @@ class DashboardController extends Controller
             ->where('archivado', false)
             ->count();
 
-        // 🔥 MÉTRICAS GIMNASIO DEMO
-        // Por ahora dejamos estas métricas preparadas.
-        // Después las conectamos a reservas, cupos y pagos reales.
-
         $reservasHoy = ReservaTurno::whereHas('turno', function ($q) use ($hoy) {
-        $q->whereDate('fecha', $hoy);
+            $q->whereDate('fecha', $hoy);
         })->count();
 
         $cuposOcupadosHoy = $reservasHoy;
+
+        $proximasReservas = ReservaTurno::whereHas('turno', function ($q) use ($hoy) {
+            $q->whereDate('fecha', '>', $hoy)
+              ->whereDate('fecha', '<=', $hoy->copy()->addDays(6));
+        })->count();
+
+        $proximasActividades = Turno::whereDate('fecha', '>=', $hoy)
+            ->orderBy('fecha')
+            ->orderBy('hora_inicio')
+            ->take(10)
+            ->get();
 
         $pagosPendientes = Cliente::where('abogado_id', $abogadoId)
             ->where('archivado', false)
@@ -51,7 +56,7 @@ class DashboardController extends Controller
 
         $presentesAhora = Asistencia::whereHas('cliente', function ($q) use ($abogadoId) {
             $q->where('abogado_id', $abogadoId);
-    })
+        })
             ->where('presente', true)
             ->whereNull('hora_salida')
             ->count();
@@ -159,13 +164,13 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'diasRestantes'           => $diasRestantes,
-
             'totalClientes'           => $totalClientesActivos,
 
-            // 🔥 TARJETAS DEL PANEL DE GIMNASIO
             'sociosActivos'           => $totalClientesActivos,
             'reservasHoy'             => $reservasHoy,
             'cuposOcupadosHoy'        => $cuposOcupadosHoy,
+            'proximasReservas'        => $proximasReservas,
+            'proximasActividades'     => $proximasActividades,
             'pagosPendientes'         => $pagosPendientes,
             'presentesAhora'          => $presentesAhora,
 

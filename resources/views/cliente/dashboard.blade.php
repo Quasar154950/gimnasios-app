@@ -83,56 +83,60 @@
             </div>
 
             {{-- ACTIVIDAD EN CURSO / PRÓXIMA --}}
-            @if($actividadEnCurso || $proximaReserva)
+@if($actividadEnCurso || $proximaReserva)
 
-                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-md p-6 mb-6 text-white">
+    <div class="rounded-2xl shadow-2xl p-6 mb-6 text-white border border-orange-400 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
 
-                    @if($actividadEnCurso)
+        @if($actividadEnCurso)
 
-                        <p class="text-sm uppercase tracking-wide opacity-80">
-                            🟢 Actividad en curso
-                        </p>
+            <div class="rounded-xl bg-white/10 border border-white/10 p-4">
 
-                        <h2 class="text-2xl font-bold mt-2">
-                            {{ $actividadEnCurso->turno->actividad }}
-                        </h2>
+                <p class="text-xs uppercase tracking-[0.2em] text-orange-100 font-bold">
+                    🟢 ACTIVIDAD EN CURSO
+                </p>
 
-                        <p class="mt-2 text-sm">
-                            🕒
-                            {{ \Carbon\Carbon::parse($actividadEnCurso->turno->hora_inicio)->format('H:i') }}
-                            -
-                            {{ \Carbon\Carbon::parse($actividadEnCurso->turno->hora_fin)->format('H:i') }}
-                        </p>
+                <h2 class="text-3xl font-black mt-2">
+                    {{ $actividadEnCurso->turno->actividad }}
+                </h2>
 
-                    @endif
+                <p class="mt-3 text-sm text-orange-100 font-medium">
+                    🕒
+                    {{ \Carbon\Carbon::parse($actividadEnCurso->turno->hora_inicio)->format('H:i') }}
+                    -
+                    {{ \Carbon\Carbon::parse($actividadEnCurso->turno->hora_fin)->format('H:i') }}
+                </p>
 
-                    @if($proximaReserva)
+            </div>
 
-                        <div class="{{ $actividadEnCurso ? 'mt-5 pt-5 border-t border-white/20' : '' }}">
+        @endif
 
-                            <p class="text-sm uppercase tracking-wide opacity-80">
-                                📌 Próxima actividad
-                            </p>
+        @if($proximaReserva)
 
-                            <h2 class="text-2xl font-bold mt-2">
-                                {{ $proximaReserva->turno->actividad }}
-                            </h2>
+            <div class="{{ $actividadEnCurso ? 'mt-5' : '' }} rounded-xl bg-black/10 border border-white/10 p-4">
 
-                            <p class="mt-2 text-sm">
-                                📅 {{ \Carbon\Carbon::parse($proximaReserva->turno->fecha)->format('d/m/Y') }}
-                                ·
-                                🕒 {{ \Carbon\Carbon::parse($proximaReserva->turno->hora_inicio)->format('H:i') }}
-                                -
-                                {{ \Carbon\Carbon::parse($proximaReserva->turno->hora_fin)->format('H:i') }}
-                            </p>
+                <p class="text-xs uppercase tracking-[0.2em] text-orange-100 font-bold">
+                    📌 PRÓXIMA ACTIVIDAD
+                </p>
 
-                        </div>
+                <h2 class="text-3xl font-black mt-2">
+                    {{ $proximaReserva->turno->actividad }}
+                </h2>
 
-                    @endif
+                <p class="mt-3 text-sm text-orange-100 font-medium">
+                    📅 {{ \Carbon\Carbon::parse($proximaReserva->turno->fecha)->format('d/m/Y') }}
+                    ·
+                    🕒 {{ \Carbon\Carbon::parse($proximaReserva->turno->hora_inicio)->format('H:i') }}
+                    -
+                    {{ \Carbon\Carbon::parse($proximaReserva->turno->hora_fin)->format('H:i') }}
+                </p>
 
-                </div>
+            </div>
 
-            @endif
+        @endif
+
+    </div>
+
+@endif
 
             {{-- DATOS --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
