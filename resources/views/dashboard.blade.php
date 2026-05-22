@@ -213,15 +213,20 @@
                             </div>
 
                             <p class="text-xs text-neutral-600 mt-2">
-                                🕒
-                                {{ \Carbon\Carbon::parse($actividad->hora_inicio)->format('H:i') }}
-                                -
-                                {{ \Carbon\Carbon::parse($actividad->hora_fin)->format('H:i') }}
-                            </p>
+                                📅 {{ \Carbon\Carbon::parse($actividad->fecha)->format('d/m/Y') }}
+    ·
+                                🕒 {{ \Carbon\Carbon::parse($actividad->hora_inicio)->format('H:i') }}
+    -
+                        {{ \Carbon\Carbon::parse($actividad->hora_fin)->format('H:i') }}
+                           </p>
 
-                            <p class="text-xs text-neutral-500 mt-1">
-                                👨‍🏫 {{ $actividad->profesor ?? 'Profesor a confirmar' }}
-                            </p>
+                         <p class="text-xs text-neutral-500 mt-1">
+                               👨‍🏫 {{ $actividad->profesor ?? 'Profesor a confirmar' }}
+                    </p>
+
+                      <p class="text-xs text-orange-600 font-bold mt-2">
+                        👥 Con reservas
+                     </p>
 
                         </div>
 
