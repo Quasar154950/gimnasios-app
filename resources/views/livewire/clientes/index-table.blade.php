@@ -221,7 +221,7 @@
                 <input
                     type="number"
                     wire:model="montoPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Ej: 25000"
                 >
             </div>
@@ -234,13 +234,13 @@
 
                 <select
                     wire:model="metodoPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                 >
-                    <option>Efectivo</option>
-                    <option>Transferencia</option>
-                    <option>Débito</option>
-                    <option>Crédito</option>
-                    <option>Mercado Pago</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia">Transferencia</option>
+                    <option value="Débito">Débito</option>
+                    <option value="Crédito">Crédito</option>
+                    <option value="Mercado Pago">Mercado Pago</option>
                 </select>
             </div>
 
@@ -253,7 +253,7 @@
                 <input
                     type="text"
                     wire:model="observacionPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="Opcional"
                 >
             </div>
