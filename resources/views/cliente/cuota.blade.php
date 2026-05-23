@@ -121,7 +121,7 @@
     class="block mb-6 transition duration-200 hover:scale-[1.01] cursor-pointer"
 >
 
-    <div class="bg-yellow-300 border border-yellow-400 rounded-3xl shadow-xl hover:shadow-2xl p-6">
+    <div class="bg-white border border-stone-200 rounded-3xl shadow-xl hover:shadow-2xl p-6">
 
         <div class="flex items-center gap-3">
 
