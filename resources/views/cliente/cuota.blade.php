@@ -116,38 +116,38 @@
             </div>
 
             {{-- PAGO ONLINE --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+<a
+    href="{{ route('cliente.pagar-cuota') }}"
+    class="block mb-6 transition duration-200 hover:scale-[1.01] cursor-pointer"
+>
 
-                <h2 class="text-lg font-black text-zinc-800">
-                    💳 Pagar cuota online
-                </h2>
+    <div class="bg-yellow-300 border border-yellow-400 rounded-3xl shadow-xl hover:shadow-2xl p-6">
 
-                <p class="text-sm text-zinc-600 mt-3 leading-relaxed">
-                    Aboná tu cuota del gimnasio de forma online con Mercado Pago.
-                </p>
+        <h2 class="text-xl font-black text-zinc-900">
+            💳 Pagar cuota online
+        </h2>
 
-                <a
-                    href="{{ route('cliente.pagar-cuota') }}"
-                    class="mt-5 flex items-center justify-center transition duration-200 hover:scale-105"
-                >
+        <p class="text-sm text-zinc-800 mt-3 leading-relaxed">
+            Aboná tu cuota del gimnasio de forma online con Mercado Pago.
+        </p>
 
-                    <div class="bg-white border border-stone-300 rounded-2xl shadow-md hover:shadow-xl p-4">
+        <div class="flex items-center justify-center mt-6">
 
-                        <img
-                            src="{{ asset('images/mp-logo.png') }}"
-                            alt="Pagar con Mercado Pago"
-                            class="h-16 w-auto"
-                        >
+            <img
+                src="{{ asset('images/mp-logo.png') }}"
+                alt="Mercado Pago"
+                class="h-28 w-auto"
+            >
 
-                    </div>
+        </div>
 
-                </a>
+        <p class="text-xs text-zinc-700 mt-5 text-center font-semibold">
+            Serás redirigido a Mercado Pago para completar el pago.
+        </p>
 
-                <p class="text-xs text-zinc-500 mt-3 text-center">
-                    Serás redirigido a Mercado Pago para completar el pago.
-                </p>
+    </div>
 
-            </div>
+</a>
 
             {{-- CONTACTO --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
