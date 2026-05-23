@@ -146,7 +146,7 @@
             <img
                 src="{{ asset('images/mp-logo.png') }}"
                 alt="Mercado Pago"
-                class="h-28 w-auto"
+                class="h-44 w-auto"
             >
 
         </div>
