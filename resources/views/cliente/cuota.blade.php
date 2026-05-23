@@ -40,17 +40,17 @@
 
             </div>
 
-                @if(session('error'))
-    <div class="rounded-xl bg-red-100 text-red-700 font-bold px-4 py-3 mb-6">
-        {{ session('error') }}
-    </div>
-@endif
+            @if(session('error'))
+                <div class="rounded-xl bg-red-100 text-red-700 font-bold px-4 py-3 mb-6">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-@if(session('success'))
-    <div class="rounded-xl bg-green-100 text-green-700 font-bold px-4 py-3 mb-6">
-        {{ session('success') }}
-    </div>
-@endif
+            @if(session('success'))
+                <div class="rounded-xl bg-green-100 text-green-700 font-bold px-4 py-3 mb-6">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             {{-- ESTADO --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
@@ -115,7 +115,7 @@
 
             </div>
 
-                        {{-- PAGO ONLINE --}}
+            {{-- PAGO ONLINE --}}
             <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
                 <h2 class="text-lg font-black text-zinc-800">
@@ -128,12 +128,22 @@
 
                 <a
                     href="{{ route('cliente.pagar-cuota') }}"
-                    class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-black text-white hover:bg-blue-700 transition"
+                    class="mt-5 flex items-center justify-center transition duration-200 hover:scale-105"
                 >
-                    Pagar con Mercado Pago
+
+                    <div class="bg-white border border-stone-300 rounded-2xl shadow-md hover:shadow-xl p-4">
+
+                        <img
+                            src="{{ asset('images/mp-logo.png') }}"
+                            alt="Pagar con Mercado Pago"
+                            class="h-16 w-auto"
+                        >
+
+                    </div>
+
                 </a>
 
-                <p class="text-xs text-zinc-500 mt-3">
+                <p class="text-xs text-zinc-500 mt-3 text-center">
                     Serás redirigido a Mercado Pago para completar el pago.
                 </p>
 
