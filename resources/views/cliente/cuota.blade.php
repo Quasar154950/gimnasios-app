@@ -123,9 +123,19 @@
 
     <div class="bg-yellow-300 border border-yellow-400 rounded-3xl shadow-xl hover:shadow-2xl p-6">
 
-        <h2 class="text-xl font-black text-zinc-900">
-            💳 Pagar cuota online
-        </h2>
+        <div class="flex items-center gap-3">
+
+            <img
+                src="{{ asset('images/mp-icon.png') }}"
+                alt="Mercado Pago"
+                class="h-8 w-auto"
+            >
+
+            <h2 class="text-xl font-black text-zinc-900">
+                Pagar cuota online
+            </h2>
+
+        </div>
 
         <p class="text-sm text-zinc-800 mt-3 leading-relaxed">
             Aboná tu cuota del gimnasio de forma online con Mercado Pago.
