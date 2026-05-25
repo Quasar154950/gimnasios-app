@@ -13,9 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
 
+        // Excluir webhook Mercado Pago del CSRF
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/mercadopago/saas',
+        ]);
+
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
-            'activo' => \App\Http\Middleware\CheckEstudioActivo::class, // 👈 CORREGIDO
+            'activo' => \App\Http\Middleware\CheckEstudioActivo::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

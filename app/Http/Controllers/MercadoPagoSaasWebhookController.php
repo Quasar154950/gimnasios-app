@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\SaasPago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use MercadoPago\MercadoPagoConfig;
 
 class MercadoPagoSaasWebhookController extends Controller
 {
@@ -46,14 +45,18 @@ class MercadoPagoSaasWebhookController extends Controller
             return response()->json(['ok' => true]);
         }
 
+        $yaEstabaAprobado = $pago->estado === 'approved';
+
         $pago->update([
             'payment_id' => $paymentId,
             'estado' => $status ?? 'desconocido',
             'metodo_pago' => $payment['payment_method_id'] ?? null,
-            'fecha_pago' => $status === 'approved' ? now() : null,
+            'fecha_pago' => $status === 'approved'
+                ? ($pago->fecha_pago ?? now())
+                : $pago->fecha_pago,
         ]);
 
-        if ($status === 'approved') {
+        if ($status === 'approved' && !$yaEstabaAprobado) {
             $pago->user->renovarSuscripcion(30);
         }
 
