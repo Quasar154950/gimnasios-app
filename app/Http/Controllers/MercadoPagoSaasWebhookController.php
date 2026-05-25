@@ -27,7 +27,10 @@ class MercadoPagoSaasWebhookController extends Controller
             ->get("https://api.mercadopago.com/v1/payments/{$paymentId}");
 
         if (!$response->successful()) {
-            return response()->json(['error' => 'No se pudo consultar el pago'], 500);
+            return response()->json([
+                'ok' => true,
+                'mensaje' => 'Webhook recibido, pero el payment_id no existe o no pudo consultarse.',
+                ]);
         }
 
         $payment = $response->json();
