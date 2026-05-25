@@ -448,24 +448,4 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
-Route::get('/simular-pago-saas/{user}', function (\App\Models\User $user) {
-    $pago = $user->saasPagos()->latest()->first();
-
-    if (!$pago) {
-        return 'Este usuario no tiene pagos SaaS generados.';
-    }
-
-    if ($pago->estado !== 'approved') {
-        $pago->update([
-            'estado' => 'approved',
-            'fecha_pago' => now(),
-            'metodo_pago' => 'simulado',
-        ]);
-
-        $user->renovarSuscripcion(30);
-    }
-
-    return 'Pago aprobado simulado. Usuario renovado y activado.';
-});
-
 require __DIR__ . '/settings.php';
