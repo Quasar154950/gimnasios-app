@@ -16,6 +16,7 @@ class SaasPago extends Model
         'external_reference',
         'metodo_pago',
         'fecha_pago',
+        'checkout_url',
     ];
 
     public function user(): BelongsTo
