@@ -117,12 +117,21 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
-                            icon="credit-card"
-                            :href="route('mercadopago.index')"
-                            :current="request()->routeIs('mercadopago.*')"
-                            wire:navigate
+                          icon="credit-card"
+                          :href="route('suscripcion.index')"
+                          :current="request()->routeIs('suscripcion.*')"
+                          wire:navigate
                         >
-                             Mercado Pago
+                           Suscripción
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
+                        icon="credit-card"
+                     :href="route('mercadopago.index')"
+                     :current="request()->routeIs('mercadopago.*')"
+                     wire:navigate
+                    >
+                          Mercado Pago
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
