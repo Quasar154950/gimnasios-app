@@ -37,34 +37,37 @@ class ClienteController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:clientes,email',
-            'direccion' => 'required|string|max:255',
-            'fecha_vencimiento_cuota' => 'nullable|date',
-        ], [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'email.required' => 'El email es obligatorio.',
-            'email.email' => 'El email no es válido.',
-            'email.unique' => 'El email ya está registrado.',
-            'direccion.required' => 'La dirección es obligatoria.',
-        ]);
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'dni' => 'required|string|max:30',
+        'telefono' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:clientes,email',
+        'direccion' => 'required|string|max:255',
+        'fecha_vencimiento_cuota' => 'nullable|date',
+    ], [
+        'nombre.required' => 'El nombre es obligatorio.',
+        'dni.required' => 'El DNI es obligatorio.',
+        'telefono.required' => 'El teléfono es obligatorio.',
+        'email.required' => 'El email es obligatorio.',
+        'email.email' => 'El email no es válido.',
+        'email.unique' => 'El email ya está registrado.',
+        'direccion.required' => 'La dirección es obligatoria.',
+    ]);
 
-        Cliente::create([
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion,
-            'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
-            'archivado' => false,
-            'abogado_id' => auth()->id(),
-        ]);
+    Cliente::create([
+        'nombre' => $request->nombre,
+        'dni' => $request->dni,
+        'telefono' => $request->telefono,
+        'email' => $request->email,
+        'direccion' => $request->direccion,
+        'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
+        'archivado' => false,
+        'abogado_id' => auth()->id(),
+    ]);
 
-        return redirect()->route('clientes.index')->with('success', 'Socio creado correctamente.');
-    }
+    return redirect()->route('clientes.index')->with('success', 'Socio creado correctamente.');
+}
 
     public function show(Request $request, string $id)
     {
@@ -260,34 +263,37 @@ class ClienteController extends Controller
     }
 
     public function update(Request $request, string $id)
-    {
-        $cliente = Cliente::where('abogado_id', auth()->id())->findOrFail($id);
+{
+    $cliente = Cliente::where('abogado_id', auth()->id())->findOrFail($id);
 
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:clientes,email,' . $id,
-            'direccion' => 'required|string|max:255',
-            'fecha_vencimiento_cuota' => 'nullable|date',
-        ], [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'email.required' => 'El email es obligatorio.',
-            'email.email' => 'El email no es válido.',
-            'email.unique' => 'El email ya está registrado.',
-            'direccion.required' => 'La dirección es obligatoria.',
-        ]);
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'dni' => 'required|string|max:30',
+        'telefono' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:clientes,email,' . $id,
+        'direccion' => 'required|string|max:255',
+        'fecha_vencimiento_cuota' => 'nullable|date',
+    ], [
+        'nombre.required' => 'El nombre es obligatorio.',
+        'dni.required' => 'El DNI es obligatorio.',
+        'telefono.required' => 'El teléfono es obligatorio.',
+        'email.required' => 'El email es obligatorio.',
+        'email.email' => 'El email no es válido.',
+        'email.unique' => 'El email ya está registrado.',
+        'direccion.required' => 'La dirección es obligatoria.',
+    ]);
 
-        $cliente->update([
-            'nombre' => $request->nombre,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion,
-            'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
-        ]);
+    $cliente->update([
+        'nombre' => $request->nombre,
+        'dni' => $request->dni,
+        'telefono' => $request->telefono,
+        'email' => $request->email,
+        'direccion' => $request->direccion,
+        'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
+    ]);
 
-        return redirect()->route('clientes.index')->with('success', 'Socio actualizado correctamente.');
-    }
+    return redirect()->route('clientes.index')->with('success', 'Socio actualizado correctamente.');
+}
 
     public function destroy(string $id)
     {

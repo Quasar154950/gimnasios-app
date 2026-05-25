@@ -46,6 +46,25 @@
                     >
 
                 </div>
+                
+                {{-- DNI --}}
+<div>
+
+    <label for="dni"
+           class="block text-sm font-bold text-stone-700">
+        DNI
+    </label>
+
+    <input
+        type="text"
+        name="dni"
+        id="dni"
+        value="{{ old('dni') }}"
+        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+        required
+    >
+
+</div>
 
                 {{-- TELÉFONO --}}
                 <div>
@@ -79,6 +98,7 @@
                         id="email"
                         value="{{ old('email') }}"
                         class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+                        required
                     >
 
                 </div>

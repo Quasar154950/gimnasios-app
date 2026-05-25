@@ -12,12 +12,19 @@ use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\SaasPagoController;
 use App\Http\Controllers\MercadoPagoSaasWebhookController;
+use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
 Route::redirect('/', '/estudio/demo')->name('home');
+
+Route::get('/activar-cuenta', [ActivarCuentaSocioController::class, 'show'])
+    ->name('activar-cuenta-socio.show');
+
+Route::post('/activar-cuenta', [ActivarCuentaSocioController::class, 'activar'])
+    ->name('activar-cuenta-socio.activar');
 
 Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
