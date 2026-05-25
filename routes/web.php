@@ -448,4 +448,21 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
+Route::get('/crear-soporte-gym', function () {
+    $user = \App\Models\User::updateOrCreate(
+        ['email' => 'soporte@tuempresa.com'],
+        [
+            'name' => 'Soporte MCTandil',
+            'password' => 'Soporte1234',
+            'role' => 'abogado',
+            'activo' => true,
+            'tipo_app' => 'soporte',
+            'plan' => 'interno',
+            'precio_suscripcion' => 0,
+        ]
+    );
+
+    return 'Soporte creado o actualizado: ' . $user->email;
+});
+
 require __DIR__ . '/settings.php';
