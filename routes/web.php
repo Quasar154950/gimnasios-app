@@ -448,19 +448,4 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
-Route::get('/configurar-plan-gym', function () {
-    $user = \App\Models\User::where('email', 'admin@sportgym.com')->first();
-
-    if (!$user) {
-        return 'No se encontró admin@sportgym.com';
-    }
-
-    $user->tipo_app = 'gimnasios';
-    $user->plan = 'pro';
-    $user->precio_suscripcion = 25000;
-    $user->save();
-
-    return 'Plan gimnasio configurado correctamente';
-});
-
 require __DIR__ . '/settings.php';
