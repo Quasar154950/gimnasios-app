@@ -11,6 +11,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\Cliente;
 use App\Models\MensajeCliente;
+use App\Models\SaasPago;
 
 class User extends Authenticatable
 {
@@ -26,6 +27,10 @@ class User extends Authenticatable
         'role',
         'activo',
         'fecha_vencimiento',
+        'tipo_app',
+        
+        'plan',
+        'precio_suscripcion',
 
         'mercadopago_enabled',
         'mercadopago_public_key',
@@ -79,6 +84,11 @@ class User extends Authenticatable
     public function mensajesEnviados()
     {
         return $this->hasMany(MensajeCliente::class);
+    }
+
+    public function saasPagos()
+    {
+    return $this->hasMany(SaasPago::class);
     }
 
     /**

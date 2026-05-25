@@ -10,6 +10,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\MercadoPagoController;
+use App\Http\Controllers\SaasPagoController;
+use App\Http\Controllers\MercadoPagoSaasWebhookController;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
@@ -170,6 +172,24 @@ Route::middleware(['auth'])->get('/soporte', function () {
 
     return view('soporte.index');
 });
+
+// 💳 PAGOS SAAS
+Route::middleware(['auth'])->group(function () {
+
+    Route::post('/soporte/saas-pagos/{user}/pagar', [SaasPagoController::class, 'pagar'])
+        ->name('soporte.saas.pagar');
+
+    Route::get('/soporte/saas-pagos/exito', [SaasPagoController::class, 'exito']);
+
+    Route::get('/soporte/saas-pagos/error', [SaasPagoController::class, 'error']);
+
+    Route::get('/soporte/saas-pagos/pendiente', [SaasPagoController::class, 'pendiente']);
+
+});
+
+// 🔔 WEBHOOK MERCADO PAGO SAAS
+Route::post('/webhooks/mercadopago/saas', [MercadoPagoSaasWebhookController::class, 'handle'])
+    ->name('webhooks.mercadopago.saas');
 
 // 🔑 RESET PASSWORD (SOLO SOPORTE)
 Route::middleware(['auth'])->post('/soporte/reset-password/{user}', function (User $user) {
