@@ -71,7 +71,13 @@ class SaasPagoController extends Controller
 
             ]);
 
-            return redirect($preference->init_point);
+            $checkoutUrl = $preference->init_point;
+
+            $pago->update([
+                'checkout_url' => $checkoutUrl,
+            ]);
+
+            return redirect('/soporte?success=Link de pago SaaS generado correctamente');
 
         } catch (MPApiException $e) {
 
@@ -79,11 +85,7 @@ class SaasPagoController extends Controller
                 'estado' => 'error',
             ]);
 
-            dd(
-                'ERROR MERCADO PAGO',
-                $e->getMessage(),
-                $e->getApiResponse()?->getContent()
-            );
+            return redirect('/soporte?error=Mercado Pago respondió con error al crear el link');
 
         } catch (\Throwable $e) {
 
@@ -91,10 +93,7 @@ class SaasPagoController extends Controller
                 'estado' => 'error',
             ]);
 
-            dd(
-                'ERROR GENERAL',
-                $e->getMessage()
-            );
+            return redirect('/soporte?error=No se pudo generar el link de pago');
         }
     }
 

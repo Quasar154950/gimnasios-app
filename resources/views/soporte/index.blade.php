@@ -257,6 +257,27 @@
                               💳 Cobrar SaaS
                              </button>
                            </form>
+                           
+                           @php
+    $ultimoPago = $user->saasPagos()->latest()->first();
+@endphp
+
+@if($ultimoPago && $ultimoPago->checkout_url)
+
+    <a href="{{ $ultimoPago->checkout_url }}"
+       target="_blank"
+       class="shrink-0 text-sm px-4 py-2 rounded bg-lime-600 hover:bg-lime-700 text-white transition">
+        🔗 Abrir link pago
+    </a>
+
+    <button
+        type="button"
+        onclick="navigator.clipboard.writeText('{{ $ultimoPago->checkout_url }}')"
+        class="shrink-0 text-sm px-4 py-2 rounded bg-zinc-700 hover:bg-zinc-800 text-white transition">
+        📋 Copiar link
+    </button>
+
+@endif
 
                             {{-- BACKUP --}}
                             <form method="POST" action="{{ route('soporte.backup') }}" class="shrink-0">
