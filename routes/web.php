@@ -448,4 +448,10 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
+Route::get('/migrar-saas', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+
+    return 'Migraciones SaaS ejecutadas';
+});
+
 require __DIR__ . '/settings.php';
