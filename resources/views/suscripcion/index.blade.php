@@ -65,17 +65,7 @@
     @endif
 </div>
 
-            {{-- BOTÓN RENOVAR --}}
-            <form method="POST" action="{{ route('renovar.suscripcion', $user->id) }}">
-                @csrf
-
-                <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
-                    Renovar (+30 días)
-                </button>
-            </form>
-
-        </div>
+            </div>
 
     </div>
 
