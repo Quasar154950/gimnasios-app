@@ -448,21 +448,19 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
-Route::get('/crear-soporte-gym', function () {
-    $user = \App\Models\User::updateOrCreate(
-        ['email' => 'soporte@tuempresa.com'],
-        [
-            'name' => 'Soporte MCTandil',
-            'password' => 'Soporte1234',
-            'role' => 'abogado',
-            'activo' => true,
-            'tipo_app' => 'soporte',
-            'plan' => 'interno',
-            'precio_suscripcion' => 0,
-        ]
-    );
+Route::get('/configurar-plan-gym', function () {
+    $user = \App\Models\User::where('email', 'admin@sportgym.com')->first();
 
-    return 'Soporte creado o actualizado: ' . $user->email;
+    if (!$user) {
+        return 'No se encontró admin@sportgym.com';
+    }
+
+    $user->tipo_app = 'gimnasios';
+    $user->plan = 'pro';
+    $user->precio_suscripcion = 25000;
+    $user->save();
+
+    return 'Plan gimnasio configurado correctamente';
 });
 
 require __DIR__ . '/settings.php';
