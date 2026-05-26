@@ -12,6 +12,7 @@
 
                 <p class="mt-2 text-sm text-stone-600 leading-relaxed">
                     Si ya sos socio del gimnasio, podés activar tu acceso usando tu DNI o email.
+                    Luego vas a ingresar siempre con tu email y contraseña.
                 </p>
 
             </div>
