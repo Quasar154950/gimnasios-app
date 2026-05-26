@@ -333,17 +333,7 @@
 
                             @else
 
-                                <form method="POST" action="{{ route('cliente.turnos.reservar', ['turno' => $turno->id]) }}">
-                                    @csrf
-
-                                    <button
-                                        type="submit"
-                                        style="background:#f97316;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;"
-                                    >
-                                        Reservar actividad
-                                    </button>
-
-                                </form>
+                                <livewire:reservar-turno-button :turno="$turno" :key="'reservar-turno-'.$turno->id" />
 
                             @endif
 
