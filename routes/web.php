@@ -455,4 +455,10 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
+Route::get('/migrar-dni-socios', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+
+    return 'Migración DNI socios ejecutada';
+});
+
 require __DIR__ . '/settings.php';
