@@ -71,7 +71,7 @@ class TurnoController extends Controller
 
             foreach ($actividades as $actividad => $datos) {
                 foreach ($horarios as [$horaInicio, $horaFin]) {
-                    Turno::firstOrCreate(
+                    Turno::updateOrCreate(
                         [
                             'actividad' => $actividad,
                             'fecha' => $fecha->toDateString(),
