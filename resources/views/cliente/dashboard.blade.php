@@ -70,17 +70,35 @@
         <div class="w-full max-w-5xl mx-auto">
 
             {{-- BIENVENIDA --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+<div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
-                <h1 class="text-2xl font-bold text-zinc-800 mb-2">
-                    👋 Bienvenido, {{ $cliente ? $cliente->nombre : auth()->user()->name }}
-                </h1>
+    <div class="flex items-center justify-between gap-4">
 
-                <p class="text-zinc-600">
-                    Panel de socio del gimnasio.
-                </p>
+        <div>
 
-            </div>
+            <h1 class="text-2xl font-bold text-zinc-800 mb-2">
+                👋 Bienvenido, {{ $cliente ? $cliente->nombre : auth()->user()->name }}
+            </h1>
+
+            <p class="text-zinc-600">
+                Panel de socio del gimnasio.
+            </p>
+
+        </div>
+
+        <div class="hidden sm:flex items-center justify-center">
+
+            <img
+                src="{{ asset('images/logo-sportgym.png') }}"
+                alt="SportGym"
+                class="h-24 w-24 object-contain drop-shadow-xl"
+            >
+
+        </div>
+
+    </div>
+
+</div>
 
             {{-- ACTIVIDAD EN CURSO / PRÓXIMA --}}
 @if($actividadEnCurso || $proximaReserva)
