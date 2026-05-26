@@ -113,33 +113,14 @@
 
         @endif
 
-        {{-- CUENTA ACTIVADA --}}
-        @if($cliente->user_id)
+{{-- MENSAJES --}}
+@if($cliente->mensajes_no_leidos_count > 0)
+    <span class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
+        💬 Nuevo mensaje
+    </span>
+@endif
 
-            <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                ✅ Cuenta activada
-            </span>
-
-        @else
-
-            <span class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700">
-                ⏳ Sin activar
-            </span>
-
-        @endif
-
-        {{-- MENSAJES --}}
-        @if($cliente->mensajes_no_leidos_count > 0)
-            <span class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-                💬 Nuevo mensaje
-            </span>
-        @endif
-
-    </div>
-
-</td>
-                            
-                            {{-- CUENTA ACTIVADA --}}
+{{-- CUENTA ACTIVADA --}}
 @if($cliente->user_id)
 
     <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -153,7 +134,10 @@
     </span>
 
 @endif
+    </div>
 
+</td>
+                            
                             {{-- TELÉFONO --}}
                             <td class="p-3 text-sm text-neutral-600 font-medium">
                                 {{ $cliente->telefono }}
