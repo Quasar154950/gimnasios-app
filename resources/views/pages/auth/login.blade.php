@@ -59,5 +59,20 @@
             </div>
         </form>
 
+      <div class="mt-6 text-center">
+
+    <p class="text-sm text-zinc-500 mb-2">
+        ¿Sos socio y todavía no activaste tu cuenta?
+    </p>
+
+    <a
+        href="{{ route('activar-cuenta-socio.show') }}"
+        class="inline-flex items-center justify-center rounded-xl bg-orange-500 hover:bg-orange-600 transition px-5 py-2 text-white font-bold"
+    >
+        Activar mi cuenta
+    </a>
+
+</div>      
+
     </div>
 </x-layouts::auth>
