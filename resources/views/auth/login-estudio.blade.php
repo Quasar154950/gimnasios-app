@@ -41,16 +41,18 @@
             </p>
 
             {{-- Texto carga --}}
-            <p class="mt-8 text-gray-300 text-sm">
-                Cargando acceso seguro...
-            </p>
+<p class="mt-8 text-gray-300 text-sm tracking-[0.25em] uppercase">
+    Cargando tu mejor versión
+</p>
 
-            {{-- Barra --}}
-            <div class="mt-5 w-56 h-1 rounded-full bg-white/10 overflow-hidden">
-                <div class="splash-bar h-full rounded-full"></div>
-            </div>
-        </div>
+{{-- Barra POWER --}}
+<div class="mt-5 w-64 h-4 rounded-full bg-white/10 overflow-hidden border border-orange-500/30 shadow-lg">
+
+    <div class="splash-bar-power h-full"></div>
+
+</div>
     </div>
+</div>
 
     {{-- LOGIN --}}
     <div id="login-content" class="flex flex-col gap-6 opacity-0 transition-opacity duration-500">
@@ -142,11 +144,26 @@
             animation: splashLogo 1.4s ease-out both, splashBreath 2.4s ease-in-out infinite;
         }
 
-        .splash-bar {
-            width: 45%;
-            background: linear-gradient(90deg, #fbbf24, #fde68a);
-            animation: splashBar 1.8s ease-in-out infinite;
-        }
+        .splash-bar-power {
+    width: 45%;
+    height: 100%;
+    border-radius: 9999px;
+
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            #f97316 0px,
+            #f97316 10px,
+            #fb923c 10px,
+            #fb923c 20px
+        );
+
+    box-shadow:
+        0 0 12px rgba(249, 115, 22, 0.8),
+        0 0 24px rgba(249, 115, 22, 0.35);
+
+    animation: splashBar 1.6s linear infinite;
+}
 
         @keyframes splashLogo {
             0% {
