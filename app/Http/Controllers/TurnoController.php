@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Turno;
 use App\Models\Cliente;
 use App\Models\ReservaTurno;
+use Carbon\Carbon;
 
 class TurnoController extends Controller
 {
     public function index()
     {
+        $this->generarTurnosProximosDias();
+
         $fechaSeleccionada = request('fecha', now()->toDateString());
-        $fecha = \Carbon\Carbon::parse($fechaSeleccionada);
+        $fecha = Carbon::parse($fechaSeleccionada);
         $cerradoFinDeSemana = $fecha->isSaturday() || $fecha->isSunday();
 
-        $turnos = Turno::where('activo', true)
+        $turnos = Turno::with('reservas.cliente')
+            ->where('activo', true)
             ->whereDate('fecha', $fechaSeleccionada)
             ->orderBy('hora_inicio')
             ->orderBy('actividad')
@@ -33,6 +37,56 @@ class TurnoController extends Controller
             'fechaSeleccionada',
             'cerradoFinDeSemana'
         ));
+    }
+
+    private function generarTurnosProximosDias(): void
+    {
+        $actividades = [
+            'Spinning' => [
+                'profesor' => 'A confirmar',
+                'cupo_maximo' => 20,
+            ],
+            'Pilates' => [
+                'profesor' => 'A confirmar',
+                'cupo_maximo' => 12,
+            ],
+        ];
+
+        $horarios = [
+            ['08:00', '09:00'],
+            ['09:00', '10:00'],
+            ['14:00', '15:00'],
+            ['15:00', '16:00'],
+            ['18:00', '19:00'],
+            ['19:00', '20:00'],
+            ['20:00', '21:00'],
+        ];
+
+        for ($i = 0; $i <= 7; $i++) {
+            $fecha = now()->copy()->addDays($i);
+
+            if ($fecha->isWeekend()) {
+                continue;
+            }
+
+            foreach ($actividades as $actividad => $datos) {
+                foreach ($horarios as [$horaInicio, $horaFin]) {
+                    Turno::firstOrCreate(
+                        [
+                            'actividad' => $actividad,
+                            'fecha' => $fecha->toDateString(),
+                            'hora_inicio' => $horaInicio,
+                        ],
+                        [
+                            'hora_fin' => $horaFin,
+                            'profesor' => $datos['profesor'],
+                            'cupo_maximo' => $datos['cupo_maximo'],
+                            'activo' => true,
+                        ]
+                    );
+                }
+            }
+        }
     }
 
     public function reservar(Turno $turno)
