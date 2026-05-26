@@ -32,9 +32,13 @@
             </div>
 
             {{-- Nombre --}}
-            <h1 class="mt-8 text-white text-2xl sm:text-3xl tracking-[0.20em] font-serif">
-                {{ $splashName }}
-            </h1>
+            <h1 class="mt-8 text-white text-3xl sm:text-4xl font-black tracking-wide">
+    SportGym
+</h1>
+
+<p class="mt-1 text-orange-400 text-sm font-black tracking-[0.35em]">
+    TANDIL
+</p>
 
             <p class="mt-2 text-amber-300 tracking-[0.45em] text-sm font-serif">
                 FITNESS CLUB
@@ -51,7 +55,21 @@
     <div class="splash-bar-power h-full"></div>
 
 </div>
+
+{{-- PESA FITNESS --}}
+<div class="mt-8 dumbbell-wrap">
+
+    <div class="dumbbell">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
     </div>
+
+</div>
+
+</div>
 </div>
 
     {{-- LOGIN --}}
@@ -165,71 +183,127 @@
     animation: splashBar 1.6s linear infinite;
 }
 
-        @keyframes splashLogo {
-            0% {
-                opacity: 0;
-                transform: scale(0.72) rotate(-6deg);
+.dumbbell-wrap {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: dumbbellFloat 2.4s ease-in-out infinite;
+}
+
+.dumbbell {
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    filter:
+        drop-shadow(0 0 8px rgba(249,115,22,0.8))
+        drop-shadow(0 0 20px rgba(249,115,22,0.35));
+}
+
+.dumbbell span:nth-child(1),
+.dumbbell span:nth-child(3) {
+
+    width: 18px;
+    height: 38px;
+
+    border-radius: 6px;
+
+    background:
+        linear-gradient(180deg, #fb923c, #ea580c);
+}
+
+.dumbbell span:nth-child(2) {
+
+    width: 78px;
+    height: 8px;
+
+    border-radius: 9999px;
+
+    background:
+        linear-gradient(90deg, #f97316, #fdba74, #f97316);
+}
+
+@keyframes dumbbellFloat {
+
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+    }
+
+    50% {
+        transform: translateY(-6px) scale(1.06);
+        opacity: 1;
+    }
+}
+
+@keyframes splashLogo {
+    0% {
+        opacity: 0;
+        transform: scale(0.72) rotate(-6deg);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.05) rotate(0deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes splashBreath {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.035);
+    }
+}
+
+@keyframes splashBar {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(240%);
+    }
+}
+</style>
+
+<script>
+    window.addEventListener('load', function () {
+
+        const splash = document.getElementById('app-splash');
+        const loginContent = document.getElementById('login-content');
+
+        setTimeout(function () {
+
+            if (splash) {
+
+                splash.classList.add('opacity-0');
+
+                setTimeout(function () {
+
+                    splash.remove();
+
+                    if (loginContent) {
+                        loginContent.classList.remove('opacity-0');
+                        loginContent.classList.add('opacity-100');
+                    }
+
+                }, 700);
             }
 
-            60% {
-                opacity: 1;
-                transform: scale(1.05) rotate(0deg);
-            }
+        }, 1800);
 
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes splashBreath {
-            0%, 100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.035);
-            }
-        }
-
-        @keyframes splashBar {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(240%);
-            }
-        }
-    </style>
-
-    <script>
-        window.addEventListener('load', function () {
-
-            const splash = document.getElementById('app-splash');
-            const loginContent = document.getElementById('login-content');
-
-            setTimeout(function () {
-
-                if (splash) {
-
-                    splash.classList.add('opacity-0');
-
-                    setTimeout(function () {
-
-                        splash.remove();
-
-                        if (loginContent) {
-                            loginContent.classList.remove('opacity-0');
-                            loginContent.classList.add('opacity-100');
-                        }
-
-                    }, 700);
-                }
-
-            }, 1800);
-
-        });
-    </script>
+    });
+</script>
 
 </x-layouts::auth>
