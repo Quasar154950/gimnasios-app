@@ -18,7 +18,7 @@
 
             <img
                 src="{{ $logo }}"
-                class="h-12 w-12 object-contain"
+                class="h-15 w-15 object-contain"
             />
 
         </x-slot>
