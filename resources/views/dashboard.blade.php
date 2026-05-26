@@ -70,7 +70,7 @@
         <img
             src="{{ asset('images/logo-sportgym.png') }}"
             alt="SportGym"
-            class="h-20 w-20 object-contain drop-shadow-xl"
+            class="h-32 w-32 object-contain drop-shadow-xl"
         >
 
     </div>
