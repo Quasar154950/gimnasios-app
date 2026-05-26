@@ -51,15 +51,32 @@
         {{-- CABECERA --}}
         <div style="border-radius:8px !important;" class="border border-stone-300 p-5 bg-stone-200 shadow-sm font-sans">
 
-            <h1 class="text-2xl font-black text-neutral-800">
-                Panel del Gimnasio
-            </h1>
+            <div class="flex items-center justify-between gap-4">
 
-            <p class="mt-1.5 text-sm text-neutral-600 leading-relaxed">
-                Resumen general de socios, reservas, actividades, asistencias y cuotas.
-            </p>
+    <div>
 
-        </div>
+        <h1 class="text-2xl font-black text-neutral-800">
+            Panel del Gimnasio
+        </h1>
+
+        <p class="mt-1.5 text-sm text-neutral-600 leading-relaxed">
+            Resumen general de socios, reservas, actividades, asistencias y cuotas.
+        </p>
+
+    </div>
+
+    <div class="hidden sm:flex items-center justify-center">
+
+        <img
+            src="{{ asset('images/logo-sportgym.png') }}"
+            alt="SportGym"
+            class="h-20 w-20 object-contain drop-shadow-xl"
+        >
+
+    </div>
+
+</div>
+</div>
 
         {{-- TARJETAS PRINCIPALES --}}
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
