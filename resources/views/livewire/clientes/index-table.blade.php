@@ -75,54 +75,84 @@
                             </td>
 
                             {{-- NOMBRE + BADGES --}}
-                            <td class="p-3 text-sm font-bold text-neutral-800 whitespace-nowrap">
-                                
-                                <div class="flex flex-col gap-1">
+<td class="p-3 text-sm font-bold text-neutral-800 whitespace-nowrap">
+    
+    <div class="flex flex-col gap-1">
 
-                                    <span>
-                                        {{ $cliente->nombre }}
-                                    </span>
+        <span>
+            {{ $cliente->nombre }}
+        </span>
 
-                                    {{-- ESTADO CUOTA --}}
-                                    @if($cliente->fecha_vencimiento_cuota)
+        {{-- ESTADO CUOTA --}}
+        @if($cliente->fecha_vencimiento_cuota)
 
-                                        @php
-                                            $hoy = \Carbon\Carbon::today();
-                                            $vencimiento = \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota);
-                                        @endphp
+            @php
+                $hoy = \Carbon\Carbon::today();
+                $vencimiento = \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota);
+            @endphp
 
-                                        @if($vencimiento->lt($hoy))
+            @if($vencimiento->lt($hoy))
 
-                                            <span class="inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
-                                                🔴 Cuota vencida
-                                            </span>
+                <span class="inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
+                    🔴 Cuota vencida
+                </span>
 
-                                        @elseif($vencimiento->lte($hoy->copy()->addDays(5)))
+            @elseif($vencimiento->lte($hoy->copy()->addDays(5)))
 
-                                            <span class="inline-flex w-fit items-center rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-bold text-yellow-700">
-                                                🟡 Próxima a vencer
-                                            </span>
+                <span class="inline-flex w-fit items-center rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-bold text-yellow-700">
+                    🟡 Próxima a vencer
+                </span>
 
-                                        @else
+            @else
 
-                                            <span class="inline-flex w-fit items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
-                                                🟢 Cuota al día
-                                            </span>
+                <span class="inline-flex w-fit items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                    🟢 Cuota al día
+                </span>
 
-                                        @endif
+            @endif
 
-                                    @endif
+        @endif
 
-                                    {{-- MENSAJES --}}
-                                    @if($cliente->mensajes_no_leidos_count > 0)
-                                        <span class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-                                            💬 Nuevo mensaje
-                                        </span>
-                                    @endif
+        {{-- CUENTA ACTIVADA --}}
+        @if($cliente->user_id)
 
-                                </div>
+            <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                ✅ Cuenta activada
+            </span>
 
-                            </td>
+        @else
+
+            <span class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700">
+                ⏳ Sin activar
+            </span>
+
+        @endif
+
+        {{-- MENSAJES --}}
+        @if($cliente->mensajes_no_leidos_count > 0)
+            <span class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
+                💬 Nuevo mensaje
+            </span>
+        @endif
+
+    </div>
+
+</td>
+                            
+                            {{-- CUENTA ACTIVADA --}}
+@if($cliente->user_id)
+
+    <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+        ✅ Cuenta activada
+    </span>
+
+@else
+
+    <span class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700">
+        ⏳ Sin activar
+    </span>
+
+@endif
 
                             {{-- TELÉFONO --}}
                             <td class="p-3 text-sm text-neutral-600 font-medium">
