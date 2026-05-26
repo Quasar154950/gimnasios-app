@@ -44,11 +44,11 @@ class TurnoController extends Controller
         $actividades = [
             'Spinning' => [
                 'profesor' => 'A confirmar',
-                'cupo_maximo' => 20,
+                'cupo_maximo' => 10,
             ],
             'Pilates' => [
                 'profesor' => 'A confirmar',
-                'cupo_maximo' => 12,
+                'cupo_maximo' => 10,
             ],
         ];
 
