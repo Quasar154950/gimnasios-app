@@ -1,14 +1,13 @@
 <x-layouts::auth :title="__('Acceso al sistema')">
 
     @php
-        $splashImage = match($userEstudio->slug_estudio ?? null) {
-            'demo' => 'images/splash-demo.png',
-            'vairo' => 'images/splash-vairo.png',
-            default => $userEstudio->logo_estudio ?: 'images/logo.png',
-        };
+    $splashImage = match($userEstudio->slug_estudio ?? null) {
+        'demo' => 'images/splash-sportgym.png',
+        default => 'images/splash-sportgym.png',
+    };
 
-        $splashName = strtoupper($userEstudio->name ?? $userEstudio->nombre_estudio ?? 'ESTUDIO JURÍDICO');
-    @endphp
+    $splashName = strtoupper($userEstudio->nombre_estudio ?? 'SPORTGYM TANDIL');
+@endphp
 
     {{-- SPLASH PWA / APP --}}
     <div 
@@ -38,7 +37,7 @@
             </h1>
 
             <p class="mt-2 text-amber-300 tracking-[0.45em] text-sm font-serif">
-                ABOGADA
+                FITNESS CLUB
             </p>
 
             {{-- Texto carga --}}
@@ -59,7 +58,7 @@
         {{-- LOGO DEL ESTUDIO --}}
         <div class="flex justify-center">
             <img 
-                src="{{ asset($userEstudio->logo_estudio ?: 'images/logo.png') }}" 
+                src="{{ asset('images/logo-sportgym.png') }}" 
                 alt="Logo" 
                 style="height: 100px; width: auto;"
             >
