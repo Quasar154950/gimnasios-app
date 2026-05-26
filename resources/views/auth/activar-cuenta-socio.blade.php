@@ -1,4 +1,4 @@
-<x-layouts::app>
+<x-layouts::auth :title="__('Activar mi cuenta')">
 
     <div class="max-w-md mx-auto mt-10">
 
@@ -93,4 +93,4 @@
 
     </div>
 
-</x-layouts::app>
+</x-layouts::auth>
