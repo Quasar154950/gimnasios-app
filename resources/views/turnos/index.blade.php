@@ -70,9 +70,29 @@
 
                 <button
                     type="submit"
-                    style="background:black;color:white;border-radius:14px;padding:10px 18px;font-size:14px;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;border:none;"
-                >
-                    Ver actividades
+                    
+                    onclick="
+                     this.disabled = true;
+                     this.innerHTML = '⏳ Cargando actividades...';
+                     this.style.opacity = '0.75';
+                     this.form.submit();
+    "
+
+    style="
+        background:black;
+        color:white;
+        border-radius:14px;
+        padding:10px 18px;
+        font-size:14px;
+        font-weight:bold;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        border:none;
+        transition:0.2s;
+    "
+>
+                Ver actividades
                 </button>
 
             </form>
