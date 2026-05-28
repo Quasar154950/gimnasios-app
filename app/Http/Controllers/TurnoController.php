@@ -140,7 +140,7 @@ class TurnoController extends Controller
             'estado' => 'reservado',
         ]);
 
-        return back()->with('success', 'Turno reservado correctamente.');
+        return back()->with('success', 'Turno reservado correctamente VERSION NUEVA.');
     }
 
     public function cancelarReserva(ReservaTurno $reserva)
