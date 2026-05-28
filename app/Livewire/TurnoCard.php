@@ -72,7 +72,7 @@ class TurnoCard extends Component
 
         $this->turno->refresh()->load('reservas.cliente');
 
-        $this->mensajeOk = 'Turno reservado correctamente.';
+        $this->mensajeOk = null;
     }
 
     public function cancelar($reservaId)
@@ -101,7 +101,8 @@ class TurnoCard extends Component
 
         $this->turno->refresh()->load('reservas.cliente');
 
-        $this->mensajeOk = 'Reserva cancelada correctamente.';
+        $this->mensajeOk = null;
+        $this->mensajeError = null;
     }
 
     public function render()
