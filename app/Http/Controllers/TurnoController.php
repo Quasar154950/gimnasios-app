@@ -97,35 +97,36 @@ class TurnoController extends Controller
             return back()->with('error', 'No existe cliente asociado.');
         }
 
-        $existe = ReservaTurno::where('cliente_id', $cliente->id)
-            ->where('turno_id', $turno->id)
-            ->exists();
-
-        if ($existe) {
-            return back()->with('error', 'Ya tienes reservado este turno.');
-        }
-
-        $yaReservoMismaActividadEseDia = ReservaTurno::where('cliente_id', $cliente->id)
+        $reservasDelDia = ReservaTurno::with('turno')
+            ->where('cliente_id', $cliente->id)
             ->whereHas('turno', function ($query) use ($turno) {
-                $query->whereDate('fecha', $turno->fecha)
-                    ->where('actividad', $turno->actividad);
+                $query->where('fecha', $turno->fecha);
             })
-            ->exists();
+            ->get();
 
-        if ($yaReservoMismaActividadEseDia) {
-            return back()->with('error', 'Ya tienes una reserva de ' . $turno->actividad . ' para este día.');
-        }
+        foreach ($reservasDelDia as $reserva) {
 
-        $horarioSuperpuesto = ReservaTurno::where('cliente_id', $cliente->id)
-            ->whereHas('turno', function ($query) use ($turno) {
-                $query->whereDate('fecha', $turno->fecha)
-                    ->where('hora_inicio', '<', $turno->hora_fin)
-                    ->where('hora_fin', '>', $turno->hora_inicio);
-            })
-            ->exists();
+            if (!$reserva->turno) {
+                continue;
+            }
 
-        if ($horarioSuperpuesto) {
-            return back()->with('error', 'Ya tienes otra reserva en un horario que se superpone.');
+            // MISMO TURNO
+            if ($reserva->turno_id === $turno->id) {
+                return back()->with('error', 'Ya tienes reservado este turno.');
+            }
+
+            // MISMA ACTIVIDAD EL MISMO DÍA
+            if ($reserva->turno->actividad === $turno->actividad) {
+                return back()->with('error', 'Ya tienes una reserva de ' . $turno->actividad . ' para este día.');
+            }
+
+            // HORARIO SUPERPUESTO
+            if (
+                $reserva->turno->hora_inicio < $turno->hora_fin &&
+                $reserva->turno->hora_fin > $turno->hora_inicio
+            ) {
+                return back()->with('error', 'Ya tienes otra reserva en un horario que se superpone.');
+            }
         }
 
         $reservados = $turno->reservas()->count();
@@ -140,7 +141,7 @@ class TurnoController extends Controller
             'estado' => 'reservado',
         ]);
 
-        return back()->with('success', 'Turno reservado correctamente VERSION NUEVA.');
+        return back()->with('success', 'Turno reservado correctamente VERSION CONTROL DIARIO.');
     }
 
     public function cancelarReserva(ReservaTurno $reserva)
