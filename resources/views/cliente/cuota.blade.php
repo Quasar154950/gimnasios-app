@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-zinc-100">
+<body class="bg-zinc-950">
 
     @php
 
@@ -173,7 +173,7 @@
                 <a
                     href="https://wa.me/"
                     target="_blank"
-                    class="mt-5 inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white hover:bg-orange-600 transition"
+                    class="mt-5 inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-sm font-bold text-white hover:bg-zinc-800 transition"
                 >
 
                     <img
@@ -192,7 +192,7 @@
 
                 <a
                     href="{{ route('cliente.dashboard') }}"
-                    class="inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-sm font-bold text-white hover:bg-zinc-800 transition"
+                    class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white hover:bg-orange-600 transition"
                 >
                     ← Volver al panel
                 </a>
