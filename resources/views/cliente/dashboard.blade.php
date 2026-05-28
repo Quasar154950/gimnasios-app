@@ -76,7 +76,7 @@
 
         <div>
 
-            <h1 class="text-2xl font-bold text-zinc-800 mb-2">
+            <h1 class="text-lg sm:text-2xl font-bold text-zinc-800 mb-2 leading-tight">
                 👋 Bienvenido, {{ $cliente ? $cliente->nombre : auth()->user()->name }}
             </h1>
 
@@ -86,12 +86,12 @@
 
         </div>
 
-        <div class="hidden sm:flex items-center justify-center">
+        <div class="flex items-center justify-center flex-shrink-0">
 
             <img
                 src="{{ asset('images/logo-sportgym.png') }}"
                 alt="SportGym"
-                class="h-24 w-24 object-contain drop-shadow-xl"
+                class="h-16 w-16 sm:h-24 sm:w-24 object-contain drop-shadow-xl"
             >
 
         </div>
