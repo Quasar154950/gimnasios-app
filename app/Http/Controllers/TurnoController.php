@@ -105,6 +105,29 @@ class TurnoController extends Controller
             return back()->with('error', 'Ya tienes reservado este turno.');
         }
 
+        $yaReservoMismaActividadEseDia = ReservaTurno::where('cliente_id', $cliente->id)
+            ->whereHas('turno', function ($query) use ($turno) {
+                $query->whereDate('fecha', $turno->fecha)
+                    ->where('actividad', $turno->actividad);
+            })
+            ->exists();
+
+        if ($yaReservoMismaActividadEseDia) {
+            return back()->with('error', 'Ya tienes una reserva de ' . $turno->actividad . ' para este día.');
+        }
+
+        $horarioSuperpuesto = ReservaTurno::where('cliente_id', $cliente->id)
+            ->whereHas('turno', function ($query) use ($turno) {
+                $query->whereDate('fecha', $turno->fecha)
+                    ->where('hora_inicio', '<', $turno->hora_fin)
+                    ->where('hora_fin', '>', $turno->hora_inicio);
+            })
+            ->exists();
+
+        if ($horarioSuperpuesto) {
+            return back()->with('error', 'Ya tienes otra reserva en un horario que se superpone.');
+        }
+
         $reservados = $turno->reservas()->count();
 
         if ($reservados >= $turno->cupo_maximo) {
