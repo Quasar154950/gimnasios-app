@@ -19,6 +19,23 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
 Route::redirect('/', '/estudio/demo')->name('home');
+Route::get('/app', function () {
+
+    if (auth()->check()) {
+
+        if (auth()->user()->role === 'cliente') {
+            return redirect()->route('cliente.dashboard');
+        }
+
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+    }
+
+    return redirect()->route('login.estudio', ['slug' => 'demo']);
+
+})->name('app.start');
+
 
 Route::get('/activar-cuenta', [ActivarCuentaSocioController::class, 'show'])
     ->name('activar-cuenta-socio.show');

@@ -1,5 +1,9 @@
 {
   "appId": "com.mctandil.gimnasios",
-  "appName": "MCTandil Gimnasios",
-  "webDir": "dist"
+  "appName": "SportGym",
+  "webDir": "www",
+  "server": {
+    "url": "https://app-abogados-production.up.railway.app/app",
+    "cleartext": false
+  }
 }
