@@ -6,23 +6,35 @@ use Livewire\Component;
 use App\Models\Turno;
 use App\Models\Cliente;
 use App\Models\ReservaTurno;
+use Carbon\Carbon;
 
 class TurnoCard extends Component
 {
     public Turno $turno;
 
-    public ?string $mensajeOk = null;
     public ?string $mensajeError = null;
+
+    protected $listeners = [
+        'turnosActualizados' => '$refresh',
+    ];
 
     public function reservar()
     {
-        $this->mensajeOk = null;
         $this->mensajeError = null;
+
+        $this->turno = Turno::find($this->turno->id);
 
         $cliente = Cliente::where('user_id', auth()->id())->first();
 
         if (!$cliente) {
             $this->mensajeError = 'No existe socio asociado.';
+            return;
+        }
+
+        $inicioTurno = Carbon::parse($this->turno->fecha . ' ' . $this->turno->hora_inicio);
+
+        if ($inicioTurno->isPast()) {
+            $this->mensajeError = 'Este turno ya comenzó o ya pasó.';
             return;
         }
 
@@ -39,7 +51,7 @@ class TurnoCard extends Component
             }
 
             if ($reserva->turno_id === $this->turno->id) {
-                $this->mensajeError = 'Ya reservaste este turno.';
+                $this->mensajeError = 'Ya tenés reservado este turno.';
                 return;
             }
 
@@ -70,14 +82,13 @@ class TurnoCard extends Component
             'estado' => 'reservado',
         ]);
 
-        $this->turno->refresh()->load('reservas.cliente');
+        $this->mensajeError = null;
 
-        $this->mensajeOk = null;
+        $this->dispatch('turnosActualizados');
     }
 
     public function cancelar($reservaId)
     {
-        $this->mensajeOk = null;
         $this->mensajeError = null;
 
         $cliente = Cliente::where('user_id', auth()->id())->first();
@@ -99,15 +110,14 @@ class TurnoCard extends Component
 
         $reserva->delete();
 
-        $this->turno->refresh()->load('reservas.cliente');
-
-        $this->mensajeOk = null;
         $this->mensajeError = null;
+
+        $this->dispatch('turnosActualizados');
     }
 
     public function render()
     {
-        $this->turno->load('reservas.cliente');
+        $this->turno = Turno::with('reservas.cliente')->find($this->turno->id);
 
         $cliente = Cliente::where('user_id', auth()->id())->first();
 
@@ -123,11 +133,15 @@ class TurnoCard extends Component
         $disponibles = max($this->turno->cupo_maximo - $reservados, 0);
         $completo = $disponibles <= 0;
 
+        $inicioTurno = Carbon::parse($this->turno->fecha . ' ' . $this->turno->hora_inicio);
+        $turnoPasado = $inicioTurno->isPast();
+
         return view('livewire.turno-card', compact(
             'reservados',
             'disponibles',
             'completo',
-            'miReserva'
+            'miReserva',
+            'turnoPasado'
         ));
     }
 }

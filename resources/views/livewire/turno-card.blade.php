@@ -14,17 +14,29 @@
         </div>
 
         @if($miReserva)
+
             <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
                 ✅ Reservado
             </span>
+
+        @elseif($turnoPasado)
+
+            <span class="inline-flex items-center rounded-full bg-neutral-200 px-2 py-1 text-[10px] font-black text-neutral-700">
+                ⏰ Finalizado
+            </span>
+
         @elseif($completo)
+
             <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
                 ❌ Completo
             </span>
+
         @else
+
             <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
                 ✅ Disponible
             </span>
+
         @endif
 
     </div>
@@ -33,6 +45,7 @@
 
         <div style="border-radius:8px !important;"
              class="bg-stone-100 p-3 border border-stone-300">
+
             <div class="text-xs text-neutral-500">
                 Horario
             </div>
@@ -42,12 +55,14 @@
                 -
                 {{ \Carbon\Carbon::parse($turno->hora_fin)->format('H:i') }}
             </div>
+
         </div>
 
         <div class="grid grid-cols-3 gap-2">
 
             <div style="border-radius:8px !important;"
                  class="bg-stone-100 p-3 text-center border border-stone-300">
+
                 <div class="text-[10px] uppercase font-black text-neutral-500">
                     Cupos
                 </div>
@@ -55,10 +70,12 @@
                 <div class="mt-1 font-black text-neutral-800">
                     {{ $turno->cupo_maximo }}
                 </div>
+
             </div>
 
             <div style="border-radius:8px !important;"
                  class="bg-stone-100 p-3 text-center border border-stone-300">
+
                 <div class="text-[9px] uppercase font-black text-neutral-500">
                     Reservados
                 </div>
@@ -66,10 +83,12 @@
                 <div class="mt-1 font-black text-orange-600 transition-all duration-300">
                     {{ $reservados }}
                 </div>
+
             </div>
 
             <div style="border-radius:8px !important;"
                  class="bg-stone-100 p-3 text-center border border-stone-300">
+
                 <div class="text-[10px] uppercase font-black text-neutral-500">
                     Libres
                 </div>
@@ -77,22 +96,19 @@
                 <div class="mt-1 font-black text-green-700 transition-all duration-300">
                     {{ $disponibles }}
                 </div>
+
             </div>
 
         </div>
 
     </div>
 
-    @if($mensajeOk)
-        <div class="mt-4 rounded-xl bg-green-100 border border-green-300 text-green-700 px-3 py-2 text-xs font-bold">
-            ✅ {{ $mensajeOk }}
-        </div>
-    @endif
-
     @if($mensajeError)
+
         <div class="mt-4 rounded-xl bg-red-100 border border-red-300 text-red-700 px-3 py-2 text-xs font-bold">
             ❌ {{ $mensajeError }}
         </div>
+
     @endif
 
     <div class="mt-5">
@@ -103,7 +119,9 @@
 
                 <div style="border-radius:8px !important;"
                      class="mb-3 bg-green-100 border border-green-300 text-green-700 px-3 py-2 text-xs font-black text-center">
+
                     ✅ Ya tenés reservado este turno
+
                 </div>
 
                 <button
@@ -113,6 +131,7 @@
                     style="background:black;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;transition:0.2s;"
                     class="hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                 >
+
                     <span wire:loading.remove wire:target="cancelar">
                         Cancelar reserva
                     </span>
@@ -120,6 +139,17 @@
                     <span wire:loading wire:target="cancelar">
                         ⏳ Cancelando...
                     </span>
+
+                </button>
+
+            @elseif($turnoPasado)
+
+                <button
+                    disabled
+                    style="border-radius:8px !important;"
+                    class="w-full bg-neutral-400 px-4 py-2 text-sm font-bold text-white cursor-not-allowed"
+                >
+                    ⏰ Turno finalizado
                 </button>
 
             @elseif($completo)
@@ -141,6 +171,7 @@
                     style="background:#f97316;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;transition:0.2s;"
                     class="hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                 >
+
                     <span wire:loading.remove wire:target="reservar">
                         Reservar actividad
                     </span>
@@ -148,6 +179,7 @@
                     <span wire:loading wire:target="reservar">
                         ⏳ Reservando...
                     </span>
+
                 </button>
 
             @endif
@@ -156,7 +188,9 @@
 
             <div style="border-radius:8px !important;"
                  class="bg-stone-100 px-4 py-3 text-sm text-zinc-600 text-center font-bold border border-stone-300">
+
                 👨‍💼 Vista administrativa de reservas
+
             </div>
 
         @endif
