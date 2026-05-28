@@ -14,11 +14,22 @@ class CheckRole
     public function handle(Request $request, Closure $next, $role): Response
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return redirect()->route('login.estudio', [
+                'slug' => session('slug_estudio', 'demo')
+            ]);
         }
 
         if (auth()->user()->role !== $role) {
-            abort(403);
+
+            if (auth()->user()->role === 'cliente') {
+                return redirect()->route('cliente.dashboard');
+            }
+
+            if (auth()->user()->role === 'abogado') {
+                return redirect()->route('dashboard');
+            }
+
+            return redirect()->route('app.start');
         }
 
         return $next($request);
