@@ -46,20 +46,24 @@ class TurnoCard extends Component
             ->get();
 
         foreach ($reservasDelDia as $reserva) {
+
             if (!$reserva->turno) {
                 continue;
             }
 
+            // MISMO TURNO
             if ($reserva->turno_id === $this->turno->id) {
                 $this->mensajeError = 'Ya tenés reservado este turno.';
                 return;
             }
 
+            // MISMA ACTIVIDAD EL MISMO DÍA
             if ($reserva->turno->actividad === $this->turno->actividad) {
                 $this->mensajeError = 'Ya tenés una reserva de ' . $this->turno->actividad . ' para este día.';
                 return;
             }
 
+            // HORARIO SUPERPUESTO
             if (
                 $reserva->turno->hora_inicio < $this->turno->hora_fin &&
                 $reserva->turno->hora_fin > $this->turno->hora_inicio
@@ -134,14 +138,19 @@ class TurnoCard extends Component
         $completo = $disponibles <= 0;
 
         $inicioTurno = Carbon::parse($this->turno->fecha . ' ' . $this->turno->hora_inicio);
-        $turnoPasado = $inicioTurno->isPast();
+        $finTurno = Carbon::parse($this->turno->fecha . ' ' . $this->turno->hora_fin);
+        $ahora = now();
+
+        $turnoEnCurso = $ahora->between($inicioTurno, $finTurno);
+        $turnoPasado = $finTurno->isPast();
 
         return view('livewire.turno-card', compact(
             'reservados',
             'disponibles',
             'completo',
             'miReserva',
-            'turnoPasado'
+            'turnoPasado',
+            'turnoEnCurso'
         ));
     }
 }
