@@ -90,6 +90,7 @@
         justify-content:center;
         border:none;
         transition:0.2s;
+        cursor:pointer;
     "
 >
                 Ver actividades

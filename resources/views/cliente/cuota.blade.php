@@ -175,6 +175,13 @@
                     target="_blank"
                     class="mt-5 inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white hover:bg-orange-600 transition"
                 >
+
+                    <img
+                      src="{{ asset('images/whatsapp.png') }}"
+                      alt="WhatsApp"
+                      class="h-5 w-5 object-contain"
+                    >
+
                     WhatsApp administración
                 </a>
 

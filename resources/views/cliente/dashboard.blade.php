@@ -394,7 +394,7 @@
                                         <button
                                             type="submit"
                                             onclick="return confirm('¿Cancelar esta reserva?')"
-                                            class="rounded-xl bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700 transition"
+                                            class="rounded-xl bg-black px-3 py-2 text-xs font-bold text-white hover:bg-orange-500 transition cursor-pointer"
                                         >
                                             Cancelar reserva
                                         </button>

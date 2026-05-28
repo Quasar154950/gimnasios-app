@@ -112,7 +112,7 @@
                     wire:loading.attr="disabled"
                     wire:target="reservar"
                     style="background:#f97316;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;transition:0.2s;"
-                    class="hover:scale-[1.01] active:scale-[0.99]"
+                    class="hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                 >
                     <span wire:loading.remove wire:target="reservar">
                         Reservar actividad
