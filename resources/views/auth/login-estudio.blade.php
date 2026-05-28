@@ -32,9 +32,17 @@
             </div>
 
             {{-- Nombre --}}
-            <h1 class="mt-8 text-white text-3xl sm:text-4xl font-black tracking-wide">
-    SportGym
-</h1>
+            <h1 class="mt-8 text-3xl sm:text-4xl font-black tracking-wide">
+              
+               <span class="text-stone-100">
+                  Sport
+               </span>
+
+               <span class="text-orange-500">
+                  Gym
+               </span>
+
+        </h1>
 
 <p class="mt-1 text-orange-400 text-sm font-black tracking-[0.35em]">
     TANDIL
