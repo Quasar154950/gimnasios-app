@@ -13,17 +13,17 @@
             </p>
         </div>
 
-        @if($miReserva)
-            <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
-                ✅ Reservado
-            </span>
-        @elseif($turnoEnCurso)
+        @if($turnoEnCurso)
             <span class="inline-flex items-center rounded-full bg-orange-100 px-2 py-1 text-[10px] font-black text-orange-700">
                 🟠 En curso
             </span>
         @elseif($turnoPasado)
             <span class="inline-flex items-center rounded-full bg-neutral-200 px-2 py-1 text-[10px] font-black text-neutral-700">
                 ⏰ Finalizado
+            </span>
+        @elseif($miReserva)
+            <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
+                ✅ Reservado
             </span>
         @elseif($completo)
             <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
@@ -103,25 +103,7 @@
 
         @if(auth()->user()->role === 'cliente')
 
-            @if($miReserva)
-
-                <button
-                    wire:click="cancelar({{ $miReserva->id }})"
-                    wire:loading.attr="disabled"
-                    wire:target="cancelar"
-                    style="background:black;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;transition:0.2s;"
-                    class="hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
-                >
-                    <span wire:loading.remove wire:target="cancelar">
-                        Cancelar reserva
-                    </span>
-
-                    <span wire:loading wire:target="cancelar">
-                        ⏳ Cancelando...
-                    </span>
-                </button>
-
-            @elseif($turnoEnCurso)
+            @if($turnoEnCurso)
 
                 <button
                     disabled
@@ -139,6 +121,24 @@
                     class="w-full bg-neutral-400 px-4 py-2 text-sm font-bold text-white cursor-not-allowed"
                 >
                     ⏰ Turno finalizado
+                </button>
+
+            @elseif($miReserva)
+
+                <button
+                    wire:click="cancelar({{ $miReserva->id }})"
+                    wire:loading.attr="disabled"
+                    wire:target="cancelar"
+                    style="background:black;color:white;border-radius:18px;padding:10px 16px;font-size:14px;font-weight:bold;width:100%;transition:0.2s;"
+                    class="hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                >
+                    <span wire:loading.remove wire:target="cancelar">
+                        Cancelar reserva
+                    </span>
+
+                    <span wire:loading wire:target="cancelar">
+                        ⏳ Cancelando...
+                    </span>
                 </button>
 
             @elseif($completo)
