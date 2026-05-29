@@ -138,7 +138,7 @@
 
             </div>
 
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
 
                 <div style="border-radius:8px !important;"
                      class="bg-stone-100 p-4 border border-stone-300">

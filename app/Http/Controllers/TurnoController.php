@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Turno;
 use App\Models\Cliente;
 use App\Models\ReservaTurno;
+use App\Models\Asistencia;
 use Carbon\Carbon;
 
 class TurnoController extends Controller
@@ -24,18 +25,24 @@ class TurnoController extends Controller
             ->orderBy('actividad')
             ->get();
 
+        $presentesAhora = Asistencia::where('presente', true)
+            ->whereNull('hora_salida')
+            ->count();
+
         if (auth()->user()->role === 'cliente') {
             return view('turnos.index', compact(
                 'turnos',
                 'fechaSeleccionada',
-                'cerradoFinDeSemana'
+                'cerradoFinDeSemana',
+                'presentesAhora'
             ));
         }
 
         return view('turnos.admin', compact(
             'turnos',
             'fechaSeleccionada',
-            'cerradoFinDeSemana'
+            'cerradoFinDeSemana',
+            'presentesAhora'
         ));
     }
 
@@ -105,29 +112,6 @@ class TurnoController extends Controller
             return back()->with('error', 'Ya tienes reservado este turno.');
         }
 
-        $yaReservoMismaActividadEseDia = ReservaTurno::where('cliente_id', $cliente->id)
-            ->whereHas('turno', function ($query) use ($turno) {
-                $query->whereDate('fecha', $turno->fecha)
-                    ->where('actividad', $turno->actividad);
-            })
-            ->exists();
-
-        if ($yaReservoMismaActividadEseDia) {
-            return back()->with('error', 'Ya tienes una reserva de ' . $turno->actividad . ' para este día.');
-        }
-
-        $horarioSuperpuesto = ReservaTurno::where('cliente_id', $cliente->id)
-            ->whereHas('turno', function ($query) use ($turno) {
-                $query->whereDate('fecha', $turno->fecha)
-                    ->where('hora_inicio', '<', $turno->hora_fin)
-                    ->where('hora_fin', '>', $turno->hora_inicio);
-            })
-            ->exists();
-
-        if ($horarioSuperpuesto) {
-            return back()->with('error', 'Ya tienes otra reserva en un horario que se superpone.');
-        }
-
         $reservados = $turno->reservas()->count();
 
         if ($reservados >= $turno->cupo_maximo) {
@@ -148,7 +132,7 @@ class TurnoController extends Controller
         $cliente = Cliente::where('user_id', auth()->id())->first();
 
         if (!$cliente || $reserva->cliente_id !== $cliente->id) {
-            abort(403);
+            return redirect()->route('cliente.dashboard');
         }
 
         $reserva->delete();
