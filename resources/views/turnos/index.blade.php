@@ -70,30 +70,30 @@
 
                 <button
                     type="submit"
-                    
+
                     onclick="
                      this.disabled = true;
                      this.innerHTML = '⏳ Cargando actividades...';
                      this.style.opacity = '0.75';
                      this.form.submit();
-    "
+                    "
 
-    style="
-        background:black;
-        color:white;
-        border-radius:14px;
-        padding:10px 18px;
-        font-size:14px;
-        font-weight:bold;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        border:none;
-        transition:0.2s;
-        cursor:pointer;
-    "
->
-                Ver actividades
+                    style="
+                        background:black;
+                        color:white;
+                        border-radius:14px;
+                        padding:10px 18px;
+                        font-size:14px;
+                        font-weight:bold;
+                        display:inline-flex;
+                        align-items:center;
+                        justify-content:center;
+                        border:none;
+                        transition:0.2s;
+                        cursor:pointer;
+                    "
+                >
+                    Ver actividades
                 </button>
 
             </form>
@@ -101,101 +101,118 @@
         </div>
 
         {{-- FIN DE SEMANA --}}
-@if(\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
+        @if(\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
 
-    <div style="border-radius:8px !important;"
-         class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
+            <div style="border-radius:8px !important;"
+                 class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
 
-        🏖️ Gimnasio cerrado. No hay actividades disponibles sábados y domingos.
-
-    </div>
-
-@endif
-
-@if(!\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
-
-        {{-- MUSCULACIÓN --}}
-        <div style="border-radius:8px !important;"
-             class="border border-stone-300 bg-stone-200 shadow-sm p-5">
-
-            <div class="flex items-center justify-between gap-3">
-
-                <div>
-
-                    <h2 class="text-xl font-black text-neutral-800">
-                        🏋️ Musculación
-                    </h2>
-
-                    <p class="text-sm text-neutral-600 mt-1">
-                        Acceso libre sin reserva previa.
-                    </p>
-
-                </div>
-
-                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                    🟢 Libre
-                </span>
+                🏖️ Gimnasio cerrado. No hay actividades disponibles sábados y domingos.
 
             </div>
-
-            <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
-
-                <div style="border-radius:8px !important;"
-                     class="bg-stone-100 p-4 border border-stone-300">
-
-                    <p class="text-sm text-zinc-500">
-                        Horario
-                    </p>
-
-                    <p class="font-black text-zinc-800 mt-1">
-                        🕒 06:00 a 23:00
-                    </p>
-
-                </div>
-
-                <div style="border-radius:8px !important;"
-                     class="bg-stone-100 p-4 border border-stone-300">
-
-                    <p class="text-sm text-zinc-500">
-                        Modalidad
-                    </p>
-
-                    <p class="font-black text-zinc-800 mt-1">
-                        🔓 Libre
-                    </p>
-
-                </div>
-
-                <div style="border-radius:8px !important;"
-                     class="bg-stone-100 p-4 border border-stone-300">
-
-                    <p class="text-sm text-zinc-500">
-                        Disponibilidad
-                    </p>
-
-                    <p class="font-black text-green-700 mt-1">
-                        🟢 Disponible
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-      
-
-        {{-- LISTADO DE ACTIVIDADES --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-
-            @foreach($turnos as $turno)
-
-                <livewire:turno-card :turno="$turno" :key="'turno-card-'.$turno->id" />
-            @endforeach
-
-        </div>
 
         @endif
-        
+
+        @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
+
+            {{-- MUSCULACIÓN --}}
+            <div style="border-radius:8px !important;"
+                 class="border border-stone-300 bg-stone-200 shadow-sm p-5">
+
+                <div class="flex items-center justify-between gap-3">
+
+                    <div>
+
+                        <h2 class="text-xl font-black text-neutral-800">
+                            🏋️ Musculación
+                        </h2>
+
+                        <p class="text-sm text-neutral-600 mt-1">
+                            Acceso libre sin reserva previa.
+                        </p>
+
+                    </div>
+
+                    <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                        🟢 Libre
+                    </span>
+
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                    {{-- HORARIO --}}
+                    <div style="border-radius:8px !important;"
+                         class="bg-stone-100 p-4 border border-stone-300">
+
+                        <p class="text-sm text-zinc-500">
+                            Horario
+                        </p>
+
+                        <p class="font-black text-zinc-800 mt-1">
+                            🕒 06:00 a 23:00
+                        </p>
+
+                    </div>
+
+                    {{-- MODALIDAD --}}
+                    <div style="border-radius:8px !important;"
+                         class="bg-stone-100 p-4 border border-stone-300">
+
+                        <p class="text-sm text-zinc-500">
+                            Modalidad
+                        </p>
+
+                        <p class="font-black text-zinc-800 mt-1">
+                            🔓 Libre
+                        </p>
+
+                    </div>
+
+                    {{-- DISPONIBILIDAD --}}
+                    <div style="border-radius:8px !important;"
+                         class="bg-stone-100 p-4 border border-stone-300">
+
+                        <p class="text-sm text-zinc-500">
+                            Disponibilidad
+                        </p>
+
+                        <p class="font-black text-green-700 mt-1">
+                            🟢 Disponible
+                        </p>
+
+                    </div>
+
+                    {{-- PRESENTES --}}
+                    <div style="border-radius:8px !important;"
+                         class="bg-orange-100 p-4 border border-orange-300">
+
+                        <p class="text-sm text-orange-700 font-bold">
+                            Presentes ahora
+                        </p>
+
+                        <p class="font-black text-orange-700 mt-1 text-lg">
+                            👥 {{ $presentesAhora ?? 0 }} socios
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {{-- LISTADO DE ACTIVIDADES --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                @foreach($turnos as $turno)
+
+                    <livewire:turno-card :turno="$turno" :key="'turno-card-'.$turno->id" />
+
+                @endforeach
+
+            </div>
+
+        @endif
+
     </div>
 
 </x-layouts::app>
