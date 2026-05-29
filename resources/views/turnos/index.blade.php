@@ -101,7 +101,7 @@
         </div>
 
         {{-- FIN DE SEMANA --}}
-        @if(\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
+        @if(\Carbon\Carbon::parse($fechaSeleccionada)->isSunday())
 
             <div style="border-radius:8px !important;"
                  class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
@@ -112,7 +112,7 @@
 
         @endif
 
-        @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isWeekend())
+        @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isSunday())
 
             {{-- MUSCULACIÓN --}}
             <div style="border-radius:8px !important;"
@@ -199,20 +199,25 @@
                 </div>
 
             </div>
+            
+                @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isSaturday())
 
-            {{-- LISTADO DE ACTIVIDADES --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    {{-- LISTADO DE ACTIVIDADES --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
 
-                @foreach($turnos as $turno)
+        @foreach($turnos as $turno)
 
-                    <livewire:turno-card :turno="$turno" :key="'turno-card-'.$turno->id" />
+            <livewire:turno-card :turno="$turno" :key="'turno-card-'.$turno->id" />
 
-                @endforeach
-
-            </div>
-
-        @endif
+        @endforeach
 
     </div>
+
+@endif
+
+{{-- Cierra el bloque de NO DOMINGO --}}
+@endif
+
+</div>
 
 </x-layouts::app>
