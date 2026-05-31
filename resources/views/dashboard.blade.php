@@ -67,11 +67,23 @@
 
     <div class="hidden sm:flex items-center justify-center">
 
-        <img
-            src="{{ asset('images/logo-sportgym.png') }}"
-            alt="SportGym"
-            class="h-32 w-32 object-contain drop-shadow-xl"
-        >
+        @php
+    $esDemoGym = (auth()->user()->slug_estudio ?? null) === 'demo';
+
+    $logoDashboard = $esDemoGym
+        ? asset('images/logo-demogym.png')
+        : asset('images/logo-sportgym.png');
+
+    $nombreGym = $esDemoGym
+        ? 'DemoGym'
+        : 'SportGym';
+@endphp
+
+<img
+    src="{{ $logoDashboard }}"
+    alt="{{ $nombreGym }}"
+    class="h-32 w-32 object-contain drop-shadow-xl"
+>
 
     </div>
 

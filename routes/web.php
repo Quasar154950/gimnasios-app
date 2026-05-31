@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
 Route::redirect('/', '/estudio/demo')->name('home');
+
 Route::get('/app', function () {
 
     if (auth()->check()) {

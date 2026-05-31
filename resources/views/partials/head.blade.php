@@ -10,17 +10,17 @@
 
     $manifest = match($slug) {
         'demo' => '/manifest-demo.json',
-        'vairo' => '/manifest-vairo.json',
-        default => '/manifest.json',
+        'sportgym' => '/manifest-sportgym.json',
+        default => '/manifest-sportgym.json',
     };
 
     $logo = auth()->check()
-        ? asset(auth()->user()->logo_estudio ?? 'images/logo.png')
-        : asset('images/logo.png');
+        ? asset(auth()->user()->logo_estudio ?? 'images/logo-sportgym.png')
+        : asset('images/logo-sportgym.png');
 
     $appName = auth()->check()
         ? auth()->user()->nombre_estudio
-        : 'MCTandil Apps';
+        : 'SportGym';
 @endphp
 
 {{-- FAVICON PERSONALIZADO --}}

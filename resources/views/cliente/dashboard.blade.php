@@ -88,11 +88,22 @@
 
         <div class="flex items-center justify-center flex-shrink-0">
 
-            <img
-                src="{{ asset('images/logo-sportgym.png') }}"
-                alt="SportGym"
-                class="h-16 w-16 sm:h-24 sm:w-24 object-contain drop-shadow-xl"
-            >
+            @php
+    $abogado = $cliente?->abogado;
+    $esDemoGym = ($abogado?->slug_estudio ?? null) === 'demo';
+
+    $logoSocio = $esDemoGym
+        ? asset('images/logo-demogym.png')
+        : asset('images/logo-sportgym.png');
+
+    $nombreGym = $esDemoGym ? 'DemoGym' : 'SportGym';
+@endphp
+
+<img
+    src="{{ $logoSocio }}"
+    alt="{{ $nombreGym }}"
+    class="h-16 w-16 sm:h-24 sm:w-24 object-contain drop-shadow-xl"
+>
 
         </div>
 

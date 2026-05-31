@@ -5,9 +5,27 @@
 @php
     $user = auth()->user();
 
-    $nombreEstudio = $user->nombre_estudio ?? 'SportGym Tandil';
+    $slug = $user->slug_estudio ?? null;
+    $nombreEstudio = $user->nombre_estudio ?? null;
 
-    $logo = asset('images/logo-sportgym.png');
+    if ($user && $user->role === 'cliente') {
+
+        $cliente = \App\Models\Cliente::with('abogado')
+            ->where('user_id', $user->id)
+            ->first();
+
+        $slug = $cliente?->abogado?->slug_estudio ?? $slug;
+        $nombreEstudio = $cliente?->abogado?->nombre_estudio ?? $nombreEstudio;
+    }
+
+    $esDemoGym = $slug === 'demo';
+
+    $nombreEstudio = $nombreEstudio
+        ?? ($esDemoGym ? 'DemoGym' : 'SportGym Tandil');
+
+    $logo = $esDemoGym
+        ? asset('images/logo-demogym.png')
+        : asset('images/logo-sportgym.png');
 @endphp
 
 @if($sidebar)
