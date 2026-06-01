@@ -473,4 +473,24 @@ Route::get('/generar-turnos-semana', function () {
     return 'Turnos generados correctamente para los próximos 7 días hábiles';
 });
 
+Route::get('/crear-demogym', function () {
+
+    $user = \App\Models\User::updateOrCreate(
+        ['email' => 'demo@gimnasio.com'],
+        [
+            'name' => 'DemoGym',
+            'password' => bcrypt('demo1234'),
+            'role' => 'abogado',
+            'activo' => true,
+            'nombre_estudio' => 'DemoGym',
+            'slug_estudio' => 'demo',
+            'logo_estudio' => 'images/logo-demogym.png',
+            'tipo_app' => 'gimnasios',
+            'plan' => 'basico',
+        ]
+    );
+
+    return 'DemoGym creado/actualizado correctamente. ID: ' . $user->id;
+});
+
 require __DIR__ . '/settings.php';
