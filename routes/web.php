@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-Route::redirect('/', '/estudio/demo')->name('home');
+Route::redirect('/', '/estudio/sportgym')->name('home');
 
 Route::get('/app', function () {
 
@@ -33,7 +33,7 @@ Route::get('/app', function () {
         request()->session()->regenerateToken();
     }
 
-    return redirect()->route('login.estudio', ['slug' => 'demo']);
+    return redirect()->route('login.estudio', ['slug' => 'sportgym']);
 
 })->name('app.start');
 
