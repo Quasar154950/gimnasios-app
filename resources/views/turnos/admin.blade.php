@@ -2,6 +2,18 @@
 
     <div class="space-y-6">
 
+        @if(session('success'))
+    <div class="rounded-xl bg-green-100 border border-green-300 text-green-700 px-4 py-3 font-bold">
+        ✅ {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="rounded-xl bg-red-100 border border-red-300 text-red-700 px-4 py-3 font-bold">
+        ❌ {{ session('error') }}
+    </div>
+@endif
+
         {{-- ENCABEZADO --}}
         <div class="rounded-xl border border-stone-300 bg-stone-200 p-6 shadow-sm">
 
@@ -125,7 +137,16 @@
                         $reservados = $turno->reservas->count();
                         $disponibles = max($turno->cupo_maximo - $reservados, 0);
                         $completo = $disponibles <= 0;
-                    @endphp
+
+                        $inicioTurno = \Carbon\Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio);
+                        $finTurno = \Carbon\Carbon::parse($turno->fecha . ' ' . $turno->hora_fin);
+                        $ahora = now();
+
+                        $turnoEnCurso = $ahora->between($inicioTurno, $finTurno);
+                        $turnoPasado = $finTurno->isPast();
+                        $bloqueado = $completo || $turnoEnCurso || $turnoPasado;
+
+                        @endphp
 
                     <div class="rounded-xl border border-stone-300 bg-stone-200 shadow-sm p-4">
 
@@ -144,15 +165,23 @@
                                 </p>
                             </div>
 
-                            @if($completo)
-                                <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
-                                    Completo
-                                </span>
-                            @else
-                                <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
-                                    Disponible
-                                </span>
-                            @endif
+                            @if($turnoEnCurso)
+    <span class="inline-flex items-center rounded-full bg-orange-100 px-2 py-1 text-[10px] font-black text-orange-700">
+        🟠 En curso
+    </span>
+@elseif($turnoPasado)
+    <span class="inline-flex items-center rounded-full bg-neutral-200 px-2 py-1 text-[10px] font-black text-neutral-700">
+        ⏰ Finalizado
+    </span>
+@elseif($completo)
+    <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
+        Completo
+    </span>
+@else
+    <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-[10px] font-black text-green-700">
+        Disponible
+    </span>
+@endif
 
                         </div>
 
@@ -167,7 +196,36 @@
                             </div>
 
                         </div>
+                        
+                        <form method="POST"
+      action="{{ route('turnos.reservar.admin', $turno) }}"
+      class="mt-4 border-t border-stone-300 pt-3 space-y-2">
+    @csrf
 
+    <label class="block text-[11px] font-black uppercase text-stone-500">
+        Reservar socio manualmente
+    </label>
+
+    <select name="cliente_id"
+            required
+            class="w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-sm text-stone-800">
+        <option value="">Seleccionar socio...</option>
+
+        @foreach($clientes as $cliente)
+            <option value="{{ $cliente->id }}">
+                {{ $cliente->nombre }}
+            </option>
+        @endforeach
+    </select>
+
+    <button type="submit"
+            @if($bloqueado) disabled @endif
+            class="w-full rounded-xl px-3 py-2 text-sm font-black
+                   {{ $bloqueado ? 'bg-stone-300 text-stone-500 cursor-not-allowed' : 'bg-black text-white' }}">
+        ➕ Reservar para socio
+    </button>
+</form>
+                            
                         <div class="mt-4 border-t border-stone-300 pt-3">
 
                             <div class="text-[11px] font-black uppercase text-stone-500 mb-2">
@@ -182,9 +240,17 @@
                                         👤 {{ $reserva->cliente->nombre ?? 'Socio eliminado' }}
                                     </div>
 
-                                    <div class="text-[10px] font-black text-green-600">
-                                        OK
-                                    </div>
+                                    <form method="POST"
+      action="{{ route('turnos.reservas.cancelar.admin', $reserva) }}"
+      onsubmit="return confirm('¿Cancelar esta reserva?')">
+    @csrf
+    @method('DELETE')
+
+    <button type="submit"
+            class="rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
+        Cancelar
+    </button>
+</form>
 
                                 </div>
 

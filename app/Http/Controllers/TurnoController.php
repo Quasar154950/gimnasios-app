@@ -38,11 +38,17 @@ class TurnoController extends Controller
             ));
         }
 
+        $clientes = Cliente::where('abogado_id', auth()->id())
+            ->where('archivado', false)
+            ->orderBy('nombre')
+            ->get();
+
         return view('turnos.admin', compact(
             'turnos',
             'fechaSeleccionada',
             'cerradoFinDeSemana',
-            'presentesAhora'
+            'presentesAhora',
+            'clientes'
         ));
     }
 
@@ -138,5 +144,79 @@ class TurnoController extends Controller
         $reserva->delete();
 
         return back()->with('success', 'Reserva cancelada correctamente.');
+    }
+
+    public function reservarAdmin(Turno $turno)
+{
+    if (auth()->user()->role !== 'abogado') {
+        abort(403);
+    }
+
+    $clienteId = request('cliente_id');
+
+    $cliente = Cliente::find($clienteId);
+
+    if (!$cliente) {
+        return back()->with('error', 'Seleccioná un socio válido.');
+    }
+
+    $inicioTurno = Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio);
+
+    if ($inicioTurno->isPast()) {
+        return back()->with('error', 'Este turno ya comenzó o ya pasó.');
+    }
+
+    $reservasDelDia = ReservaTurno::with('turno')
+        ->where('cliente_id', $cliente->id)
+        ->whereHas('turno', function ($query) use ($turno) {
+            $query->whereDate('fecha', $turno->fecha);
+        })
+        ->get();
+
+    foreach ($reservasDelDia as $reserva) {
+        if (!$reserva->turno) {
+            continue;
+        }
+
+        if ($reserva->turno_id === $turno->id) {
+            return back()->with('error', 'Este socio ya tiene reservado este turno.');
+        }
+
+        if ($reserva->turno->actividad === $turno->actividad) {
+            return back()->with('error', 'Este socio ya tiene una reserva de ' . $turno->actividad . ' para este día.');
+        }
+
+        if (
+            $reserva->turno->hora_inicio < $turno->hora_fin &&
+            $reserva->turno->hora_fin > $turno->hora_inicio
+        ) {
+            return back()->with('error', 'Este socio ya tiene otra reserva en un horario que se superpone.');
+        }
+    }
+
+    $turno->load('reservas');
+
+    if ($turno->reservas->count() >= $turno->cupo_maximo) {
+        return back()->with('error', 'El turno está completo.');
+    }
+
+    ReservaTurno::create([
+        'cliente_id' => $cliente->id,
+        'turno_id' => $turno->id,
+        'estado' => 'reservado',
+    ]);
+
+    return back()->with('success', 'Turno reservado manualmente.');
+}
+
+    public function cancelarReservaAdmin(ReservaTurno $reserva)
+    {
+        if (auth()->user()->role !== 'abogado') {
+            abort(403);
+        }
+
+        $reserva->delete();
+
+        return back()->with('success', 'Reserva cancelada manualmente.');
     }
 }

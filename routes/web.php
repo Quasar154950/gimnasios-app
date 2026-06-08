@@ -126,6 +126,11 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         Route::get('turnos', [TurnoController::class, 'index'])->name('turnos.index');
         Route::post('turnos/{turno}/reservar', [TurnoController::class, 'reservar'])
             ->name('turnos.reservar');
+        Route::post('turnos/{turno}/reservar-admin', [TurnoController::class, 'reservarAdmin'])
+            ->name('turnos.reservar.admin');
+        Route::delete('turnos/reservas/{reserva}/cancelar-admin', [TurnoController::class, 'cancelarReservaAdmin'])
+             ->name('turnos.reservas.cancelar.admin');
+
 // 👥 ASISTENCIAS
         Route::get('asistencias', [\App\Http\Controllers\AsistenciaController::class, 'index'])
           ->name('asistencias.index');
