@@ -247,9 +247,13 @@
     @method('DELETE')
 
     <button type="submit"
-            class="rounded-full bg-red-100 px-2 py-1 text-[10px] font-black text-red-700">
-        Cancelar
-    </button>
+        @if($turnoEnCurso || $turnoPasado) disabled @endif
+        class="rounded-full px-2 py-1 text-[10px] font-black
+        {{ ($turnoEnCurso || $turnoPasado)
+            ? 'bg-stone-300 text-stone-500 cursor-not-allowed'
+            : 'bg-red-100 text-red-700' }}">
+    Cancelar
+</button>
 </form>
 
                                 </div>

@@ -210,13 +210,24 @@ class TurnoController extends Controller
 }
 
     public function cancelarReservaAdmin(ReservaTurno $reserva)
-    {
-        if (auth()->user()->role !== 'abogado') {
-            abort(403);
-        }
-
-        $reserva->delete();
-
-        return back()->with('success', 'Reserva cancelada manualmente.');
+{
+    if (auth()->user()->role !== 'abogado') {
+        abort(403);
     }
+
+    $reserva->load('turno');
+
+    if (!$reserva->turno) {
+        return back()->with('error', 'No se encontró el turno asociado a esta reserva.');
+    }
+
+    $inicioTurno = Carbon::parse($reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio);
+
+    if ($inicioTurno->isPast()) {
+        return back()->with('error', 'No se puede cancelar una reserva de un turno que ya comenzó o ya pasó.');
+    }
+
+    $reserva->delete();
+
+    return back()->with('success', 'Reserva cancelada manualmente.');
 }
