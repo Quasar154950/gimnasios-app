@@ -231,3 +231,4 @@ class TurnoController extends Controller
 
     return back()->with('success', 'Reserva cancelada manualmente.');
 }
+}
