@@ -64,6 +64,8 @@ class SaasPagoController extends Controller
             ],
 
             'auto_return' => 'approved',
+            
+            'notification_url' => 'https://app-abogados-production.up.railway.app/webhooks/mercadopago/saas',
         ];
 
         Log::info('MP SaaS payload', $payload);
