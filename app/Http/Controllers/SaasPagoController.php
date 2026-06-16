@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SaasPago;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
@@ -44,31 +45,36 @@ class SaasPagoController extends Controller
 
         $client = new PreferenceClient();
 
+        $payload = [
+            'items' => [
+                [
+                    'title' => 'Suscripción SaaS MCTandil - ' . strtoupper($user->plan),
+                    'quantity' => 1,
+                    'currency_id' => 'ARS',
+                    'unit_price' => (int) $user->precio_suscripcion,
+                ],
+            ],
+
+            'external_reference' => $pago->external_reference,
+
+            'back_urls' => [
+                'success' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/exito',
+                'failure' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/error',
+                'pending' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/pendiente',
+            ],
+
+            'auto_return' => 'approved',
+        ];
+
+        Log::info('MP SaaS payload', $payload);
+
         try {
+            $preference = $client->create($payload);
 
-            $preference = $client->create([
-
-                'items' => [
-                    [
-                        'title' => 'Suscripción SaaS MCTandil - ' . strtoupper($user->plan),
-                        'quantity' => 1,
-                        'currency_id' => 'ARS',
-                        'unit_price' => (float) $user->precio_suscripcion,
-                    ],
-                ],
-
-                'payer' => [
-                    'email' => $user->email,
-                ],
-
-                'external_reference' => $pago->external_reference,
-
-                'back_urls' => [
-                    'success' => url('/soporte/saas-pagos/exito'),
-                    'failure' => url('/soporte/saas-pagos/error'),
-                    'pending' => url('/soporte/saas-pagos/pendiente'),
-                ],
-
+            Log::info('MP SaaS respuesta', [
+                'id' => $preference->id ?? null,
+                'init_point' => $preference->init_point ?? null,
+                'sandbox_init_point' => $preference->sandbox_init_point ?? null,
             ]);
 
             $checkoutUrl = $preference->init_point;
@@ -81,6 +87,11 @@ class SaasPagoController extends Controller
 
         } catch (MPApiException $e) {
 
+            Log::error('MP SaaS API error', [
+                'message' => $e->getMessage(),
+                'api_response' => method_exists($e, 'getApiResponse') ? $e->getApiResponse() : null,
+            ]);
+
             $pago->update([
                 'estado' => 'error',
             ]);
@@ -88,6 +99,10 @@ class SaasPagoController extends Controller
             return redirect('/soporte?error=Mercado Pago respondió con error al crear el link');
 
         } catch (\Throwable $e) {
+
+            Log::error('MP SaaS error general', [
+                'message' => $e->getMessage(),
+            ]);
 
             $pago->update([
                 'estado' => 'error',

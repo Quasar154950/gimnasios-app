@@ -14,9 +14,6 @@ use App\Http\Controllers\SaasPagoController;
 use App\Http\Controllers\MercadoPagoSaasWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
 
