@@ -179,16 +179,6 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->delete('/cliente/reservas
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/expedientes/{expediente}/imprimir', [ExpedienteController::class, 'imprimir'])
     ->name('cliente.expedientes.imprimir');
 
-// Test cloudinary
-Route::get('/test-cloudinary', function () {
-    $result = Storage::disk('cloudinary')->put(
-        'test-railway.jpg',
-        file_get_contents(public_path('favicon.ico'))
-    );
-
-    return $result ? 'OK' : 'ERROR';
-});
-
 // Panel soporte
 Route::middleware(['auth'])->get('/soporte', function () {
     $user = auth()->user();
@@ -256,10 +246,15 @@ Route::middleware(['auth'])->post('/soporte/{user}/guardar-vencimiento', functio
     }
 
     $request->validate([
-        'fecha_vencimiento' => ['required', 'date'],
+    'fecha_vencimiento' => ['required', 'date'],
+    'plan' => ['required', 'string'],
+    'precio_suscripcion' => ['required', 'integer', 'min:0'],
     ]);
 
     $user->fecha_vencimiento = $request->fecha_vencimiento;
+    $user->plan = $request->plan;
+    $user->precio_suscripcion = $request->precio_suscripcion;
+
     $user->save();
 
     return redirect('/soporte')->with('success', 'Fecha de vencimiento actualizada correctamente.');
@@ -409,70 +404,5 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
-
-// Ruta temporal
-Route::get('/crear-slug', function () {
-
-    if (!Schema::hasColumn('users', 'slug_estudio')) {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('slug_estudio')->nullable();
-        });
-    }
-
-    return 'Columna slug creada';
-});
-
-// 🔄 Generar turnos automáticos próximos 7 días
-Route::get('/generar-turnos-semana', function () {
-
-    $horarios = [
-        '08:00',
-        '09:00',
-        '14:00',
-        '15:00',
-        '18:00',
-        '19:00',
-        '20:00',
-    ];
-
-    $actividades = [
-        'Spinning',
-        'Pilates',
-    ];
-
-    for ($i = 1; $i <= 7; $i++) {
-
-        $fecha = now()->addDays($i);
-
-        if ($fecha->isWeekend()) {
-            continue;
-        }
-
-        foreach ($actividades as $actividad) {
-
-            foreach ($horarios as $hora) {
-
-                $inicio = \Carbon\Carbon::createFromFormat('H:i', $hora);
-                $fin = $inicio->copy()->addHour();
-
-                \App\Models\Turno::updateOrCreate(
-                    [
-                        'actividad' => $actividad,
-                        'fecha' => $fecha->format('Y-m-d'),
-                        'hora_inicio' => $inicio->format('H:i:s'),
-                    ],
-                    [
-                        'profesor' => 'Demo',
-                        'hora_fin' => $fin->format('H:i:s'),
-                        'cupo_maximo' => 10,
-                        'activo' => true,
-                    ]
-                );
-            }
-        }
-    }
-
-    return 'Turnos generados correctamente para los próximos 7 días hábiles';
-});
 
 require __DIR__ . '/settings.php';
