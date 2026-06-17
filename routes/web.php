@@ -52,6 +52,9 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
             $user = auth()->user();
             return view('suscripcion.index', compact('user'));
         })->name('suscripcion.index');
+        
+        Route::post('/suscripcion/pagar', [SaasPagoController::class, 'pagarMiSuscripcion'])
+            ->name('suscripcion.pagar');
 
         Route::post('/renovar/{user}', function (User $user) {
             $user->renovarSuscripcion();

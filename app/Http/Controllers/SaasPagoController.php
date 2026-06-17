@@ -113,6 +113,77 @@ class SaasPagoController extends Controller
             return redirect('/soporte?error=No se pudo generar el link de pago');
         }
     }
+    
+    public function pagarMiSuscripcion()
+{
+    $user = auth()->user();
+
+    if (!$user || $user->role !== 'abogado') {
+        abort(403);
+    }
+
+    if (!$user->precio_suscripcion || $user->precio_suscripcion <= 0) {
+        return redirect('/suscripcion?error=No tenés precio de suscripción configurado');
+    }
+
+    $accessToken = env('MERCADOPAGO_SAAS_ACCESS_TOKEN');
+
+    if (!$accessToken) {
+        return redirect('/suscripcion?error=Falta configurar Mercado Pago SaaS');
+    }
+
+    $pago = SaasPago::create([
+        'user_id' => $user->id,
+        'plan' => $user->plan,
+        'monto' => $user->precio_suscripcion,
+        'estado' => 'pendiente',
+        'external_reference' => 'saas_pago_' . $user->id . '_' . now()->timestamp,
+    ]);
+
+    MercadoPagoConfig::setAccessToken($accessToken);
+
+    $client = new PreferenceClient();
+
+    $payload = [
+        'items' => [
+            [
+                'title' => 'Suscripción SaaS MCTandil - ' . strtoupper($user->plan),
+                'quantity' => 1,
+                'currency_id' => 'ARS',
+                'unit_price' => (int) $user->precio_suscripcion,
+            ],
+        ],
+
+        'external_reference' => $pago->external_reference,
+
+        'back_urls' => [
+            'success' => 'https://app-abogados-production.up.railway.app/suscripcion',
+            'failure' => 'https://app-abogados-production.up.railway.app/suscripcion',
+            'pending' => 'https://app-abogados-production.up.railway.app/suscripcion',
+        ],
+
+        'auto_return' => 'approved',
+
+        'notification_url' => 'https://app-abogados-production.up.railway.app/webhooks/mercadopago/saas',
+    ];
+
+    try {
+        $preference = $client->create($payload);
+
+        $pago->update([
+            'checkout_url' => $preference->init_point,
+        ]);
+
+        return redirect($preference->init_point);
+
+    } catch (\Throwable $e) {
+        $pago->update([
+            'estado' => 'error',
+        ]);
+
+        return redirect('/suscripcion?error=No se pudo generar el pago');
+    }
+    }
 
     public function exito()
     {

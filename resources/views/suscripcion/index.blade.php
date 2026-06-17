@@ -29,6 +29,23 @@
                         : 'Sin fecha' }}
                 </p>
             </div>
+            {{-- PLAN --}}
+<div>
+    <p class="text-sm text-gray-500">Plan</p>
+
+    <p class="font-semibold">
+        {{ strtoupper($user->plan ?? 'Sin plan') }}
+    </p>
+</div>
+
+{{-- PRECIO --}}
+<div>
+    <p class="text-sm text-gray-500">Precio mensual</p>
+
+    <p class="font-semibold">
+        ${{ number_format($user->precio_suscripcion ?? 0, 0, ',', '.') }}
+    </p>
+</div>
 
             {{-- DÍAS RESTANTES --}}
             
@@ -64,6 +81,26 @@
         </p>
     @endif
 </div>
+{{-- PAGAR SUSCRIPCIÓN --}}
+@if($user->precio_suscripcion > 0)
+
+    <div class="pt-4">
+
+        <form method="POST" action="{{ route('suscripcion.pagar') }}">
+            @csrf
+
+            <button
+                type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
+            >
+                💳 Pagar con Mercado Pago
+            </button>
+
+        </form>
+
+    </div>
+
+@endif
 
             </div>
 
