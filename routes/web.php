@@ -414,7 +414,7 @@ Route::get('/test-mail', function () {
         \Illuminate\Support\Facades\Mail::raw(
             'Prueba de correo MCTandil',
             function ($message) {
-                $message->to('tu_mail@gmail.com')
+                $message->to('mctandil.soporte@gmail.com')
                     ->subject('Prueba MCTandil');
             }
         );
