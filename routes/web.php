@@ -408,21 +408,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/test-mail', function () {
-    try {
-        \Illuminate\Support\Facades\Mail::raw('Prueba de correo MCTandil', function ($message) {
-            $message->to('mctandil.soporte@gmail.com')
-                ->subject('Prueba MCTandil');
-        });
-
-        return 'Mail enviado';
-    } catch (\Throwable $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ], 500);
-    }
-});
-
 require __DIR__ . '/settings.php';
