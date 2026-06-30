@@ -106,7 +106,7 @@
             <div style="border-radius:8px !important;"
                  class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
 
-                🏖️ Gimnasio cerrado. No hay actividades disponibles sábados y domingos.
+                🏖️ Gimnasio cerrado. Los domingos no hay actividades disponibles.
 
             </div>
 
