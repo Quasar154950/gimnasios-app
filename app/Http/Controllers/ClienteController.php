@@ -268,14 +268,13 @@ class ClienteController extends Controller
 
     $request->validate([
         'nombre' => 'required|string|max:255',
-        'dni' => 'required|string|max:30',
+        'dni' => 'nullable|string|max:30',
         'telefono' => 'required|string|max:255',
         'email' => 'required|email|max:255|unique:clientes,email,' . $id,
         'direccion' => 'required|string|max:255',
         'fecha_vencimiento_cuota' => 'nullable|date',
     ], [
         'nombre.required' => 'El nombre es obligatorio.',
-        'dni.required' => 'El DNI es obligatorio.',
         'telefono.required' => 'El teléfono es obligatorio.',
         'email.required' => 'El email es obligatorio.',
         'email.email' => 'El email no es válido.',
@@ -285,7 +284,7 @@ class ClienteController extends Controller
 
     $cliente->update([
         'nombre' => $request->nombre,
-        'dni' => $request->dni,
+        'dni' => $request->dni ?? $cliente->dni,
         'telefono' => $request->telefono,
         'email' => $request->email,
         'direccion' => $request->direccion,
