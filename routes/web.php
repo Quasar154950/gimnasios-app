@@ -184,7 +184,7 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/perfil', fu
 
 $ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
     ->orderByDesc('created_at')
-    ->first();;
+    ->first();
     }
 
     return view('cliente.perfil', compact(
