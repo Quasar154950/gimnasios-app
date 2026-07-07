@@ -1,6 +1,6 @@
 <x-layouts::app :title="'Turnos'">
 
-    <div class="-m-4 min-h-screen space-y-6 bg-slate-950 p-4 sm:-m-6 sm:p-6">
+    <div class="-m-4 min-h-screen space-y-6 bg-slate-950 p-4 pb-32 sm:-m-6 sm:p-6 sm:pb-32">
 
         {{-- ALERTAS --}}
         @if(session('success'))
@@ -219,5 +219,41 @@
 @endif
 
 </div>
+
+  @if(auth()->user()->role === 'cliente')
+    {{-- BARRA INFERIOR --}}
+    <div class="fixed bottom-0 left-0 right-0 z-50">
+        <div class="max-w-md mx-auto px-5 pb-4">
+            <div class="relative rounded-[2rem] bg-white text-zinc-900 shadow-2xl px-5 py-3 flex items-center justify-between">
+
+                <a href="{{ route('cliente.dashboard') }}" class="text-center text-xs font-bold">
+                    <div class="text-xl">🏠</div>
+                    Inicio
+                </a>
+
+                <a href="{{ route('cliente.turnos') }}" class="text-center text-xs font-bold">
+                    <div class="text-xl">📅</div>
+                    Reservas
+                </a>
+
+                <a href="{{ route('cliente.mi-qr') }}"
+                   class="absolute left-1/2 -translate-x-1/2 -top-7 h-16 w-16 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl shadow-xl border-4 border-[#071015]">
+                    📱
+                </a>
+
+                <a href="{{ route('cliente.mensajes') }}" class="text-center text-xs font-bold ml-14">
+                    <div class="text-xl">🔔</div>
+                    Avisos
+                </a>
+
+                <a href="#" class="text-center text-xs font-bold">
+                    <div class="text-xl">👤</div>
+                    Perfil
+                </a>
+
+            </div>
+        </div>
+    </div>
+@endif  
 
 </x-layouts::app>

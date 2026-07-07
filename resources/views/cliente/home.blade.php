@@ -26,6 +26,8 @@
         ->count();
     $misReservas = collect();
 $proximaReserva = null;
+$estadoReservaTexto = 'Sin reservas activas';
+$estadoReservaColor = 'text-zinc-500';
 
 if ($cliente) {
     $misReservas = \App\Models\ReservaTurno::with('turno')
@@ -42,10 +44,33 @@ if ($cliente) {
         ->get()
         ->sortBy(fn($r) => $r->turno->fecha . ' ' . $r->turno->hora_inicio);
 
-    $proximaReserva = $misReservas
-        ->filter(fn($r) => $r->turno && \Carbon\Carbon::parse($r->turno->fecha . ' ' . $r->turno->hora_inicio)->isFuture())
-        ->first();
+   $proximaReserva = $misReservas->first();
 }
+
+if ($proximaReserva && $proximaReserva->turno) {
+    $inicio = \Carbon\Carbon::parse($proximaReserva->turno->fecha . ' ' . $proximaReserva->turno->hora_inicio);
+    $fin = \Carbon\Carbon::parse($proximaReserva->turno->fecha . ' ' . $proximaReserva->turno->hora_fin);
+    $ahora = now();
+
+    if ($ahora->between($inicio, $fin)) {
+        $estadoReservaTexto = '🔴 Actividad en curso';
+        $estadoReservaColor = 'text-red-600';
+    } elseif ($inicio->isToday()) {
+        $minutos = $ahora->diffInMinutes($inicio, false);
+
+        if ($minutos <= 60 && $minutos > 0) {
+            $estadoReservaTexto = '🟠 Empieza en ' . $minutos . ' min';
+            $estadoReservaColor = 'text-orange-600';
+        } else {
+            $estadoReservaTexto = '🟢 Hoy tenés actividad';
+            $estadoReservaColor = 'text-green-600';
+        }
+    } else {
+        $estadoReservaTexto = '📌 Próxima reserva';
+        $estadoReservaColor = 'text-orange-600';
+    }
+}
+
 @endphp
 
 <div class="min-h-screen max-w-md mx-auto bg-[#071015] pb-28">
@@ -126,9 +151,13 @@ if ($cliente) {
     </h3>
 
     @if($misReservas->count() > 0)
-        <p class="text-xs text-orange-600 font-bold mt-1">
-            {{ $misReservas->count() }} reserva{{ $misReservas->count() > 1 ? 's' : '' }} activa{{ $misReservas->count() > 1 ? 's' : '' }}
-        </p>
+        <p class="text-xs {{ $estadoReservaColor }} font-bold mt-1">
+    {{ $estadoReservaTexto }}
+</p>
+
+<p class="text-xs text-zinc-500 mt-1">
+    {{ $misReservas->count() }} reserva{{ $misReservas->count() > 1 ? 's' : '' }} activa{{ $misReservas->count() > 1 ? 's' : '' }}
+</p>
 
         @if($proximaReserva && $proximaReserva->turno)
             <p class="text-xs text-zinc-500 mt-1">
