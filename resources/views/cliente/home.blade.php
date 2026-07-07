@@ -253,7 +253,7 @@ if ($proximaReserva && $proximaReserva->turno) {
                 Avisos
             </a>
 
-            <a href="#" class="text-center text-xs font-bold">
+            <a href="{{ route('cliente.perfil') }}" class="text-center text-xs font-bold">
                 <div class="text-xl">👤</div>
                 Perfil
             </a>

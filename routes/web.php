@@ -162,6 +162,40 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/musculacion
     return view('cliente.musculacion');
 })->name('cliente.musculacion');
 
+Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/perfil', function () {
+
+    $cliente = \App\Models\Cliente::where('user_id', auth()->id())->first();
+
+    $reservasActivas = 0;
+    $ingresosMes = 0;
+    $ultimoIngreso = null;
+
+    if ($cliente) {
+        $reservasActivas = \App\Models\ReservaTurno::where('cliente_id', $cliente->id)
+            ->whereHas('turno', function ($query) {
+                $query->whereDate('fecha', '>=', now()->toDateString());
+            })
+            ->count();
+
+        $ingresosMes = \App\Models\Asistencia::where('cliente_id', $cliente->id)
+            ->whereMonth('hora_entrada', now()->month)
+            ->whereYear('hora_entrada', now()->year)
+            ->count();
+
+        $ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
+            ->orderByDesc('hora_entrada')
+            ->first();
+    }
+
+    return view('cliente.perfil', compact(
+        'cliente',
+        'reservasActivas',
+        'ingresosMes',
+        'ultimoIngreso'
+    ));
+
+})->name('cliente.perfil');
+
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/turnos', [TurnoController::class, 'index'])
     ->name('cliente.turnos');
 
