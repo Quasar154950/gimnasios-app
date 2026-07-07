@@ -205,11 +205,20 @@ if ($proximaReserva && $proximaReserva->turno) {
                 <p class="text-xs text-zinc-400 mt-1">Próximamente</p>
             </div>
 
-            <div class="rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
-                <div class="text-3xl mb-3">👤</div>
-                <h3 class="font-black">Mi perfil</h3>
-                <p class="text-xs text-zinc-400 mt-1">Próximamente</p>
-            </div>
+            <a href="{{ route('cliente.perfil') }}"
+   class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+
+    <div class="text-3xl mb-3">👤</div>
+
+    <h3 class="font-black">
+        Mi perfil
+    </h3>
+
+    <p class="text-xs text-zinc-500 mt-1">
+        Datos personales
+    </p>
+
+</a>
 
         </div>
     </div>
