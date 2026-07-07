@@ -24,6 +24,28 @@
     $presentesAhora = \App\Models\Asistencia::where('presente', true)
         ->whereNull('hora_salida')
         ->count();
+    $misReservas = collect();
+$proximaReserva = null;
+
+if ($cliente) {
+    $misReservas = \App\Models\ReservaTurno::with('turno')
+        ->where('cliente_id', $cliente->id)
+        ->whereHas('turno', function ($query) {
+            $query->where(function ($q) {
+                $q->whereDate('fecha', '>', now()->toDateString())
+                  ->orWhere(function ($q2) {
+                      $q2->whereDate('fecha', now()->toDateString())
+                         ->whereTime('hora_fin', '>=', now()->format('H:i:s'));
+                  });
+            });
+        })
+        ->get()
+        ->sortBy(fn($r) => $r->turno->fecha . ' ' . $r->turno->hora_inicio);
+
+    $proximaReserva = $misReservas
+        ->filter(fn($r) => $r->turno && \Carbon\Carbon::parse($r->turno->fecha . ' ' . $r->turno->hora_inicio)->isFuture())
+        ->first();
+}
 @endphp
 
 <div class="min-h-screen max-w-md mx-auto bg-[#071015] pb-28">
@@ -96,11 +118,31 @@
             </a>
 
             <a href="{{ route('cliente.turnos') }}"
-               class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
-                <div class="text-3xl mb-3">📅</div>
-                <h3 class="font-black">Reservas</h3>
-                <p class="text-xs text-zinc-500 mt-1">Clases y turnos</p>
-            </a>
+   class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+    <div class="text-3xl mb-3">📅</div>
+
+    <h3 class="font-black">
+        Mis reservas
+    </h3>
+
+    @if($misReservas->count() > 0)
+        <p class="text-xs text-orange-600 font-bold mt-1">
+            {{ $misReservas->count() }} reserva{{ $misReservas->count() > 1 ? 's' : '' }} activa{{ $misReservas->count() > 1 ? 's' : '' }}
+        </p>
+
+        @if($proximaReserva && $proximaReserva->turno)
+            <p class="text-xs text-zinc-500 mt-1">
+                Próxima:
+                {{ $proximaReserva->turno->actividad }}
+                {{ \Carbon\Carbon::parse($proximaReserva->turno->hora_inicio)->format('H:i') }}
+            </p>
+        @endif
+    @else
+        <p class="text-xs text-zinc-500 mt-1">
+            Sin reservas activas
+        </p>
+    @endif
+</a>
 
             <a href="{{ route('cliente.musculacion') }}"
                class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
