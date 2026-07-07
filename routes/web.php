@@ -178,13 +178,13 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/perfil', fu
             ->count();
 
         $ingresosMes = \App\Models\Asistencia::where('cliente_id', $cliente->id)
-            ->whereMonth('hora_entrada', now()->month)
-            ->whereYear('hora_entrada', now()->year)
-            ->count();
+    ->whereMonth('created_at', now()->month)
+    ->whereYear('created_at', now()->year)
+    ->count();
 
-        $ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
-            ->orderByDesc('hora_entrada')
-            ->first();
+$ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
+    ->orderByDesc('created_at')
+    ->first();;
     }
 
     return view('cliente.perfil', compact(

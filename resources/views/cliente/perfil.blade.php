@@ -126,7 +126,7 @@
 
             @if($ultimoIngreso)
                 <p class="text-zinc-300 mt-2">
-                    {{ \Carbon\Carbon::parse($ultimoIngreso->hora_entrada)->format('d/m/Y H:i') }}
+                    {{ \Carbon\Carbon::parse($ultimoIngreso->created_at)->format('d/m/Y H:i') }}
                 </p>
             @else
                 <p class="text-zinc-400 mt-2">
