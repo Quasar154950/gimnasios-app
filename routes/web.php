@@ -151,7 +151,7 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
 // Panel cliente
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/dashboard', function () {
-    return view('cliente.dashboard');
+    return view('cliente.home');
 })->name('cliente.dashboard');
 
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/turnos', [TurnoController::class, 'index'])
