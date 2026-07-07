@@ -154,6 +154,10 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/dashboard',
     return view('cliente.home');
 })->name('cliente.dashboard');
 
+Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/mensajes', function () {
+    return view('cliente.mensajes');
+})->name('cliente.mensajes');
+
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/turnos', [TurnoController::class, 'index'])
     ->name('cliente.turnos');
 
