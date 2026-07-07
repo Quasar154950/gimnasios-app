@@ -46,7 +46,7 @@
             </div>
 
             <div class="flex items-center gap-3">
-                href="{{ route('cliente.mensajes') }}"
+                <a href="{{ route('cliente.mensajes') }}"
                    class="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center text-xl">
                     🔔
                 </a>
@@ -108,7 +108,7 @@
                 <p class="text-xs text-zinc-500 mt-1">{{ $presentesAhora }} presentes</p>
             </div>
 
-            href="{{ route('cliente.mensajes') }}"
+            <a href="{{ route('cliente.mensajes') }}"
                class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-3">💬</div>
                 <h3 class="font-black">Mensajes</h3>
@@ -176,7 +176,7 @@
                 📱
             </a>
 
-            <a href="#novedades" class="text-center text-xs font-bold ml-14">
+            <a href="{{ route('cliente.mensajes') }}" class="text-center text-xs font-bold ml-14">
                 <div class="text-xl">🔔</div>
                 Avisos
             </a>
