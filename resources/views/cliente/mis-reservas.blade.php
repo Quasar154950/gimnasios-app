@@ -86,23 +86,43 @@
 
                     </div>
 
-                    <form
-                        method="POST"
-                        action="{{ route('cliente.reservas.cancelar',$reserva) }}"
-                        class="mt-5">
+                    @php
+    $inicioTurno = \Carbon\Carbon::parse($reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio);
+    $limiteCancelacion = now()->copy()->addHour();
+    $puedeCancelar = $inicioTurno->greaterThan($limiteCancelacion);
+@endphp
 
-                        @csrf
-                        @method('DELETE')
+@if($puedeCancelar)
 
-                        <button
-                            onclick="return confirm('¿Cancelar esta reserva?')"
-                            class="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
+    <form
+        method="POST"
+        action="{{ route('cliente.reservas.cancelar',$reserva) }}"
+        class="mt-5">
 
-                            Cancelar reserva
+        @csrf
+        @method('DELETE')
 
-                        </button>
+        <button
+            onclick="return confirm('¿Cancelar esta reserva?')"
+            class="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
 
-                    </form>
+            Cancelar reserva
+
+        </button>
+
+    </form>
+
+@else
+
+    <div class="mt-5 rounded-2xl bg-zinc-200 py-3 text-center font-bold text-zinc-500">
+        Cancelación no disponible
+    </div>
+
+    <p class="text-xs text-zinc-500 text-center mt-2">
+        No se puede cancelar una reserva dentro de la hora previa o cuando la actividad ya comenzó.
+    </p>
+
+@endif
 
                 </div>
 

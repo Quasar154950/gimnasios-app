@@ -134,17 +134,29 @@ class TurnoController extends Controller
     }
 
     public function cancelarReserva(ReservaTurno $reserva)
-    {
-        $cliente = Cliente::where('user_id', auth()->id())->first();
+{
+    $cliente = Cliente::where('user_id', auth()->id())->first();
 
-        if (!$cliente || $reserva->cliente_id !== $cliente->id) {
-            return redirect()->route('cliente.dashboard');
-        }
-
-        $reserva->delete();
-
-        return back()->with('success', 'Reserva cancelada correctamente.');
+    if (!$cliente || $reserva->cliente_id !== $cliente->id) {
+        return redirect()->route('cliente.dashboard');
     }
+
+    $reserva->load('turno');
+
+    if (!$reserva->turno) {
+        return back()->with('error', 'No se encontró el turno asociado a esta reserva.');
+    }
+
+    $inicioTurno = Carbon::parse($reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio);
+
+    if ($inicioTurno->lessThanOrEqualTo(now()->copy()->addHour())) {
+        return back()->with('error', 'No se puede cancelar una reserva dentro de la hora previa o cuando la actividad ya comenzó.');
+    }
+
+    $reserva->delete();
+
+    return back()->with('success', 'Reserva cancelada correctamente.');
+}
 
     public function reservarAdmin(Turno $turno)
 {
