@@ -117,7 +117,7 @@ if ($cliente) {
                 <p class="text-xs text-zinc-500 mt-1">Cuotas y estado</p>
             </a>
 
-            <a href="{{ route('cliente.turnos') }}"
+            <a href="{{ route('cliente.mis-reservas') }}"
    class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
     <div class="text-3xl mb-3">📅</div>
 

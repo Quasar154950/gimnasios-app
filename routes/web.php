@@ -165,6 +165,32 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/musculacion
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/turnos', [TurnoController::class, 'index'])
     ->name('cliente.turnos');
 
+Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/mis-reservas', function () {
+
+    $cliente = \App\Models\Cliente::where('user_id', auth()->id())->first();
+
+    $misReservas = collect();
+
+    if ($cliente) {
+        $misReservas = \App\Models\ReservaTurno::with('turno')
+            ->where('cliente_id', $cliente->id)
+            ->whereHas('turno', function ($query) {
+                $query->where(function ($q) {
+                    $q->whereDate('fecha', '>', now()->toDateString())
+                      ->orWhere(function ($q2) {
+                          $q2->whereDate('fecha', now()->toDateString())
+                             ->whereTime('hora_fin', '>=', now()->format('H:i:s'));
+                      });
+                });
+            })
+            ->get()
+            ->sortBy(fn($r) => $r->turno->fecha . ' ' . $r->turno->hora_inicio);
+    }
+
+    return view('cliente.mis-reservas', compact('cliente', 'misReservas'));
+
+})->name('cliente.mis-reservas');
+
 Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/cuota', function () {
 
     $cliente = \App\Models\Cliente::where('user_id', auth()->id())->first();
