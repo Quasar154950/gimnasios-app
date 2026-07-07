@@ -102,11 +102,12 @@
                 <p class="text-xs text-zinc-500 mt-1">Clases y turnos</p>
             </a>
 
-            <div class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
-                <div class="text-3xl mb-3">🏋️</div>
-                <h3 class="font-black">Musculación</h3>
-                <p class="text-xs text-zinc-500 mt-1">{{ $presentesAhora }} presentes</p>
-            </div>
+            <a href="{{ route('cliente.musculacion') }}"
+               class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               <div class="text-3xl mb-3">🏋️</div>
+               <h3 class="font-black">Musculación</h3>
+               <p class="text-xs text-zinc-500 mt-1">{{ $presentesAhora }} presentes</p>
+            </a>
 
             <a href="{{ route('cliente.mensajes') }}"
                class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
