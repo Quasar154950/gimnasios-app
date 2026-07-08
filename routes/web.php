@@ -476,4 +476,20 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
+Route::get('/crear-columna-ultimo-login', function () {
+    if (!Schema::hasColumn('users', 'ultimo_login_at')) {
+        Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('ultimo_login_at')->nullable()->after('email_verified_at');
+        });
+
+        return 'Columna ultimo_login_at creada correctamente.';
+    }
+
+    return 'La columna ultimo_login_at ya existe.';
+});
+
+
 require __DIR__ . '/settings.php';
