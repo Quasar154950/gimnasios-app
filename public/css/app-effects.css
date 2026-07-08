@@ -1,0 +1,107 @@
+.native-feel,
+button,
+a {
+    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.native-feel:active,
+button:active,
+a:active {
+    transform: scale(0.96);
+    filter: brightness(1.08);
+}
+
+.card-app {
+    transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.card-app:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 28px rgba(249, 115, 22, 0.22);
+    filter: brightness(1.05);
+}
+
+.glow-tap {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-tap:active {
+    box-shadow: 0 0 24px rgba(249, 115, 22, 0.35);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+

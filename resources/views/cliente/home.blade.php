@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Gimnasio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/app-effects.css') }}">
 </head>
 
 <body class="bg-[#071015] text-white">
@@ -271,5 +272,6 @@ if ($proximaReserva && $proximaReserva->turno) {
     </div>
 </div>
 
+<script src="{{ asset('js/app-effects.js') }}"></script>   
 </body>
 </html>

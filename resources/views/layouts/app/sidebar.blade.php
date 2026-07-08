@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+        <link rel="stylesheet" href="{{ asset('css/app-effects.css') }}">
     </head>
 
     <body
@@ -214,6 +215,8 @@
 
         @fluxScripts
 
+        <script src="{{ asset('js/app-effects.js') }}"></script>
+
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function () {
@@ -229,6 +232,5 @@
                 });
             }
         </script>
-
-    </body>
+     </body>
 </html>
