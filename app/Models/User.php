@@ -27,6 +27,8 @@ class User extends Authenticatable
         'fecha_vencimiento',
         'tipo_app',
 
+        'ultimo_login_at',
+
         'plan',
         'precio_suscripcion',
 
@@ -49,6 +51,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'fecha_vencimiento' => 'datetime',
+            'ultimo_login_at' => 'datetime',
             'activo' => 'boolean',
 
             'mercadopago_enabled' => 'boolean',

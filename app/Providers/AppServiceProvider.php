@@ -5,9 +5,12 @@ namespace App\Providers;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Pagination\Paginator; // <--- 1. AGREGAR ESTO
+use Illuminate\Pagination\Paginator;
+use Illuminate\Auth\Events\Login;
+use App\Listeners\ActualizarUltimoLogin;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,8 +29,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        // 2. AGREGAR ESTO: Fuerza a Laravel a usar estilos de Tailwind para los links
+        // Fuerza a Laravel a usar estilos de Tailwind para los links
         Paginator::useTailwind();
+
+        // Actualiza la fecha del último ingreso al iniciar sesión
+        Event::listen(
+            Login::class,
+            ActualizarUltimoLogin::class,
+        );
     }
 
     /**
