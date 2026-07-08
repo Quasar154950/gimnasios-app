@@ -192,7 +192,7 @@ $ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
         'cliente',
         'reservasActivas',
         'ingresosMes',
-        'ultimoIngreso'
+        'ultimoIngreso',
         'ultimoLogin',
     ));
 
