@@ -120,20 +120,36 @@
         </div>
 
         <div class="rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
-            <h3 class="font-black text-lg">
-                🕒 Último ingreso
-            </h3>
+    <h3 class="font-black text-lg">
+        📱 Último ingreso a la app
+    </h3>
 
-            @if($ultimoIngreso)
-                <p class="text-zinc-300 mt-2">
-                    {{ \Carbon\Carbon::parse($ultimoIngreso->created_at)->format('d/m/Y H:i') }}
-                </p>
-            @else
-                <p class="text-zinc-400 mt-2">
-                    Todavía no hay ingresos registrados.
-                </p>
-            @endif
-        </div>
+    @if($ultimoLogin)
+        <p class="text-zinc-300 mt-2">
+            {{ \Carbon\Carbon::parse($ultimoLogin)->format('d/m/Y H:i') }}
+        </p>
+    @else
+        <p class="text-zinc-400 mt-2">
+            Todavía no hay ingresos a la app registrados.
+        </p>
+    @endif
+</div>
+
+<div class="rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
+    <h3 class="font-black text-lg">
+        🏋️ Última asistencia al gimnasio
+    </h3>
+
+    @if($ultimoIngreso)
+        <p class="text-zinc-300 mt-2">
+            {{ \Carbon\Carbon::parse($ultimoIngreso->created_at)->format('d/m/Y H:i') }}
+        </p>
+    @else
+        <p class="text-zinc-400 mt-2">
+            Todavía no hay asistencias registradas.
+        </p>
+    @endif
+</div>
 
         <form method="POST" action="/logout" class="mt-8">
             @csrf

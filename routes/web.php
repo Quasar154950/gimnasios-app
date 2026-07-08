@@ -169,6 +169,7 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/perfil', fu
     $reservasActivas = 0;
     $ingresosMes = 0;
     $ultimoIngreso = null;
+    $ultimoLogin = auth()->user()->ultimo_login_at;
 
     if ($cliente) {
         $reservasActivas = \App\Models\ReservaTurno::where('cliente_id', $cliente->id)
@@ -192,6 +193,7 @@ $ultimoIngreso = \App\Models\Asistencia::where('cliente_id', $cliente->id)
         'reservasActivas',
         'ingresosMes',
         'ultimoIngreso'
+        'ultimoLogin',
     ));
 
 })->name('cliente.perfil');
@@ -475,21 +477,5 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
-
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-
-Route::get('/crear-columna-ultimo-login', function () {
-    if (!Schema::hasColumn('users', 'ultimo_login_at')) {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('ultimo_login_at')->nullable()->after('email_verified_at');
-        });
-
-        return 'Columna ultimo_login_at creada correctamente.';
-    }
-
-    return 'La columna ultimo_login_at ya existe.';
-});
-
 
 require __DIR__ . '/settings.php';
