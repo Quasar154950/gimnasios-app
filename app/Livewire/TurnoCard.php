@@ -92,32 +92,49 @@ class TurnoCard extends Component
     }
 
     public function cancelar($reservaId)
-    {
-        $this->mensajeError = null;
+{
+    $this->mensajeError = null;
 
-        $cliente = Cliente::where('user_id', auth()->id())->first();
+    $cliente = Cliente::where('user_id', auth()->id())->first();
 
-        if (!$cliente) {
-            $this->mensajeError = 'No existe socio asociado.';
-            return;
-        }
-
-        $reserva = ReservaTurno::where('id', $reservaId)
-            ->where('cliente_id', $cliente->id)
-            ->where('turno_id', $this->turno->id)
-            ->first();
-
-        if (!$reserva) {
-            $this->mensajeError = 'No se encontró la reserva.';
-            return;
-        }
-
-        $reserva->delete();
-
-        $this->mensajeError = null;
-
-        $this->dispatch('turnosActualizados');
+    if (!$cliente) {
+        $this->mensajeError = 'No existe socio asociado.';
+        return;
     }
+
+    $reserva = ReservaTurno::with('turno')
+        ->where('id', $reservaId)
+        ->where('cliente_id', $cliente->id)
+        ->where('turno_id', $this->turno->id)
+        ->first();
+
+    if (!$reserva) {
+        $this->mensajeError = 'No se encontró la reserva.';
+        return;
+    }
+
+    if (!$reserva->turno) {
+        $this->mensajeError = 'No se encontró el turno asociado.';
+        return;
+    }
+
+    if ((int) $reserva->turno->abogado_id !== (int) $cliente->abogado_id) {
+        abort(403);
+    }
+
+    $inicioTurno = Carbon::parse($reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio);
+
+    if ($inicioTurno->lessThanOrEqualTo(now()->copy()->addHour())) {
+        $this->mensajeError = 'No se puede cancelar una reserva dentro de la hora previa o cuando la actividad ya comenzó.';
+        return;
+    }
+
+    $reserva->delete();
+
+    $this->mensajeError = null;
+
+    $this->dispatch('turnosActualizados');
+}
 
     public function render()
     {
