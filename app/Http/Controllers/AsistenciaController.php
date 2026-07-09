@@ -13,13 +13,21 @@ class AsistenciaController extends Controller
 {
     public function index()
     {
+        $abogadoId = auth()->id();
+
         $presentes = Asistencia::with('cliente')
+            ->whereHas('cliente', function ($q) use ($abogadoId) {
+                $q->where('abogado_id', $abogadoId);
+            })
             ->where('presente', true)
             ->whereNull('hora_salida')
             ->latest('hora_ingreso')
             ->get();
 
         $ingresosHoy = Asistencia::with('cliente')
+           ->whereHas('cliente', function ($q) use ($abogadoId) {
+               $q->where('abogado_id', $abogadoId);
+            })
             ->whereDate('fecha', today())
             ->latest('hora_ingreso')
             ->get();

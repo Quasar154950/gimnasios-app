@@ -22,9 +22,16 @@
 
     $nombreGym = $esDemoGym ? 'DemoGym' : 'SportGym';
 
-    $presentesAhora = \App\Models\Asistencia::where('presente', true)
-        ->whereNull('hora_salida')
-        ->count();
+    $presentesAhora = 0;
+
+    if ($cliente) {
+        $presentesAhora = \App\Models\Asistencia::where('presente', true)
+            ->whereNull('hora_salida')
+            ->whereHas('cliente', function ($query) use ($cliente) {
+                $query->where('abogado_id', $cliente->abogado_id);
+            })
+            ->count();
+    }
     $misReservas = collect();
 $proximaReserva = null;
 $estadoReservaTexto = 'Sin reservas activas';
@@ -33,11 +40,12 @@ $estadoReservaColor = 'text-zinc-500';
 if ($cliente) {
     $misReservas = \App\Models\ReservaTurno::with('turno')
         ->where('cliente_id', $cliente->id)
-        ->whereHas('turno', function ($query) {
-            $query->where(function ($q) {
-                $q->whereDate('fecha', '>', now()->toDateString())
-                  ->orWhere(function ($q2) {
-                      $q2->whereDate('fecha', now()->toDateString())
+        ->whereHas('turno', function ($query) use ($cliente) {
+            $query->where('abogado_id', $cliente->abogado_id)
+               ->where(function ($q) {
+                   $q->whereDate('fecha', '>', now()->toDateString())
+                      ->orWhere(function ($q2) {
+                          $q2->whereDate('fecha', now()->toDateString())
                          ->whereTime('hora_fin', '>=', now()->format('H:i:s'));
                   });
             });
@@ -57,7 +65,7 @@ if ($proximaReserva && $proximaReserva->turno) {
         $estadoReservaTexto = '🔴 Actividad en curso';
         $estadoReservaColor = 'text-red-600';
     } elseif ($inicio->isToday()) {
-        $minutos = $ahora->diffInMinutes($inicio, false);
+        $minutos = (int) round($ahora->diffInMinutes($inicio, false));
 
         if ($minutos <= 60 && $minutos > 0) {
             $estadoReservaTexto = '🟠 Empieza en ' . $minutos . ' min';

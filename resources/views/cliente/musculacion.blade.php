@@ -11,9 +11,18 @@
 <body class="bg-[#071015] text-white">
 
 @php
-    $presentesAhora = \App\Models\Asistencia::where('presente', true)
-        ->whereNull('hora_salida')
-        ->count();
+    $cliente = \App\Models\Cliente::where('user_id', auth()->id())->first();
+
+    $presentesAhora = 0;
+
+    if ($cliente) {
+        $presentesAhora = \App\Models\Asistencia::where('presente', true)
+            ->whereNull('hora_salida')
+            ->whereHas('cliente', function ($query) use ($cliente) {
+                $query->where('abogado_id', $cliente->abogado_id);
+            })
+            ->count();
+    }
 
     $capacidad = 60;
 

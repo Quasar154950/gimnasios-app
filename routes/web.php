@@ -480,24 +480,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-
-Route::get('/crear-columna-abogado-id-turnos', function () {
-
-    if (!Schema::hasColumn('turnos', 'abogado_id')) {
-        Schema::table('turnos', function (Blueprint $table) {
-            $table->foreignId('abogado_id')
-                ->nullable()
-                ->after('id')
-                ->constrained('users')
-                ->nullOnDelete();
-        });
-
-        return 'Columna abogado_id creada correctamente en turnos.';
-    }
-
-    return 'La columna abogado_id ya existe en turnos.';
-});
-
 require __DIR__ . '/settings.php';
