@@ -31,18 +31,21 @@ class DashboardController extends Controller
             ->where('archivado', false)
             ->count();
 
-        $reservasHoy = ReservaTurno::whereHas('turno', function ($q) use ($hoy) {
-            $q->whereDate('fecha', $hoy);
+        $reservasHoy = ReservaTurno::whereHas('turno', function ($q) use ($hoy, $abogadoId) {
+            $q->where('abogado_id', $abogadoId)
+              ->whereDate('fecha', $hoy);
         })->count();
 
         $cuposOcupadosHoy = $reservasHoy;
 
-        $proximasReservas = ReservaTurno::whereHas('turno', function ($q) use ($hoy) {
-            $q->whereDate('fecha', '>', $hoy)
-              ->whereDate('fecha', '<=', $hoy->copy()->addDays(6));
+        $proximasReservas = ReservaTurno::whereHas('turno', function ($q) use ($hoy, $abogadoId) {
+            $q->where('abogado_id', $abogadoId)
+               ->whereDate('fecha', '>', $hoy)
+               ->whereDate('fecha', '<=', $hoy->copy()->addDays(6));
         })->count();
 
-        $proximasActividades = Turno::whereDate('fecha', '>', $hoy)
+        $proximasActividades = Turno::where('abogado_id', $abogadoId)
+            ->whereDate('fecha', '>', $hoy)
             ->whereDate('fecha', '<=', $hoy->copy()->addDays(6))
             ->whereIn('id', ReservaTurno::select('turno_id'))
             ->orderBy('fecha')
