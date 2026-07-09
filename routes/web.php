@@ -173,8 +173,9 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/perfil', fu
 
     if ($cliente) {
         $reservasActivas = \App\Models\ReservaTurno::where('cliente_id', $cliente->id)
-            ->whereHas('turno', function ($query) {
-                $query->whereDate('fecha', '>=', now()->toDateString());
+            ->whereHas('turno', function ($query) use ($cliente) {
+                $query->where('abogado_id', $cliente->abogado_id)
+                ->whereDate('fecha', '>=', now()->toDateString());
             })
             ->count();
 
@@ -210,12 +211,13 @@ Route::middleware(['auth', 'role:cliente', 'activo'])->get('/cliente/mis-reserva
     if ($cliente) {
         $misReservas = \App\Models\ReservaTurno::with('turno')
             ->where('cliente_id', $cliente->id)
-            ->whereHas('turno', function ($query) {
-                $query->where(function ($q) {
-                    $q->whereDate('fecha', '>', now()->toDateString())
-                      ->orWhere(function ($q2) {
-                          $q2->whereDate('fecha', now()->toDateString())
-                             ->whereTime('hora_fin', '>=', now()->format('H:i:s'));
+            ->whereHas('turno', function ($query) use ($cliente) {
+                $query->where('abogado_id', $cliente->abogado_id)
+                    ->where(function ($q) {
+                      $q->whereDate('fecha', '>', now()->toDateString())
+                          ->orWhere(function ($q2) {
+                              $q2->whereDate('fecha', now()->toDateString())
+                              ->whereTime('hora_fin', '>=', now()->format('H:i:s'));
                       });
                 });
             })
@@ -477,5 +479,25 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
+Route::get('/crear-columna-abogado-id-turnos', function () {
+
+    if (!Schema::hasColumn('turnos', 'abogado_id')) {
+        Schema::table('turnos', function (Blueprint $table) {
+            $table->foreignId('abogado_id')
+                ->nullable()
+                ->after('id')
+                ->constrained('users')
+                ->nullOnDelete();
+        });
+
+        return 'Columna abogado_id creada correctamente en turnos.';
+    }
+
+    return 'La columna abogado_id ya existe en turnos.';
+});
 
 require __DIR__ . '/settings.php';

@@ -14,6 +14,7 @@ class Turno extends Model
         'hora_fin',
         'cupo_maximo',
         'activo',
+        'abogado_id',
     ];
 
     public function reservas()
