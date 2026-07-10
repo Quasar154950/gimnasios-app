@@ -184,7 +184,16 @@ a:not(.card-app):active {
         translate: 0 0;
     }
 }
+/*
+|--------------------------------------------------------------------------
+| BOTÓN QR FLOTANTE
+|--------------------------------------------------------------------------
+| Mantiene el centrado durante el efecto de presión.
+*/
 
+.qr-float:active {
+    transform: translateX(-50%) scale(0.92) !important;
+}
 
 
 

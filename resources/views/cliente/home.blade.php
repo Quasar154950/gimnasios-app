@@ -260,7 +260,7 @@ if ($proximaReserva && $proximaReserva->turno) {
             </a>
 
             <a href="{{ route('cliente.mi-qr') }}"
-               class="absolute left-1/2 -translate-x-1/2 -top-7 h-16 w-16 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl shadow-xl border-4 border-[#071015]">
+               class="qr-float absolute left-1/2 -translate-x-1/2 -top-7 h-16 w-16 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl shadow-xl border-4 border-[#071015]">
                 📱
             </a>
 
