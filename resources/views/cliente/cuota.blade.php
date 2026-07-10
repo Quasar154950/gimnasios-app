@@ -29,7 +29,7 @@
         <div class="w-full max-w-3xl mx-auto">
 
             {{-- CABECERA --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+            <div class="card-app bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
                 <h1 class="text-2xl font-black text-zinc-800">
                     💳 Estado de cuota
@@ -54,7 +54,7 @@
             @endif
 
             {{-- ESTADO --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+            <div class="card-app bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
                 @if($cliente && $fechaVencimiento)
 
@@ -119,10 +119,10 @@
             {{-- PAGO ONLINE --}}
 <a
     href="{{ route('cliente.pagar-cuota') }}"
-    class="block mb-6 transition duration-200 hover:scale-[1.01] cursor-pointer"
+    class="block mb-6 cursor-pointer"
 >
 
-    <div class="bg-white border border-stone-200 rounded-3xl shadow-xl hover:shadow-2xl p-6">
+    <div class="card-app bg-white border border-stone-200 rounded-3xl shadow-xl hover:shadow-2xl p-6">
 
         <div class="flex items-center gap-3">
 
@@ -161,7 +161,7 @@
 </a>
 
             {{-- CONTACTO --}}
-            <div class="bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
+            <div class="card-app bg-stone-200 border border-stone-300 rounded-xl shadow-md p-6 mb-6">
 
                 <h2 class="text-lg font-black text-zinc-800">
                     📲 Administración

@@ -58,7 +58,7 @@
         <div class="h-11 w-11"></div>
     </div>
 
-    <div class="rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-6 shadow-2xl text-center">
+    <div class="card-app rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-6 shadow-2xl text-center">
 
         <div class="text-6xl mb-4">🏋️</div>
 
@@ -76,7 +76,7 @@
 
     </div>
 
-    <div class="mt-6 rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+    <div class="card-app mt-6 rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
 
         <div class="flex items-center justify-between mb-3">
             <h2 class="font-black text-lg">
@@ -105,7 +105,7 @@
 
     </div>
 
-    <div class="mt-6 rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
+    <div class="card-app mt-6 rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
         <h3 class="font-black mb-2">
             Información
         </h3>

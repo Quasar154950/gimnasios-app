@@ -28,7 +28,7 @@
 
     <div class="px-6 mt-8">
 
-        <div class="rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-6 shadow-2xl text-center">
+        <div class="card-app rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-6 shadow-2xl text-center">
             <div class="h-24 w-24 mx-auto rounded-full bg-white text-zinc-900 flex items-center justify-center text-5xl shadow-xl">
                 👤
             </div>
@@ -48,7 +48,7 @@
 
         <div class="grid grid-cols-2 gap-4 mt-6">
 
-            <div class="rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
+            <div class="card-app rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-2">📧</div>
                 <p class="text-xs text-zinc-500">Email</p>
                 <p class="font-bold text-sm break-words mt-1">
@@ -56,7 +56,7 @@
                 </p>
             </div>
 
-            <div class="rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
+            <div class="card-app rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-2">📱</div>
                 <p class="text-xs text-zinc-500">Teléfono</p>
                 <p class="font-bold text-sm mt-1">
@@ -64,7 +64,7 @@
                 </p>
             </div>
 
-            <div class="rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
+            <div class="card-app rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-2">🏋️</div>
                 <p class="text-xs text-zinc-500">Ingresos este mes</p>
                 <p class="font-black text-2xl mt-1">
@@ -72,7 +72,7 @@
                 </p>
             </div>
 
-            <div class="rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
+            <div class="card-app rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-2">📅</div>
                 <p class="text-xs text-zinc-500">Reservas activas</p>
                 <p class="font-black text-2xl mt-1">
@@ -82,7 +82,7 @@
 
         </div>
 
-        <div class="rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
+        <div class="card-app rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
             <h3 class="font-black text-lg">
                 💳 Estado de cuota
             </h3>
@@ -120,7 +120,7 @@
             @endif
         </div>
 
-        <div class="rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
+        <div class="card-app rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
     <h3 class="font-black text-lg">
         📱 Último ingreso a la app
     </h3>
@@ -136,7 +136,7 @@
     @endif
 </div>
 
-<div class="rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
+<div class="card-app rounded-3xl bg-white/10 border border-white/10 p-5 mt-6">
     <h3 class="font-black text-lg">
         🏋️ Última asistencia al gimnasio
     </h3>

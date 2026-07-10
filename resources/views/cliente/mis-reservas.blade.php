@@ -34,7 +34,7 @@
 
         @if($misReservas->isEmpty())
 
-            <div class="rounded-3xl bg-white/10 p-8 text-center">
+            <div class="card-app rounded-3xl bg-white/10 p-8 text-center">
 
                 <div class="text-6xl mb-4">
                     📭
@@ -59,7 +59,7 @@
 
             @foreach($misReservas as $reserva)
 
-                <div class="rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
+                <div class="card-app rounded-3xl bg-white text-zinc-900 p-5 shadow-xl">
 
                     <div class="flex justify-between items-start">
 
