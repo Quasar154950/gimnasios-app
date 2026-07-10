@@ -37,6 +37,7 @@ a:not(.card-app):active {
     overflow: hidden;
 
     transform: translateY(0) scale(1);
+    translate: 0 0;
 
     box-shadow:
         0 12px 28px rgba(0, 0, 0, 0.24),
@@ -48,14 +49,14 @@ a:not(.card-app):active {
         filter 0.22s ease;
 
     -webkit-tap-highlight-color: transparent;
-    will-change: transform;
+    will-change: transform, translate, opacity;
 }
 
 .card-app:active {
-    transform: translateY(2px) scale(0.955);
+    transform: translateY(3px) scale(0.95);
 
     box-shadow:
-        0 5px 14px rgba(0, 0, 0, 0.28),
+        0 4px 12px rgba(0, 0, 0, 0.30),
         0 0 28px rgba(249, 115, 22, 0.30);
 
     filter: brightness(1.06);
@@ -93,8 +94,11 @@ a:not(.card-app):active {
     button,
     a,
     .card-app,
-    .glow-tap {
-        transition: none;
+    .glow-tap,
+    .page-enter,
+    .page-leave {
+        transition: none !important;
+        animation: none !important;
     }
 }
 /*
@@ -142,7 +146,7 @@ a:not(.card-app):active {
 */
 
 .card-app {
-    animation: cardEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: cardEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .card-app:nth-child(1) {
@@ -172,12 +176,12 @@ a:not(.card-app):active {
 @keyframes cardEnter {
     from {
         opacity: 0;
-        transform: translateY(22px) scale(0.97);
+        translate: 0 22px;
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        translate: 0 0;
     }
 }
 
