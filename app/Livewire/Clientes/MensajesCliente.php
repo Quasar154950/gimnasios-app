@@ -39,15 +39,11 @@ class MensajesCliente extends Component
         $this->mensaje = '';
     }
 
-    public function vaciarConversacion()
+    public function vaciarConversacion(): void
     {
-        $this->validarAcceso();
+    $this->validarAcceso();
 
-        if (auth()->user()->role !== 'abogado') {
-            abort(403);
-        }
-
-        $this->cliente->mensajes()->delete();
+    $this->cliente->mensajes()->delete();
     }
 
     public function marcarMensajesComoLeidos(): void
