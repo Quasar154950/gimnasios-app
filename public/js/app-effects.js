@@ -21,8 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
             !el.hasAttribute('download')
         ) {
 
-            // No animar enlaces Livewire
-            if (el.hasAttribute('wire:click')) {
+            // No interceptar enlaces manejados por Livewire
+            if (
+                el.hasAttribute('wire:click') ||
+                el.hasAttribute('wire:navigate')
+            ) {
                 return;
             }
 
