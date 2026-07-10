@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Gimnasio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ asset('css/app-effects.css') }}">
-</head>
+@extends('layouts.cliente-app')
 
-<body class="bg-[#071015] text-white">
+@section('title', 'Mi Gimnasio')
+
+@section('content')
 
 @php
     $cliente = \App\Models\Cliente::where('user_id', auth()->id())->first();
@@ -246,6 +240,10 @@ if ($proximaReserva && $proximaReserva->turno) {
 
 </div>
 
+@endsection
+
+@section('fixed-ui')
+
 {{-- BARRA INFERIOR --}}
 <div class="fixed bottom-0 left-0 right-0 z-50">
     <div class="max-w-md mx-auto px-5 pb-4">
@@ -280,6 +278,4 @@ if ($proximaReserva && $proximaReserva->turno) {
     </div>
 </div>
 
-<script src="{{ asset('js/app-effects.js') }}"></script>   
-</body>
-</html>
+@endsection

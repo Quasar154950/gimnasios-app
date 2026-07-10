@@ -97,7 +97,89 @@ a:not(.card-app):active {
         transition: none;
     }
 }
+/*
+|--------------------------------------------------------------------------
+| TRANSICIÓN DE ENTRADA DE PANTALLA
+|--------------------------------------------------------------------------
+*/
 
+.page-enter {
+    animation: pageEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SALIDA DE PANTALLA
+|--------------------------------------------------------------------------
+*/
+
+.page-leave {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ENTRADA ESCALONADA DE TARJETAS
+|--------------------------------------------------------------------------
+*/
+
+.card-app {
+    animation: cardEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.card-app:nth-child(1) {
+    animation-delay: 0.03s;
+}
+
+.card-app:nth-child(2) {
+    animation-delay: 0.07s;
+}
+
+.card-app:nth-child(3) {
+    animation-delay: 0.11s;
+}
+
+.card-app:nth-child(4) {
+    animation-delay: 0.15s;
+}
+
+.card-app:nth-child(5) {
+    animation-delay: 0.19s;
+}
+
+.card-app:nth-child(6) {
+    animation-delay: 0.23s;
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
 
 
