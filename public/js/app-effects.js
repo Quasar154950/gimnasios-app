@@ -34,12 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const page = document.getElementById('app-page');
 
             if (page) {
-                page.classList.remove('page-enter');
-                page.classList.add('page-leave');
 
+                // Dejamos que el botón vuelva antes de iniciar la salida
                 setTimeout(() => {
-                    window.location.href = el.href;
-                }, 170);
+
+                    page.classList.remove('page-enter');
+                    page.classList.add('page-leave');
+
+                    setTimeout(() => {
+                        window.location.href = el.href;
+                    }, 170);
+
+                }, 100);
+
             } else {
                 window.location.href = el.href;
             }
