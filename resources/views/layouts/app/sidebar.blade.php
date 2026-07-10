@@ -64,7 +64,7 @@
                             icon="home"
                             :href="route('cliente.dashboard')"
                             :current="request()->routeIs('cliente.dashboard')"
-                            wire:navigate
+                            
                         >
                             Panel
                         </flux:sidebar.item>
