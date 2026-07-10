@@ -480,27 +480,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-use Illuminate\Support\Facades\Artisan;
-
-Route::get('/migrar-chat-gym', function () {
-
-    try {
-
-        Artisan::call('migrate', [
-            '--force' => true,
-        ]);
-
-        return '<pre>' . Artisan::output() . '</pre>';
-
-    } catch (\Throwable $e) {
-
-        return '<pre>'
-            . $e->getMessage()
-            . "\n\n"
-            . $e->getTraceAsString()
-            . '</pre>';
-    }
-
-});
-
 require __DIR__ . '/settings.php';
