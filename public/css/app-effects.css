@@ -196,43 +196,44 @@ a:not(.card-app):active {
 }
 /*
 |--------------------------------------------------------------------------
-| RIPPLE TÁCTIL
+| BRILLO PREMIUM
 |--------------------------------------------------------------------------
-| Onda de luz suave al tocar las tarjetas principales.
+| Reflejo diagonal suave al tocar las tarjetas.
 */
 
-.card-app::after {
+.card-app::before {
     content: "";
     position: absolute;
 
-    left: var(--ripple-x, 50%);
-    top: var(--ripple-y, 50%);
+    top: -45%;
+    left: -120%;
 
-    width: 12px;
-    height: 12px;
+    width: 55%;
+    height: 190%;
 
-    border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.32);
+    background: linear-gradient(
+        115deg,
+        transparent,
+        rgba(255, 255, 255, 0.40),
+        transparent
+    );
 
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-
+    transform: rotate(18deg);
     pointer-events: none;
+    z-index: 2;
 }
 
-.card-app.ripple-active::after {
-    animation: cardRipple 420ms ease-out;
+.card-app.shine::before {
+    animation: premiumShine 450ms ease-out;
 }
 
-@keyframes cardRipple {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0.65;
+@keyframes premiumShine {
+    from {
+        left: -120%;
     }
 
-    100% {
-        transform: translate(-50%, -50%) scale(28);
-        opacity: 0;
+    to {
+        left: 160%;
     }
 }
 

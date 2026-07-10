@@ -8,24 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Brillo al tocar tarjetas grandes
         if (el.classList.contains('card-app')) {
-            const rect = el.getBoundingClientRect();
-
-            const rippleX = e.clientX - rect.left;
-            const rippleY = e.clientY - rect.top;
-
-            el.style.setProperty('--ripple-x', `${rippleX}px`);
-            el.style.setProperty('--ripple-y', `${rippleY}px`);
-
-            el.classList.remove('ripple-active');
+            el.classList.remove('shine');
 
             void el.offsetWidth;
 
-            el.classList.add('ripple-active');
+            el.classList.add('shine');
 
             setTimeout(() => {
-                el.classList.remove('ripple-active');
-            }, 420);
+                el.classList.remove('shine');
+            }, 450);
         }
 
         if (navigator.vibrate) {
@@ -55,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (page) {
 
-                // Dejamos que el botón vuelva antes de iniciar la salida
+                // Esperamos 200 ms para que se vea el retorno del botón
                 setTimeout(() => {
 
                     page.classList.remove('page-enter');
