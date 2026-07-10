@@ -1,16 +1,16 @@
 <div class="space-y-4">
 
     {{-- ACCIONES DEL CHAT --}}
-    @if(auth()->user()->role === 'abogado' && !$mensajes->isEmpty())
+    @if(!$mensajes->isEmpty())
         <div class="flex justify-end">
 
             <button
                 type="button"
                 wire:click="vaciarConversacion"
-                onclick="return confirm('¿Seguro que querés borrar toda la conversación con este socio?')"
+                onclick="return confirm('¿Seguro que querés borrar toda la conversación?')"
                 style="background:black;color:white;border-radius:14px;padding:8px 14px;font-size:12px;font-weight:bold;display:inline-flex;align-items:center;gap:8px;"
             >
-                🗑 Vaciar conversación
+                🗑 Borrar conversación
             </button>
 
         </div>
