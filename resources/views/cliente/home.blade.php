@@ -110,7 +110,7 @@ if ($proximaReserva && $proximaReserva->turno) {
 
     {{-- TARJETA PRINCIPAL --}}
     <div class="px-6">
-        <div class="card-app rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-5 shadow-2xl">
+        <div class="rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-5 shadow-2xl">
             <p class="text-sm text-orange-100">
                 Gimnasio en tiempo real
             </p>
