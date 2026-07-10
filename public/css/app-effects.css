@@ -146,7 +146,7 @@ a:not(.card-app):active {
 */
 
 .card-app {
-    animation: cardEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    /* animation: cardEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) backwards; */
 }
 
 .card-app:nth-child(1) {
