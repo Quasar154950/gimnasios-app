@@ -1,27 +1,73 @@
+/*
+|--------------------------------------------------------------------------
+| BOTONES Y ENLACES
+|--------------------------------------------------------------------------
+| Efecto de presión general para botones y enlaces normales.
+| Las tarjetas con card-app usan su propia animación.
+*/
+
 .native-feel,
 button,
 a {
-    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    transition:
+        transform 0.14s ease,
+        box-shadow 0.14s ease,
+        filter 0.14s ease;
+
     -webkit-tap-highlight-color: transparent;
 }
 
 .native-feel:active,
 button:active,
-a:active {
+a:not(.card-app):active {
     transform: scale(0.96);
     filter: brightness(1.08);
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| TARJETAS APP
+|--------------------------------------------------------------------------
+| Sombra permanente, elevación y efecto de presión más visible.
+*/
+
 .card-app {
-    transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    position: relative;
+    overflow: hidden;
+
+    transform: translateY(0) scale(1);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.24),
+        0 2px 8px rgba(0, 0, 0, 0.16);
+
+    transition:
+        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+
     -webkit-tap-highlight-color: transparent;
+    will-change: transform;
 }
 
 .card-app:active {
-    transform: scale(0.97);
-    box-shadow: 0 0 28px rgba(249, 115, 22, 0.22);
-    filter: brightness(1.05);
+    transform: translateY(2px) scale(0.955);
+
+    box-shadow:
+        0 5px 14px rgba(0, 0, 0, 0.28),
+        0 0 28px rgba(249, 115, 22, 0.30);
+
+    filter: brightness(1.06);
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| BRILLO AL TOCAR
+|--------------------------------------------------------------------------
+| Se usa agregando la clase glow-tap.
+*/
 
 .glow-tap {
     position: relative;
@@ -29,8 +75,30 @@ a:active {
 }
 
 .glow-tap:active {
-    box-shadow: 0 0 24px rgba(249, 115, 22, 0.35);
+    box-shadow:
+        0 0 24px rgba(249, 115, 22, 0.35),
+        0 8px 20px rgba(0, 0, 0, 0.20);
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| RESPETO POR ACCESIBILIDAD
+|--------------------------------------------------------------------------
+| Reduce animaciones si el usuario lo tiene configurado en el dispositivo.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    .native-feel,
+    button,
+    a,
+    .card-app,
+    .glow-tap {
+        transition: none;
+    }
+}
+
+
 
 
 
