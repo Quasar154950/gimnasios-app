@@ -1,52 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const tappables = document.querySelectorAll(
-        'button, a, .native-tap, .card-app'
-    );
+    document.addEventListener('click', (e) => {
 
-    tappables.forEach((el) => {
+        const el = e.target.closest('button, a, .native-tap, .card-app');
 
-        el.addEventListener('click', (e) => {
+        if (!el) {
+            return;
+        }
 
-            if (navigator.vibrate) {
-                navigator.vibrate(12);
+        if (navigator.vibrate) {
+            navigator.vibrate(12);
+        }
+
+        // Solo enlaces internos
+        if (
+            el.tagName === 'A' &&
+            el.href &&
+            el.origin === window.location.origin &&
+            !el.target &&
+            !el.hasAttribute('download')
+        ) {
+
+            // No animar enlaces Livewire
+            if (el.hasAttribute('wire:click')) {
+                return;
             }
 
-            // Solo enlaces internos
-            if (
-                el.tagName === 'A' &&
-                el.href &&
-                el.origin === window.location.origin &&
-                !el.target &&
-                !el.hasAttribute('download')
-            ) {
+            e.preventDefault();
 
-                // No animar enlaces Livewire
-                if (el.hasAttribute('wire:click')) {
-                    return;
-                }
+            const page = document.getElementById('app-page');
 
-                e.preventDefault();
+            if (page) {
+                page.classList.remove('page-enter');
+                page.classList.add('page-leave');
 
-                const page = document.getElementById('app-page');
-
-                if (page) {
-
-                    page.classList.remove('page-enter');
-                    page.classList.add('page-leave');
-
-                    setTimeout(() => {
-                        window.location = el.href;
-                    }, 170);
-
-                } else {
-
-                    window.location = el.href;
-
-                }
+                setTimeout(() => {
+                    window.location.href = el.href;
+                }, 170);
+            } else {
+                window.location.href = el.href;
             }
-
-        });
+        }
 
     });
 
