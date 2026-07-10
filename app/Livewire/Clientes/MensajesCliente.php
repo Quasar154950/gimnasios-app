@@ -12,14 +12,14 @@ class MensajesCliente extends Component
 
     public string $mensaje = '';
 
-    public function mount(Cliente $cliente)
+    public function mount(Cliente $cliente): void
     {
         $this->cliente = $cliente;
 
         $this->marcarMensajesComoLeidos();
     }
 
-    public function enviarMensaje()
+    public function enviarMensaje(): void
     {
         $this->validarAcceso();
 
@@ -41,9 +41,20 @@ class MensajesCliente extends Component
 
     public function vaciarConversacion(): void
     {
-    $this->validarAcceso();
+        $this->validarAcceso();
 
-    $this->cliente->mensajes()->delete();
+        $user = auth()->user();
+
+        if ($user->role === 'cliente') {
+            $this->cliente->chat_borrado_cliente_at = now();
+        } elseif ($user->role === 'abogado') {
+            $this->cliente->chat_borrado_abogado_at = now();
+        } else {
+            abort(403);
+        }
+
+        $this->cliente->save();
+        $this->cliente->refresh();
     }
 
     public function marcarMensajesComoLeidos(): void
@@ -54,14 +65,41 @@ class MensajesCliente extends Component
             ? 'estudio'
             : 'cliente';
 
-        $this->cliente
+        $query = $this->cliente
             ->mensajes()
             ->where('remitente', $remitentePendiente)
-            ->where('leido', false)
-            ->update([
-                'leido' => true,
-                'leido_at' => now(),
-            ]);
+            ->where('leido', false);
+
+        /*
+         * Solo marca como leídos los mensajes que el usuario
+         * todavía puede ver después de haber limpiado su chat.
+         */
+        if (
+            auth()->user()->role === 'cliente'
+            && $this->cliente->chat_borrado_cliente_at
+        ) {
+            $query->where(
+                'created_at',
+                '>',
+                $this->cliente->chat_borrado_cliente_at
+            );
+        }
+
+        if (
+            auth()->user()->role === 'abogado'
+            && $this->cliente->chat_borrado_abogado_at
+        ) {
+            $query->where(
+                'created_at',
+                '>',
+                $this->cliente->chat_borrado_abogado_at
+            );
+        }
+
+        $query->update([
+            'leido' => true,
+            'leido_at' => now(),
+        ]);
     }
 
     private function validarAcceso(): void
@@ -95,13 +133,39 @@ class MensajesCliente extends Component
     {
         $this->marcarMensajesComoLeidos();
 
-        $mensajes = $this->cliente
+        $query = $this->cliente
             ->mensajes()
-            ->oldest()
-            ->get();
+            ->oldest();
+
+        $user = auth()->user();
+
+        if (
+            $user->role === 'cliente'
+            && $this->cliente->chat_borrado_cliente_at
+        ) {
+            $query->where(
+                'created_at',
+                '>',
+                $this->cliente->chat_borrado_cliente_at
+            );
+        }
+
+        if (
+            $user->role === 'abogado'
+            && $this->cliente->chat_borrado_abogado_at
+        ) {
+            $query->where(
+                'created_at',
+                '>',
+                $this->cliente->chat_borrado_abogado_at
+            );
+        }
+
+        $mensajes = $query->get();
 
         return view('livewire.clientes.mensajes-cliente', [
             'mensajes' => $mensajes,
         ]);
     }
 }
+
