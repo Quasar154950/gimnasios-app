@@ -484,9 +484,22 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/migrar-chat-gym', function () {
 
-    Artisan::call('migrate', ['--force' => true]);
+    try {
 
-    return nl2br(Artisan::output());
+        Artisan::call('migrate', [
+            '--force' => true,
+        ]);
+
+        return '<pre>' . Artisan::output() . '</pre>';
+
+    } catch (\Throwable $e) {
+
+        return '<pre>'
+            . $e->getMessage()
+            . "\n\n"
+            . $e->getTraceAsString()
+            . '</pre>';
+    }
 
 });
 
