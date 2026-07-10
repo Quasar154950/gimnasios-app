@@ -116,7 +116,7 @@ if ($proximaReserva && $proximaReserva->turno) {
 
     {{-- TARJETA PRINCIPAL --}}
     <div class="px-6">
-        <div class="rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-5 shadow-2xl">
+        <div class="card-app rounded-[2rem] bg-gradient-to-br from-orange-500 to-orange-700 p-5 shadow-2xl">
             <p class="text-sm text-orange-100">
                 Gimnasio en tiempo real
             </p>
@@ -145,15 +145,15 @@ if ($proximaReserva && $proximaReserva->turno) {
         <div class="grid grid-cols-2 gap-4">
 
             <a href="{{ route('cliente.cuota') }}"
-               class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-3">💳</div>
                 <h3 class="font-black">Pagos</h3>
                 <p class="text-xs text-zinc-500 mt-1">Cuotas y estado</p>
             </a>
 
             <a href="{{ route('cliente.mis-reservas') }}"
-   class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
-    <div class="text-3xl mb-3">📅</div>
+               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+                 <div class="text-3xl mb-3">📅</div>
 
     <h3 class="font-black">
         Mis reservas
@@ -183,39 +183,39 @@ if ($proximaReserva && $proximaReserva->turno) {
 </a>
 
             <a href="{{ route('cliente.musculacion') }}"
-               class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                <div class="text-3xl mb-3">🏋️</div>
                <h3 class="font-black">Musculación</h3>
                <p class="text-xs text-zinc-500 mt-1">{{ $presentesAhora }} presentes</p>
             </a>
 
             <a href="{{ route('cliente.mensajes') }}"
-               class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-3">💬</div>
                 <h3 class="font-black">Mensajes</h3>
                 <p class="text-xs text-zinc-500 mt-1">Chat interno</p>
             </a>
 
-            <div class="rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
+            <div class="card-app rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
                 <div class="text-3xl mb-3">📈</div>
                 <h3 class="font-black">Mi progreso</h3>
                 <p class="text-xs text-zinc-400 mt-1">Próximamente</p>
             </div>
 
-            <div class="rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
+            <div class="card-app rounded-[1.5rem] bg-white/10 border border-white/10 p-5">
                 <div class="text-3xl mb-3">📝</div>
                 <h3 class="font-black">Rutinas</h3>
                 <p class="text-xs text-zinc-400 mt-1">Próximamente</p>
             </div>
 
-            <div class="rounded-[1.5rem] bg-white/10 border border-white/10 p-5" id="novedades">
+            <div class="card-app rounded-[1.5rem] bg-white/10 border border-white/10 p-5" id="novedades">
                 <div class="text-3xl mb-3">📢</div>
                 <h3 class="font-black">Novedades</h3>
                 <p class="text-xs text-zinc-400 mt-1">Próximamente</p>
             </div>
 
             <a href="{{ route('cliente.perfil') }}"
-   class="rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
 
     <div class="text-3xl mb-3">👤</div>
 
