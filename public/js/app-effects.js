@@ -8,6 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (el.classList.contains('card-app')) {
+            const rect = el.getBoundingClientRect();
+
+            const rippleX = e.clientX - rect.left;
+            const rippleY = e.clientY - rect.top;
+
+            el.style.setProperty('--ripple-x', `${rippleX}px`);
+            el.style.setProperty('--ripple-y', `${rippleY}px`);
+
+            el.classList.remove('ripple-active');
+
+            void el.offsetWidth;
+
+            el.classList.add('ripple-active');
+
+            setTimeout(() => {
+                el.classList.remove('ripple-active');
+            }, 420);
+        }
+
         if (navigator.vibrate) {
             navigator.vibrate(12);
         }

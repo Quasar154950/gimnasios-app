@@ -194,7 +194,47 @@ a:not(.card-app):active {
 .qr-float:active {
     transform: translateX(-50%) scale(0.92) !important;
 }
+/*
+|--------------------------------------------------------------------------
+| RIPPLE TÁCTIL
+|--------------------------------------------------------------------------
+| Onda de luz suave al tocar las tarjetas principales.
+*/
 
+.card-app::after {
+    content: "";
+    position: absolute;
+
+    left: var(--ripple-x, 50%);
+    top: var(--ripple-y, 50%);
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.32);
+
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.card-app.ripple-active::after {
+    animation: cardRipple 420ms ease-out;
+}
+
+@keyframes cardRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.65;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(28);
+        opacity: 0;
+    }
+}
 
 
 
