@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = el.href;
                     }, 170);
 
-                }, 150);
+                }, 200);
 
             } else {
                 window.location.href = el.href;
