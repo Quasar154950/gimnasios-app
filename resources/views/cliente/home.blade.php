@@ -139,14 +139,14 @@ if ($proximaReserva && $proximaReserva->turno) {
         <div class="grid grid-cols-2 gap-4">
 
             <a href="{{ route('cliente.cuota') }}"
-               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app card-light rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-3">💳</div>
                 <h3 class="font-black">Pagos</h3>
                 <p class="text-xs text-zinc-500 mt-1">Cuotas y estado</p>
             </a>
 
             <a href="{{ route('cliente.mis-reservas') }}"
-               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app card-light rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                  <div class="text-3xl mb-3">📅</div>
 
     <h3 class="font-black">
@@ -177,14 +177,14 @@ if ($proximaReserva && $proximaReserva->turno) {
 </a>
 
             <a href="{{ route('cliente.musculacion') }}"
-               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app card-light rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                <div class="text-3xl mb-3">🏋️</div>
                <h3 class="font-black">Musculación</h3>
                <p class="text-xs text-zinc-500 mt-1">{{ $presentesAhora }} presentes</p>
             </a>
 
             <a href="{{ route('cliente.mensajes') }}"
-               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+               class="card-app card-light rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
                 <div class="text-3xl mb-3">💬</div>
                 <h3 class="font-black">Mensajes</h3>
                 <p class="text-xs text-zinc-500 mt-1">Chat interno</p>
@@ -209,7 +209,7 @@ if ($proximaReserva && $proximaReserva->turno) {
             </div>
 
             <a href="{{ route('cliente.perfil') }}"
-               class="card-app rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
+                class="card-app card-light rounded-[1.5rem] bg-white text-zinc-900 p-5 shadow-xl">
 
     <div class="text-3xl mb-3">👤</div>
 

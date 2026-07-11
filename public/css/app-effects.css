@@ -198,10 +198,11 @@ a:not(.card-app):active {
 |--------------------------------------------------------------------------
 | BRILLO PREMIUM
 |--------------------------------------------------------------------------
-| Reflejo diagonal suave al tocar las tarjetas.
 */
 
-.card-app::before {
+/* Tarjetas oscuras y naranja */
+
+.card-app:not(.card-light)::before {
     content: "";
     position: absolute;
 
@@ -214,20 +215,47 @@ a:not(.card-app):active {
     background: linear-gradient(
         115deg,
         transparent,
-        rgba(255, 255, 255, 0.40),
+        rgba(255,255,255,.40),
         transparent
     );
 
     transform: rotate(18deg);
+
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Tarjetas blancas */
+
+.card-light::before {
+    content: "";
+    position: absolute;
+
+    top: -45%;
+    left: -120%;
+
+    width: 55%;
+    height: 190%;
+
+    background: linear-gradient(
+        115deg,
+        transparent,
+        rgba(0,0,0,.12),
+        transparent
+    );
+
+    transform: rotate(18deg);
+
     pointer-events: none;
     z-index: 2;
 }
 
 .card-app.shine::before {
-    animation: premiumShine 450ms ease-out;
+    animation: premiumShine .45s ease;
 }
 
 @keyframes premiumShine {
+
     from {
         left: -120%;
     }
@@ -235,6 +263,7 @@ a:not(.card-app):active {
     to {
         left: 160%;
     }
+
 }
 
 
