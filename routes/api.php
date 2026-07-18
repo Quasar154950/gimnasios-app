@@ -1,0 +1,50 @@
+<?php
+
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MobileHomeController;
+use App\Http\Controllers\Api\MobileReservaController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('mobile')->group(function () {
+
+    Route::post(
+        '/login',
+        [AuthController::class, 'login']
+    );
+
+    Route::middleware('auth:sanctum')->group(function () {
+
+        Route::get(
+            '/me',
+            [AuthController::class, 'me']
+        );
+
+        Route::get(
+            '/home',
+            [MobileHomeController::class, 'index']
+        );
+
+        // RESERVAS Y TURNOS
+        Route::get(
+            '/reservas',
+            [MobileReservaController::class, 'index']
+        );
+
+        Route::post(
+            '/turnos/{turno}/reservar',
+            [MobileReservaController::class, 'reservar']
+        );
+
+        Route::delete(
+            '/reservas/{reserva}',
+            [MobileReservaController::class, 'cancelar']
+        );
+
+        Route::post(
+            '/logout',
+            [AuthController::class, 'logout']
+        );
+
+    });
+
+});
