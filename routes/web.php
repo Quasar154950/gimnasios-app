@@ -481,9 +481,6 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
-
 Route::get('/ejecutar-migraciones-mobile', function () {
     Artisan::call('migrate', [
         '--force' => true,
