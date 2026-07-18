@@ -46,10 +46,14 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Evita acumular tokens innecesarios del mismo usuario.
-        $user->tokens()->where('name', 'sportgym-mobile')->delete();
+        // Evita acumular tokens del mismo teléfono.
+        $user->tokens()
+            ->where('name', 'gym-mobile')
+            ->delete();
 
-        $token = $user->createToken('sportgym-mobile')->plainTextToken;
+        $token = $user
+            ->createToken('gym-mobile')
+            ->plainTextToken;
 
         $user->forceFill([
             'ultimo_login_at' => now(),
@@ -59,14 +63,16 @@ class AuthController extends Controller
             'message' => 'Inicio de sesión correcto.',
             'token' => $token,
             'token_type' => 'Bearer',
+
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
-                'activo' => $user->activo,
+                'activo' => (bool) $user->activo,
                 'ultimo_login_at' => $user->ultimo_login_at,
             ],
+
             'cliente' => [
                 'id' => $cliente->id,
                 'nombre' => $cliente->nombre ?? $user->name,
@@ -77,47 +83,58 @@ class AuthController extends Controller
     }
 
     public function me(Request $request): JsonResponse
-{
-    $user = $request->user()->load('cliente.abogado');
+    {
+        $user = $request->user()->load('cliente.abogado');
 
-    $cliente = $user->cliente;
+        $cliente = $user->cliente;
 
-    if (! $cliente) {
+        if (! $cliente) {
+            return response()->json([
+                'message' => 'No existe un socio asociado a esta cuenta.',
+            ], 422);
+        }
+
+        $gimnasio = $cliente->abogado;
+
         return response()->json([
-            'message' => 'No existe un socio asociado a esta cuenta.',
-        ], 422);
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'activo' => (bool) $user->activo,
+                'ultimo_login_at' => $user->ultimo_login_at,
+            ],
+
+            'cliente' => [
+                'id' => $cliente->id,
+                'nombre' => $cliente->nombre ?? $user->name,
+                'apellido' => $cliente->apellido ?? null,
+                'dni' => $cliente->dni ?? null,
+                'contacto' => $cliente->contacto ?? null,
+                'telefono' => $cliente->telefono ?? null,
+                'fecha_vencimiento_cuota' =>
+                    $cliente->fecha_vencimiento_cuota ?? null,
+            ],
+
+            'gimnasio' => [
+                'id' => $gimnasio?->id,
+                'nombre' =>
+                    $gimnasio?->nombre_estudio
+                    ?? $gimnasio?->name
+                    ?? 'Gimnasio',
+                'slug' =>
+                    $gimnasio?->slug_estudio
+                    ?? 'gimnasio',
+            ],
+        ]);
     }
-
-    $gimnasio = $cliente->abogado;
-
-    return response()->json([
-        'user' => [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->role,
-            'activo' => $user->activo,
-            'ultimo_login_at' => $user->ultimo_login_at,
-        ],
-
-        'cliente' => [
-            'id' => $cliente->id,
-            'nombre' => $cliente->nombre ?? $user->name,
-            'apellido' => $cliente->apellido ?? null,
-            'dni' => $cliente->dni ?? null,
-        ],
-
-        'gimnasio' => [
-            'id' => $gimnasio?->id,
-            'nombre' => $gimnasio?->nombre_estudio ?? 'SportGym Tandil',
-            'slug' => $gimnasio?->slug_estudio ?? 'sportgym',
-        ],
-    ]);
-}
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()?->delete();
+        $request->user()
+            ->currentAccessToken()
+            ?->delete();
 
         return response()->json([
             'message' => 'Sesión cerrada correctamente.',
