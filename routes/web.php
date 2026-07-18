@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ExpedienteController;
@@ -480,19 +479,5 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
-
-Route::get('/ejecutar-migraciones-mobile', function () {
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    Artisan::call('optimize:clear');
-
-    return nl2br(
-        "MIGRACIONES EJECUTADAS\n\n" .
-        Artisan::output()
-    );
-});
-
 
 require __DIR__ . '/settings.php';
