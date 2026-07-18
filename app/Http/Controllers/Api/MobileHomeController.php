@@ -193,6 +193,10 @@ class MobileHomeController extends Controller
             'musculacion' => [
                 'presentes_ahora' => $presentesAhora,
             ],
+
+            'qr' => [
+                'url' => route('asistencias.marcar', $cliente->id),
+            ],
         ]);
     }
 }
