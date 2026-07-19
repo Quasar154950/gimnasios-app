@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MobileHomeController;
+use App\Http\Controllers\Api\MobileMensajeController;
 use App\Http\Controllers\Api\MobileReservaController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,12 @@ Route::prefix('mobile')->group(function () {
             [MobileHomeController::class, 'index']
         );
 
-        // RESERVAS Y TURNOS
+        /*
+        |--------------------------------------------------------------------------
+        | RESERVAS Y TURNOS
+        |--------------------------------------------------------------------------
+        */
+
         Route::get(
             '/reservas',
             [MobileReservaController::class, 'index']
@@ -38,6 +44,27 @@ Route::prefix('mobile')->group(function () {
         Route::delete(
             '/reservas/{reserva}',
             [MobileReservaController::class, 'cancelar']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | MENSAJES
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/mensajes',
+            [MobileMensajeController::class, 'index']
+        );
+
+        Route::post(
+            '/mensajes',
+            [MobileMensajeController::class, 'store']
+        );
+
+        Route::delete(
+            '/mensajes',
+            [MobileMensajeController::class, 'clear']
         );
 
         Route::post(
