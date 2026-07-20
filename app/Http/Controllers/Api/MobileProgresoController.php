@@ -26,23 +26,33 @@ class MobileProgresoController extends Controller
         $inicioMes = $hoy->copy()->startOfMonth();
         $finMes = $hoy->copy()->endOfMonth();
         $inicioAnio = $hoy->copy()->startOfYear();
+
         $objetivoMensual = 12;
 
         /*
         |--------------------------------------------------------------------------
-        | FECHAS DE ASISTENCIA
+        | TODAS LAS ASISTENCIAS
         |--------------------------------------------------------------------------
-        |
-        | Se toma una sola asistencia por día para evitar duplicar resultados
-        | si el socio ingresó más de una vez durante la misma jornada.
-        |
         */
 
-        $fechasAsistencia = Asistencia::query()
+        $asistencias = Asistencia::query()
             ->where('cliente_id', $cliente->id)
             ->whereNotNull('fecha')
             ->orderBy('fecha')
-            ->get(['fecha'])
+            ->orderBy('hora_ingreso')
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | FECHAS ÚNICAS DE ENTRENAMIENTO
+        |--------------------------------------------------------------------------
+        |
+        | Para estadísticas de entrenamientos se considera una sola asistencia
+        | por día, aunque el socio haya ingresado varias veces.
+        |
+        */
+
+        $fechasAsistencia = $asistencias
             ->pluck('fecha')
             ->map(function ($fecha) {
                 return Carbon::parse($fecha)->startOfDay();
@@ -50,6 +60,7 @@ class MobileProgresoController extends Controller
             ->unique(function (Carbon $fecha) {
                 return $fecha->format('Y-m-d');
             })
+            ->sort()
             ->values();
 
         /*
@@ -71,6 +82,128 @@ class MobileProgresoController extends Controller
                 return $fecha->betweenIncluded($inicioAnio, $hoy);
             })
             ->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | DURACIÓN DE LOS ENTRENAMIENTOS
+        |--------------------------------------------------------------------------
+        |
+        | Solo se calculan asistencias que tengan ingreso y salida.
+        |
+        */
+
+        dd($asistencias->first());
+        $duracionesMinutos = $asistencias
+            ->filter(function ($asistencia) {
+                return $asistencia->hora_ingreso
+                    && $asistencia->hora_salida;
+            })
+            ->map(function ($asistencia) {
+                $fecha = Carbon::parse($asistencia->fecha)
+                    ->format('Y-m-d');
+
+                $ingreso = Carbon::parse(
+                    $fecha . ' ' . $asistencia->hora_ingreso
+                );
+
+                $salida = Carbon::parse(
+                    $fecha . ' ' . $asistencia->hora_salida
+                );
+
+                /*
+                | Si por alguna razón la salida quedó después de medianoche,
+                | se considera que pertenece al día siguiente.
+                */
+
+                if ($salida->lessThan($ingreso)) {
+                    $salida->addDay();
+                }
+
+                return max(
+                    0,
+                    $ingreso->diffInMinutes($salida)
+                );
+            });
+
+        $tiempoTotalMinutos = (int) $duracionesMinutos->sum();
+
+        $duracionPromedioMinutos = $duracionesMinutos->isNotEmpty()
+            ? (int) round($duracionesMinutos->average())
+            : 0;
+
+        $duracionesMesActual = $asistencias
+            ->filter(function ($asistencia) use ($inicioMes, $finMes) {
+                if (
+                    ! $asistencia->fecha
+                    || ! $asistencia->hora_ingreso
+                    || ! $asistencia->hora_salida
+                ) {
+                    return false;
+                }
+
+                $fecha = Carbon::parse($asistencia->fecha);
+
+                return $fecha->betweenIncluded(
+                    $inicioMes,
+                    $finMes
+                );
+            })
+            ->map(function ($asistencia) {
+                $fecha = Carbon::parse($asistencia->fecha)
+                    ->format('Y-m-d');
+
+                $ingreso = Carbon::parse(
+                    $fecha . ' ' . $asistencia->hora_ingreso
+                );
+
+                $salida = Carbon::parse(
+                    $fecha . ' ' . $asistencia->hora_salida
+                );
+
+                if ($salida->lessThan($ingreso)) {
+                    $salida->addDay();
+                }
+
+                return max(
+                    0,
+                    $ingreso->diffInMinutes($salida)
+                );
+            });
+
+        $tiempoMesMinutos = (int) $duracionesMesActual->sum();
+
+        /*
+        |--------------------------------------------------------------------------
+        | PROMEDIOS
+        |--------------------------------------------------------------------------
+        */
+
+        if ($fechasAsistencia->isNotEmpty()) {
+            $primeraAsistencia = $fechasAsistencia->first();
+
+            $cantidadSemanas = max(
+                1,
+                $primeraAsistencia->diffInWeeks($hoy) + 1
+            );
+
+            $cantidadMeses = max(
+                1,
+                $primeraAsistencia->diffInMonths($hoy) + 1
+            );
+        } else {
+            $cantidadSemanas = 1;
+            $cantidadMeses = 1;
+        }
+
+        $promedioSemanal = round(
+            $totalAsistencias / $cantidadSemanas,
+            1
+        );
+
+        $promedioMensual = round(
+            $totalAsistencias / $cantidadMeses,
+            1
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -104,13 +237,13 @@ class MobileProgresoController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | ASISTENCIAS DE LOS ÚLTIMOS 6 MESES
+        | ACTIVIDAD DE LOS ÚLTIMOS 12 MESES
         |--------------------------------------------------------------------------
         */
 
         $asistenciasPorMes = collect();
 
-        for ($i = 5; $i >= 0; $i--) {
+        for ($i = 11; $i >= 0; $i--) {
             $mes = $hoy->copy()->subMonths($i);
 
             $cantidad = $fechasAsistencia
@@ -123,13 +256,17 @@ class MobileProgresoController extends Controller
             $asistenciasPorMes->push([
                 'clave' => $mes->format('Y-m'),
                 'mes' => $this->nombreMes($mes),
+                'mes_nombre' => $this->nombreMes($mes),
+                'anio' => $mes->year,
                 'cantidad' => $cantidad,
+                'asistencias' => $cantidad,
+                'entrenamientos' => $cantidad,
             ]);
         }
 
         /*
         |--------------------------------------------------------------------------
-        | LOGROS
+        | LOGROS AUTOMÁTICOS
         |--------------------------------------------------------------------------
         */
 
@@ -138,58 +275,136 @@ class MobileProgresoController extends Controller
                 'codigo' => 'primera_asistencia',
                 'titulo' => 'Primer paso',
                 'descripcion' => 'Registraste tu primera asistencia.',
+                'icono' => 'entrenamiento',
                 'desbloqueado' => $totalAsistencias >= 1,
             ],
             [
                 'codigo' => 'diez_asistencias',
                 'titulo' => 'En movimiento',
-                'descripcion' => 'Alcanzaste 10 asistencias.',
+                'descripcion' => 'Alcanzaste 10 entrenamientos.',
+                'icono' => 'fitness',
                 'desbloqueado' => $totalAsistencias >= 10,
+            ],
+            [
+                'codigo' => 'veinticinco_asistencias',
+                'titulo' => 'Buen ritmo',
+                'descripcion' => 'Alcanzaste 25 entrenamientos.',
+                'icono' => 'medalla',
+                'desbloqueado' => $totalAsistencias >= 25,
             ],
             [
                 'codigo' => 'cincuenta_asistencias',
                 'titulo' => 'Constancia',
-                'descripcion' => 'Alcanzaste 50 asistencias.',
+                'descripcion' => 'Alcanzaste 50 entrenamientos.',
+                'icono' => 'trofeo',
                 'desbloqueado' => $totalAsistencias >= 50,
+            ],
+            [
+                'codigo' => 'cien_asistencias',
+                'titulo' => 'Centenario',
+                'descripcion' => 'Alcanzaste 100 entrenamientos.',
+                'icono' => 'premium',
+                'desbloqueado' => $totalAsistencias >= 100,
+            ],
+            [
+                'codigo' => 'doscientas_cincuenta_asistencias',
+                'titulo' => 'Leyenda del gimnasio',
+                'descripcion' => 'Alcanzaste 250 entrenamientos.',
+                'icono' => 'trofeo',
+                'desbloqueado' => $totalAsistencias >= 250,
             ],
             [
                 'codigo' => 'racha_tres',
                 'titulo' => 'Tres días seguidos',
                 'descripcion' => 'Entrenaste durante 3 días consecutivos.',
+                'icono' => 'racha',
                 'desbloqueado' => $mejorRacha >= 3,
             ],
             [
                 'codigo' => 'racha_siete',
                 'titulo' => 'Semana imparable',
                 'descripcion' => 'Entrenaste durante 7 días consecutivos.',
+                'icono' => 'fuego',
                 'desbloqueado' => $mejorRacha >= 7,
+            ],
+            [
+                'codigo' => 'racha_treinta',
+                'titulo' => 'Imparable',
+                'descripcion' => 'Alcanzaste una racha de 30 días.',
+                'icono' => 'fuego',
+                'desbloqueado' => $mejorRacha >= 30,
             ],
             [
                 'codigo' => 'objetivo_mensual',
                 'titulo' => 'Objetivo cumplido',
                 'descripcion' => 'Cumpliste el objetivo mensual.',
+                'icono' => 'trofeo',
                 'desbloqueado' =>
                     $asistenciasMesActual >= $objetivoMensual,
             ],
         ];
 
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA
+        |--------------------------------------------------------------------------
+        |
+        | Se incluyen nombres alternativos para mantener compatibilidad con
+        | la pantalla Flutter actual.
+        |
+        */
+
         return response()->json([
             'resumen' => [
                 'total_asistencias' => $totalAsistencias,
+                'total_entrenamientos' => $totalAsistencias,
+                'entrenamientos_totales' => $totalAsistencias,
+
+                'asistencias_mes' => $asistenciasMesActual,
                 'asistencias_mes_actual' => $asistenciasMesActual,
+                'entrenamientos_mes' => $asistenciasMesActual,
+
                 'asistencias_anio_actual' => $asistenciasAnioActual,
+
                 'racha_actual' => $rachaActual,
                 'mejor_racha' => $mejorRacha,
+
+                'tiempo_total_minutos' => $tiempoTotalMinutos,
+                'tiempo_total_formateado' =>
+                    $this->formatearMinutos($tiempoTotalMinutos),
+
+                'tiempo_mes_minutos' => $tiempoMesMinutos,
+                'tiempo_mes_formateado' =>
+                    $this->formatearMinutos($tiempoMesMinutos),
+
+                'duracion_promedio_minutos' =>
+                    $duracionPromedioMinutos,
+
+                'duracion_promedio_formateada' =>
+                    $this->formatearMinutos(
+                        $duracionPromedioMinutos
+                    ),
+
+                'promedio_semanal' => $promedioSemanal,
+                'promedio_mensual' => $promedioMensual,
             ],
 
             'objetivo_mensual' => [
+                'meta' => $objetivoMensual,
                 'objetivo' => $objetivoMensual,
+
+                'actual' => $asistenciasMesActual,
+                'progreso' => $asistenciasMesActual,
                 'realizadas' => $asistenciasMesActual,
+                'asistencias_mes' => $asistenciasMesActual,
+
                 'restantes' => max(
                     0,
                     $objetivoMensual - $asistenciasMesActual
                 ),
+
                 'porcentaje' => $porcentajeObjetivo,
+
                 'cumplido' =>
                     $asistenciasMesActual >= $objetivoMensual,
             ],
@@ -213,6 +428,7 @@ class MobileProgresoController extends Controller
                 return Carbon::parse($fecha)->format('Y-m-d');
             })
             ->unique()
+            ->sort()
             ->values();
 
         $ultimaFecha = Carbon::parse(
@@ -220,13 +436,15 @@ class MobileProgresoController extends Controller
         )->startOfDay();
 
         /*
-        | La racha sigue activa si la última asistencia fue hoy
-        | o ayer. Si fue antes, la racha actual es cero.
+        | La racha continúa activa si el último entrenamiento fue
+        | hoy o ayer.
         */
 
         if (
             ! $ultimaFecha->isSameDay($hoy)
-            && ! $ultimaFecha->isSameDay($hoy->copy()->subDay())
+            && ! $ultimaFecha->isSameDay(
+                $hoy->copy()->subDay()
+            )
         ) {
             return 0;
         }
@@ -234,7 +452,11 @@ class MobileProgresoController extends Controller
         $racha = 1;
         $fechaEsperada = $ultimaFecha->copy()->subDay();
 
-        for ($i = $fechasNormalizadas->count() - 2; $i >= 0; $i--) {
+        for (
+            $i = $fechasNormalizadas->count() - 2;
+            $i >= 0;
+            $i--
+        ) {
             $fecha = Carbon::parse(
                 $fechasNormalizadas[$i]
             )->startOfDay();
@@ -276,15 +498,44 @@ class MobileProgresoController extends Controller
             $fechaAnterior = $fechasOrdenadas[$i - 1];
             $fechaActual = $fechasOrdenadas[$i];
 
-            if ($fechaAnterior->copy()->addDay()->isSameDay($fechaActual)) {
+            if (
+                $fechaAnterior
+                    ->copy()
+                    ->addDay()
+                    ->isSameDay($fechaActual)
+            ) {
                 $rachaActual++;
-                $mejorRacha = max($mejorRacha, $rachaActual);
+
+                $mejorRacha = max(
+                    $mejorRacha,
+                    $rachaActual
+                );
             } else {
                 $rachaActual = 1;
             }
         }
 
         return $mejorRacha;
+    }
+
+    private function formatearMinutos(int $minutos): string
+    {
+        if ($minutos <= 0) {
+            return '0 min';
+        }
+
+        $horas = intdiv($minutos, 60);
+        $minutosRestantes = $minutos % 60;
+
+        if ($horas <= 0) {
+            return $minutosRestantes . ' min';
+        }
+
+        if ($minutosRestantes <= 0) {
+            return $horas . ' h';
+        }
+
+        return $horas . ' h ' . $minutosRestantes . ' min';
     }
 
     private function nombreMes(Carbon $fecha): string
