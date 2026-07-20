@@ -119,12 +119,20 @@ $duracionesMinutos = $asistencias
             $fecha . ' ' . $horaSalida
         );
 
+        /*
+        | Si la salida fue después de medianoche,
+        | corresponde al día siguiente.
+        */
         if ($salida->lessThan($ingreso)) {
             $salida->addDay();
         }
 
-        return (int) $ingreso->diffInMinutes($salida);
+        return max(
+            0,
+            (int) $ingreso->diffInMinutes($salida)
+        );
     });
+
         $tiempoTotalMinutos = (int) $duracionesMinutos->sum();
 
         $duracionPromedioMinutos = $duracionesMinutos->isNotEmpty()
