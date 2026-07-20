@@ -92,14 +92,17 @@ class MobileProgresoController extends Controller
         |
         */
 
-        $duracionesMinutos = collect();
+                $duracionesMinutos = collect();
         $duracionesMesActual = collect();
 
         foreach ($asistencias as $asistencia) {
+            /*
+            | Una entrada todavía abierta no tiene hora de salida.
+            | No se calcula hasta que el socio registre su salida.
+            */
             if (
-                empty($asistencia->fecha)
-                || empty($asistencia->hora_ingreso)
-                || empty($asistencia->hora_salida)
+                is_null($asistencia->hora_ingreso)
+                || is_null($asistencia->hora_salida)
             ) {
                 continue;
             }
@@ -108,27 +111,31 @@ class MobileProgresoController extends Controller
                 $fecha = Carbon::parse($asistencia->fecha)
                     ->format('Y-m-d');
 
-                $ingreso = Carbon::parse(
-                    $fecha . ' ' . $asistencia->hora_ingreso
+                $horaIngreso = Carbon::parse(
+                    $asistencia->hora_ingreso
+                )->format('H:i:s');
+
+                $horaSalida = Carbon::parse(
+                    $asistencia->hora_salida
+                )->format('H:i:s');
+
+                $ingreso = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $fecha . ' ' . $horaIngreso
                 );
 
-                $salida = Carbon::parse(
-                    $fecha . ' ' . $asistencia->hora_salida
+                $salida = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $fecha . ' ' . $horaSalida
                 );
 
-                /*
-                | Si la salida ocurrió después de medianoche,
-                | pertenece al día siguiente.
-                */
                 if ($salida->lessThan($ingreso)) {
                     $salida->addDay();
                 }
 
-                $duracion = max(
-                    0,
-                    (int) round(
-                        $ingreso->diffInMinutes($salida)
-                    )
+                $duracion = (int) $ingreso->diffInMinutes(
+                    $salida,
+                    true
                 );
 
                 $duracionesMinutos->push($duracion);
@@ -146,10 +153,6 @@ class MobileProgresoController extends Controller
                     $duracionesMesActual->push($duracion);
                 }
             } catch (\Throwable $exception) {
-                /*
-                | Una asistencia antigua con datos inválidos no debe
-                | impedir que cargue toda la pantalla Mi Progreso.
-                */
                 report($exception);
             }
         }
