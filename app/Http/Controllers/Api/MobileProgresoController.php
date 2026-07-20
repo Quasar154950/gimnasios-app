@@ -92,39 +92,39 @@ class MobileProgresoController extends Controller
         |
         */
 
-        $duracionesMinutos = $asistencias
+$duracionesMinutos = $asistencias
     ->filter(function ($asistencia) {
-        return $asistencia->fecha
-            && $asistencia->hora_ingreso
-            && $asistencia->hora_salida;
+        return ! empty($asistencia->fecha)
+            && ! empty($asistencia->hora_ingreso)
+            && ! empty($asistencia->hora_salida);
     })
     ->map(function ($asistencia) {
-                $fecha = Carbon::parse($asistencia->fecha)
-                    ->format('Y-m-d');
+        $fecha = Carbon::parse($asistencia->fecha)->format('Y-m-d');
 
-                $ingreso = Carbon::parse(
-                    $fecha . ' ' . $asistencia->hora_ingreso
-                );
+        $horaIngreso = Carbon::parse(
+            $asistencia->hora_ingreso
+        )->format('H:i:s');
 
-                $salida = Carbon::parse(
-                    $fecha . ' ' . $asistencia->hora_salida
-                );
+        $horaSalida = Carbon::parse(
+            $asistencia->hora_salida
+        )->format('H:i:s');
 
-                /*
-                | Si por alguna razón la salida quedó después de medianoche,
-                | se considera que pertenece al día siguiente.
-                */
+        $ingreso = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $fecha . ' ' . $horaIngreso
+        );
 
-                if ($salida->lessThan($ingreso)) {
-                    $salida->addDay();
-                }
+        $salida = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            $fecha . ' ' . $horaSalida
+        );
 
-                return max(
-                    0,
-                    $ingreso->diffInMinutes($salida)
-                );
-            });
+        if ($salida->lessThan($ingreso)) {
+            $salida->addDay();
+        }
 
+        return (int) $ingreso->diffInMinutes($salida);
+    });
         $tiempoTotalMinutos = (int) $duracionesMinutos->sum();
 
         $duracionPromedioMinutos = $duracionesMinutos->isNotEmpty()
