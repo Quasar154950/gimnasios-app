@@ -92,12 +92,27 @@ class MobileProgresoController extends Controller
         |
         */
 
-        return response()->json($asistencias->first());
         $duracionesMinutos = $asistencias
-            ->filter(function ($asistencia) {
-                return $asistencia->hora_ingreso
-                    && $asistencia->hora_salida;
-            })
+    ->filter(function ($asistencia) {
+        return $asistencia->fecha
+            && $asistencia->hora_ingreso
+            && $asistencia->hora_salida;
+    })
+    ->map(function ($asistencia) {
+        $fecha = Carbon::parse($asistencia->fecha)->format('Y-m-d');
+
+        $horaIngreso = Carbon::parse($asistencia->hora_ingreso)->format('H:i:s');
+        $horaSalida = Carbon::parse($asistencia->hora_salida)->format('H:i:s');
+
+        $ingreso = Carbon::parse($fecha . ' ' . $horaIngreso);
+        $salida = Carbon::parse($fecha . ' ' . $horaSalida);
+
+        if ($salida->lessThan($ingreso)) {
+            $salida->addDay();
+        }
+
+        return $ingreso->diffInMinutes($salida);
+    });
             ->map(function ($asistencia) {
                 $fecha = Carbon::parse($asistencia->fecha)
                     ->format('Y-m-d');
