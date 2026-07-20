@@ -92,71 +92,19 @@ class MobileProgresoController extends Controller
         |
         */
 
-$duracionesMinutos = $asistencias
-    ->filter(function ($asistencia) {
-        return ! empty($asistencia->fecha)
-            && ! empty($asistencia->hora_ingreso)
-            && ! empty($asistencia->hora_salida);
-    })
-    ->map(function ($asistencia) {
-        $fecha = Carbon::parse($asistencia->fecha)->format('Y-m-d');
+        $duracionesMinutos = collect();
+        $duracionesMesActual = collect();
 
-        $horaIngreso = Carbon::parse(
-            $asistencia->hora_ingreso
-        )->format('H:i:s');
+        foreach ($asistencias as $asistencia) {
+            if (
+                empty($asistencia->fecha)
+                || empty($asistencia->hora_ingreso)
+                || empty($asistencia->hora_salida)
+            ) {
+                continue;
+            }
 
-        $horaSalida = Carbon::parse(
-            $asistencia->hora_salida
-        )->format('H:i:s');
-
-        $ingreso = Carbon::createFromFormat(
-            'Y-m-d H:i:s',
-            $fecha . ' ' . $horaIngreso
-        );
-
-        $salida = Carbon::createFromFormat(
-            'Y-m-d H:i:s',
-            $fecha . ' ' . $horaSalida
-        );
-
-        /*
-        | Si la salida fue después de medianoche,
-        | corresponde al día siguiente.
-        */
-        if ($salida->lessThan($ingreso)) {
-            $salida->addDay();
-        }
-
-        return max(
-            0,
-            (int) $ingreso->diffInMinutes($salida)
-        );
-    });
-
-        $tiempoTotalMinutos = (int) $duracionesMinutos->sum();
-
-        $duracionPromedioMinutos = $duracionesMinutos->isNotEmpty()
-            ? (int) round($duracionesMinutos->average())
-            : 0;
-
-        $duracionesMesActual = $asistencias
-            ->filter(function ($asistencia) use ($inicioMes, $finMes) {
-                if (
-                    ! $asistencia->fecha
-                    || ! $asistencia->hora_ingreso
-                    || ! $asistencia->hora_salida
-                ) {
-                    return false;
-                }
-
-                $fecha = Carbon::parse($asistencia->fecha);
-
-                return $fecha->betweenIncluded(
-                    $inicioMes,
-                    $finMes
-                );
-            })
-            ->map(function ($asistencia) {
+            try {
                 $fecha = Carbon::parse($asistencia->fecha)
                     ->format('Y-m-d');
 
@@ -168,15 +116,49 @@ $duracionesMinutos = $asistencias
                     $fecha . ' ' . $asistencia->hora_salida
                 );
 
+                /*
+                | Si la salida ocurrió después de medianoche,
+                | pertenece al día siguiente.
+                */
                 if ($salida->lessThan($ingreso)) {
                     $salida->addDay();
                 }
 
-                return max(
+                $duracion = max(
                     0,
-                    $ingreso->diffInMinutes($salida)
+                    (int) round(
+                        $ingreso->diffInMinutes($salida)
+                    )
                 );
-            });
+
+                $duracionesMinutos->push($duracion);
+
+                $fechaAsistencia = Carbon::parse(
+                    $asistencia->fecha
+                )->startOfDay();
+
+                if (
+                    $fechaAsistencia->betweenIncluded(
+                        $inicioMes,
+                        $finMes
+                    )
+                ) {
+                    $duracionesMesActual->push($duracion);
+                }
+            } catch (\Throwable $exception) {
+                /*
+                | Una asistencia antigua con datos inválidos no debe
+                | impedir que cargue toda la pantalla Mi Progreso.
+                */
+                report($exception);
+            }
+        }
+
+        $tiempoTotalMinutos = (int) $duracionesMinutos->sum();
+
+        $duracionPromedioMinutos = $duracionesMinutos->isNotEmpty()
+            ? (int) round($duracionesMinutos->average())
+            : 0;
 
         $tiempoMesMinutos = (int) $duracionesMesActual->sum();
 
