@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Asistencia;
+use App\Models\Pago;
 use App\Models\ReservaTurno;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +50,18 @@ class MobileHomeController extends Controller
                 false
             )
             : null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | ÚLTIMO PAGO
+        |--------------------------------------------------------------------------
+        */
+
+        $ultimoPago = Pago::query()
+            ->where('cliente_id', $cliente->id)
+            ->orderByDesc('fecha_pago')
+            ->orderByDesc('id')
+            ->first();
 
         /*
         |--------------------------------------------------------------------------
@@ -167,6 +180,21 @@ class MobileHomeController extends Controller
                 'estado' => $estadoCuota,
                 'vencimiento' => $fechaVencimientoCuota?->format('Y-m-d'),
                 'dias_restantes' => $diasRestantes,
+
+                'ultimo_pago' => $ultimoPago
+                    ? [
+                        'id' => $ultimoPago->id,
+                        'monto' => (float) $ultimoPago->monto,
+                        'metodo_pago' => $ultimoPago->metodo_pago,
+                        'observacion' => $ultimoPago->observacion,
+                        'fecha_pago' => $ultimoPago->fecha_pago
+                            ? Carbon::parse($ultimoPago->fecha_pago)->format('Y-m-d')
+                            : null,
+                        'vencimiento_cuota' => $ultimoPago->vencimiento_cuota
+                            ? Carbon::parse($ultimoPago->vencimiento_cuota)->format('Y-m-d')
+                            : null,
+                    ]
+                    : null,
             ],
 
             'proxima_reserva' => $turno
