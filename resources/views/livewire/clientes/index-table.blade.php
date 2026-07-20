@@ -177,6 +177,12 @@
                                      title="Historial de pagos">
                                         💰
                                     </a>
+                                    
+                                    <a href="{{ route('clientes.entrenamientos', $cliente->id) }}"
+                                    class="p-2 rounded-lg text-neutral-500 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+                                    title="Historial de entrenamientos">
+                                        🏋️
+                                    </a>
 
                                     <button 
                                          wire:click="archivar({{ $cliente->id }})" 

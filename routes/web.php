@@ -90,6 +90,9 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         
         Route::get('clientes/{cliente}/pagos', [ClienteController::class, 'pagos'])
             ->name('clientes.pagos');
+        
+        Route::get('clientes/{cliente}/entrenamientos', [ClienteController::class, 'entrenamientos'])
+            ->name('clientes.entrenamientos');
 
         Route::resource('clientes', ClienteController::class);
 

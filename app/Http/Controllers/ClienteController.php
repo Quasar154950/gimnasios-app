@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\Etiqueta;
 use App\Models\Pago;
 use App\Models\User;
+use App\Models\Asistencia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -338,4 +339,19 @@ class ClienteController extends Controller
             'pagos'
         ));
     }
+    public function entrenamientos(string $id)
+{
+    $cliente = Cliente::where('abogado_id', auth()->id())
+        ->findOrFail($id);
+
+    $asistencias = Asistencia::where('cliente_id', $cliente->id)
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('clientes.entrenamientos', compact(
+        'cliente',
+        'asistencias'
+    ));
+}
+
 }
