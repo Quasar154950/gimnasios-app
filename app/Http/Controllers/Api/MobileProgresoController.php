@@ -92,7 +92,7 @@ class MobileProgresoController extends Controller
         |
         */
 
-        dd($asistencias->first());
+        return response()->json($asistencias->first());
         $duracionesMinutos = $asistencias
             ->filter(function ($asistencia) {
                 return $asistencia->hora_ingreso
