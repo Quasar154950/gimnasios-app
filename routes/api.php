@@ -5,14 +5,32 @@ use App\Http\Controllers\Api\MobileHomeController;
 use App\Http\Controllers\Api\MobileMensajeController;
 use App\Http\Controllers\Api\MobileReservaController;
 use App\Http\Controllers\Api\MobileProgresoController;
+use App\Http\Controllers\Api\ActivarCuentaSocioController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | RUTAS PÚBLICAS
+    |--------------------------------------------------------------------------
+    */
 
     Route::post(
         '/login',
         [AuthController::class, 'login']
     );
+
+    Route::post(
+        '/activar-cuenta',
+        [ActivarCuentaSocioController::class, 'activar']
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | RUTAS PROTEGIDAS
+    |--------------------------------------------------------------------------
+    */
 
     Route::middleware('auth:sanctum')->group(function () {
 
@@ -42,13 +60,20 @@ Route::prefix('mobile')->group(function () {
             [MobileReservaController::class, 'reservar']
         );
 
-        Route::get(
-            '/progreso',
-            [MobileProgresoController::class, 'index']);
-
         Route::delete(
             '/reservas/{reserva}',
             [MobileReservaController::class, 'cancelar']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | PROGRESO
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/progreso',
+            [MobileProgresoController::class, 'index']
         );
 
         /*
@@ -71,6 +96,12 @@ Route::prefix('mobile')->group(function () {
             '/mensajes',
             [MobileMensajeController::class, 'clear']
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | SESIÓN
+        |--------------------------------------------------------------------------
+        */
 
         Route::post(
             '/logout',
