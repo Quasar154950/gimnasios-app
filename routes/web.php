@@ -13,6 +13,7 @@ use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\SaasPagoController;
 use App\Http\Controllers\MercadoPagoSaasWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
+use App\Http\Controllers\AvisoController;
 use App\Models\User;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
@@ -45,11 +46,17 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
     Route::middleware('role:abogado')->group(function () {
 
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
+
+        // 📢 AVISOS
+        Route::resource('avisos', AvisoController::class)
+            ->except(['show']);
 
         // 🔥 SUSCRIPCIÓN
         Route::get('/suscripcion', function () {
             $user = auth()->user();
+            
             return view('suscripcion.index', compact('user'));
         })->name('suscripcion.index');
         
@@ -482,5 +489,15 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/migrar-avisos', function () {
+    Artisan::call('migrate', [
+        '--force' => true,
+    ]);
+
+    return '<pre>'.Artisan::output().'</pre>';
+});
 
 require __DIR__ . '/settings.php';

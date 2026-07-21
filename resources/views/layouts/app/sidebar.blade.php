@@ -116,6 +116,15 @@
                         >
                             Pagos / Cuotas
                         </flux:sidebar.item>
+                        
+                        <flux:sidebar.item
+                            icon="megaphone"
+                            :href="route('avisos.index')"
+                            :current="request()->routeIs('avisos.*')"
+                            wire:navigate
+                        >
+                            Avisos
+                        </flux:sidebar.item>
 
                         <flux:sidebar.item
                           icon="credit-card"
@@ -128,10 +137,10 @@
 
                         <flux:sidebar.item
                         icon="credit-card"
-                     :href="route('mercadopago.index')"
-                     :current="request()->routeIs('mercadopago.*')"
-                     wire:navigate
-                    >
+                       :href="route('mercadopago.index')"
+                       :current="request()->routeIs('mercadopago.*')"
+                       wire:navigate
+                       >
                           Mercado Pago
                         </flux:sidebar.item>
 
