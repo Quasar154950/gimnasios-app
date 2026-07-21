@@ -251,7 +251,7 @@
         class="rounded-full px-2 py-1 text-[10px] font-black
         {{ ($turnoEnCurso || $turnoPasado)
             ? 'bg-stone-300 text-stone-500 cursor-not-allowed'
-            : 'bg-red-100 text-red-700' }}">
+            : 'bg-red-100 text-red-700 cursor-pointer hover:bg-red-200 transition-colors' }}">
     Cancelar
 </button>
 </form>
