@@ -143,18 +143,25 @@
                                 Publicar desde
                             </label>
 
-                            <input
-                                type="datetime-local"
-                                name="fecha_publicacion"
-                                value="{{ old('fecha_publicacion') }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
-                                       text-zinc-900 outline-none transition
-                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
-                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white
-                                       [&::-webkit-calendar-picker-indicator]:cursor-pointer
-                                       dark:[&::-webkit-calendar-picker-indicator]:invert"
-                                style="color-scheme: dark;"
-                            >
+                            <div class="relative">
+    <input
+        type="datetime-local"
+        name="fecha_publicacion"
+        value="{{ old('fecha_publicacion') }}"
+        class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 pr-12
+               text-zinc-900 outline-none transition
+               focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+               dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+        style="color-scheme: dark;"
+    >
+
+    <span
+        class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl"
+        aria-hidden="true"
+    >
+        📅
+    </span>
+</div>
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
                                 Si queda vacío, se publicará inmediatamente.
@@ -168,18 +175,25 @@
                                 Visible hasta
                             </label>
 
-                            <input
-                                type="datetime-local"
-                                name="fecha_vencimiento"
-                                value="{{ old('fecha_vencimiento') }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
-                                       text-zinc-900 outline-none transition
-                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
-                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white
-                                       [&::-webkit-calendar-picker-indicator]:cursor-pointer
-                                       dark:[&::-webkit-calendar-picker-indicator]:invert"
-                                style="color-scheme: dark;"
-                            >
+                            <div class="relative">
+    <input
+        type="datetime-local"
+        name="fecha_vencimiento"
+        value="{{ old('fecha_vencimiento') }}"
+        class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 pr-12
+               text-zinc-900 outline-none transition
+               focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+               dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+        style="color-scheme: dark;"
+    >
+
+    <span
+        class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl"
+        aria-hidden="true"
+    >
+        📅
+    </span>
+</div>
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
                                 Si queda vacío, el aviso no vencerá automáticamente.
