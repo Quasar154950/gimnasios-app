@@ -188,7 +188,9 @@
                                 class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
                                        text-zinc-900 outline-none transition
                                        focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
-                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white
+                                       [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                                       dark:[&::-webkit-calendar-picker-indicator]:invert"
                                 style="color-scheme: dark;"
                             >
 
@@ -217,6 +219,8 @@
                                        text-zinc-900 outline-none transition
                                        focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
                                        dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                       [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                                       dark:[&::-webkit-calendar-picker-indicator]:invert"
                                 style="color-scheme: dark;"
                             >
 
