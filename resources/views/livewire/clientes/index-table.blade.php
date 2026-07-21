@@ -1,48 +1,61 @@
-<div class="rounded-xl border border-stone-300 p-4 md:p-6 bg-stone-200 shadow-sm font-sans">
-    
-    {{-- BUSCADOR CON LUPA REDONDEADA INTERNA --}}
-    <div class="mb-6 md:mb-8 flex items-center gap-2 text-left">
-        
-        {{-- Contenedor principal del buscador --}}
-        <div class="flex-1 min-w-0 flex items-center bg-stone-100 border border-stone-300 rounded-xl p-1 focus-within:ring-2 focus-within:ring-blue-500 transition shadow-sm">
-            
-            {{-- INPUT --}}
-            <input 
-                wire:model.live.debounce.300ms="busqueda" 
-                type="text" 
+<div class="rounded-xl border border-stone-300 bg-stone-200 p-4 font-sans shadow-sm md:p-6">
+
+    {{-- BUSCADOR --}}
+    <div class="mb-6 flex items-center gap-2 text-left md:mb-8">
+
+        <div
+            class="flex min-w-0 flex-1 items-center rounded-xl border border-stone-300 bg-stone-100 p-1 shadow-sm transition focus-within:ring-2 focus-within:ring-blue-500"
+        >
+            <input
+                wire:model.live.debounce.300ms="busqueda"
+                type="text"
                 placeholder="Buscar socio por nombre, email o teléfono..."
-                class="flex-1 min-w-0 bg-transparent pl-3 py-1.5 border-none focus:ring-0 outline-none text-sm text-neutral-800"
+                class="min-w-0 flex-1 border-none bg-transparent py-1.5 pl-3 text-sm text-neutral-800 outline-none focus:ring-0"
             >
 
-            {{-- LUPITA --}}
-            <div class="flex items-center justify-center bg-stone-100 text-neutral-500 rounded-lg px-3 py-1.5 ml-1 border border-stone-300 shrink-0">
+            <div
+                class="ml-1 flex shrink-0 items-center justify-center rounded-lg border border-stone-300 bg-stone-100 px-3 py-1.5 text-neutral-500"
+            >
                 🔍
             </div>
         </div>
 
-        {{-- BOTÓN LIMPIAR --}}
-        <button type="button"
-                wire:click="$set('busqueda', '')"
-                class="shrink-0 inline-flex items-center gap-2 rounded-xl bg-stone-100 px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-stone-300 transition cursor-pointer shadow-sm whitespace-nowrap border border-stone-300">
+        <button
+            type="button"
+            wire:click="$set('busqueda', '')"
+            class="inline-flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-sm font-medium text-neutral-600 shadow-sm transition hover:bg-stone-300"
+        >
             🧹 Limpiar
         </button>
+
     </div>
 
     {{-- MENSAJE DE ÉXITO --}}
     @if(session('success'))
-        <div x-data="{ show: true }" 
-             x-show="show" 
-             x-init="setTimeout(() => show = false, 3000)" 
-             class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm font-bold flex items-center gap-2 transition-all">
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            class="mb-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 p-4 text-sm font-bold text-green-700 transition-all"
+        >
             ✅ {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- MENSAJE DE ERROR --}}
+    @if(session('error'))
+        <div
+            class="mb-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700"
+        >
+            ❌ {{ session('error') }}
         </div>
     @endif
 
     {{-- TABLA DE SOCIOS --}}
     @if($clientes->isEmpty())
 
-        <div class="text-center py-10">
-            <p class="text-neutral-500 italic">
+        <div class="py-10 text-center">
+            <p class="italic text-neutral-500">
                 No se encontraron socios activos.
             </p>
         </div>
@@ -54,7 +67,9 @@
             <table class="w-full border-collapse">
 
                 <thead>
-                    <tr class="border-b border-stone-300 text-neutral-500 text-[11px] uppercase tracking-wider font-bold">
+                    <tr
+                        class="border-b border-stone-300 text-[11px] font-bold uppercase tracking-wider text-neutral-500"
+                    >
                         <th class="p-3 text-left">ID</th>
                         <th class="p-3 text-left">Nombre</th>
                         <th class="p-3 text-left">Teléfono</th>
@@ -67,79 +82,112 @@
 
                     @foreach($clientes as $cliente)
 
-                        <tr wire:key="cliente-{{ $cliente->id }}" class="hover:bg-stone-100 transition">
+                        <tr
+                            wire:key="cliente-{{ $cliente->id }}"
+                            class="transition hover:bg-stone-100"
+                        >
 
                             {{-- ID --}}
-                            <td class="p-3 text-sm text-neutral-500 font-mono">
+                            <td class="p-3 font-mono text-sm text-neutral-500">
                                 #{{ $cliente->id }}
                             </td>
 
-                            {{-- NOMBRE + BADGES --}}
-<td class="p-3 text-sm font-bold text-neutral-800 whitespace-nowrap">
-    
-    <div class="flex flex-col gap-1">
+                            {{-- NOMBRE Y BADGES --}}
+                            <td class="whitespace-nowrap p-3 text-sm font-bold text-neutral-800">
 
-        <span>
-            {{ $cliente->nombre }}
-        </span>
+                                <div class="flex flex-col gap-1">
 
-        {{-- ESTADO CUOTA --}}
-        @if($cliente->fecha_vencimiento_cuota)
+                                    <span>
+                                        {{ $cliente->nombre }}
+                                    </span>
 
-            @php
-                $hoy = \Carbon\Carbon::today();
-                $vencimiento = \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota);
-            @endphp
+                                    {{-- ESTADO CUOTA --}}
+                                    @if($cliente->fecha_vencimiento_cuota)
 
-            @if($vencimiento->lt($hoy))
+                                        @php
+                                            $hoy = \Carbon\Carbon::today();
+                                            $vencimiento = \Carbon\Carbon::parse(
+                                                $cliente->fecha_vencimiento_cuota
+                                            );
+                                        @endphp
 
-                <span class="inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700">
-                    🔴 Cuota vencida
-                </span>
+                                        @if($vencimiento->lt($hoy))
 
-            @elseif($vencimiento->lte($hoy->copy()->addDays(5)))
+                                            <span
+                                                class="inline-flex w-fit items-center rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-700"
+                                            >
+                                                🔴 Cuota vencida
+                                            </span>
 
-                <span class="inline-flex w-fit items-center rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-bold text-yellow-700">
-                    🟡 Próxima a vencer
-                </span>
+                                        @elseif($vencimiento->lte($hoy->copy()->addDays(5)))
 
-            @else
+                                            <span
+                                                class="inline-flex w-fit items-center rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-bold text-yellow-700"
+                                            >
+                                                🟡 Próxima a vencer
+                                            </span>
 
-                <span class="inline-flex w-fit items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
-                    🟢 Cuota al día
-                </span>
+                                        @else
 
-            @endif
+                                            <span
+                                                class="inline-flex w-fit items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700"
+                                            >
+                                                🟢 Cuota al día
+                                            </span>
 
-        @endif
+                                        @endif
 
-{{-- MENSAJES --}}
-@if($cliente->mensajes_no_leidos_count > 0)
-    <span class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">
-        💬 Nuevo mensaje
-    </span>
-@endif
+                                        <span class="text-[10px] font-medium text-neutral-500">
+                                            Vence:
+                                            {{ $vencimiento->format('d/m/Y') }}
+                                        </span>
 
-{{-- CUENTA ACTIVADA --}}
-@if($cliente->user_id)
+                                    @else
 
-    <span class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-        ✅ Cuenta activada
-    </span>
+                                        <span
+                                            class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700"
+                                        >
+                                            ⚪ Sin vencimiento
+                                        </span>
 
-@else
+                                    @endif
 
-    <span class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700">
-        ⏳ Sin activar
-    </span>
+                                    {{-- MENSAJES --}}
+                                    @if($cliente->mensajes_no_leidos_count > 0)
 
-@endif
-    </div>
+                                        <span
+                                            class="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700"
+                                        >
+                                            💬 Nuevo mensaje
+                                        </span>
 
-</td>
-                            
+                                    @endif
+
+                                    {{-- CUENTA ACTIVADA --}}
+                                    @if($cliente->user_id)
+
+                                        <span
+                                            class="inline-flex w-fit items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700"
+                                        >
+                                            ✅ Cuenta activada
+                                        </span>
+
+                                    @else
+
+                                        <span
+                                            class="inline-flex w-fit items-center rounded-full bg-stone-300 px-2 py-0.5 text-[10px] font-bold text-stone-700"
+                                        >
+                                            ⏳ Sin activar
+                                        </span>
+
+                                    @endif
+
+                                </div>
+
+                            </td>
+
                             {{-- TELÉFONO --}}
-                            <td class="p-3 text-sm text-neutral-600 font-medium">
+                            <td class="p-3 text-sm font-medium text-neutral-600">
                                 {{ $cliente->telefono }}
                             </td>
 
@@ -153,50 +201,75 @@
 
                                 <div class="flex items-center justify-end gap-1">
 
-                                    <a href="{{ route('clientes.show', $cliente->id) }}" 
-                                       class="p-2 rounded-lg text-neutral-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer" 
-                                       title="Ver Detalle">
+                                    <a
+                                        href="{{ route('clientes.show', $cliente->id) }}"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-blue-50 hover:text-blue-600"
+                                        title="Ver detalle"
+                                    >
                                         👁️
                                     </a>
-                                    
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" 
-                                       class="p-2 rounded-lg text-neutral-500 hover:text-yellow-600 hover:bg-yellow-50 transition cursor-pointer" 
-                                       title="Editar">
+
+                                    <a
+                                        href="{{ route('clientes.edit', $cliente->id) }}"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-yellow-50 hover:text-yellow-600"
+                                        title="Editar socio"
+                                    >
                                         ✏️
                                     </a>
-                                    
-                                    <button 
-                                         wire:click="abrirRenovacion({{ $cliente->id }})"
-                                         class="p-2 text-neutral-500 hover:text-green-600 hover:bg-green-50 transition rounded-lg cursor-pointer"
-                                         title="Renovar cuota">
+
+                                    {{-- RENOVAR Y REGISTRAR PAGO --}}
+                                    <button
+                                        type="button"
+                                        wire:click="abrirRenovacion({{ $cliente->id }})"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-green-50 hover:text-green-600"
+                                        title="Registrar pago y renovar cuota"
+                                    >
                                         💳
-                                    </button>   
-                                        
-                                     <a href="{{ route('clientes.pagos', $cliente->id) }}"
-                                     class="p-2 rounded-lg text-neutral-500 hover:text-emerald-600 hover:bg-emerald-50 transition cursor-pointer"
-                                     title="Historial de pagos">
+                                    </button>
+
+                                    {{-- EDITAR VENCIMIENTO MANUALMENTE --}}
+                                    <button
+                                        type="button"
+                                        wire:click="abrirEdicionVencimiento({{ $cliente->id }})"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-purple-50 hover:text-purple-600"
+                                        title="Editar fecha de vencimiento"
+                                    >
+                                        📅
+                                    </button>
+
+                                    <a
+                                        href="{{ route('clientes.pagos', $cliente->id) }}"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-emerald-50 hover:text-emerald-600"
+                                        title="Historial de pagos"
+                                    >
                                         💰
                                     </a>
-                                    
-                                    <a href="{{ route('clientes.entrenamientos', $cliente->id) }}"
-                                    class="p-2 rounded-lg text-neutral-500 hover:text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
-                                    title="Historial de entrenamientos">
+
+                                    <a
+                                        href="{{ route('clientes.entrenamientos', $cliente->id) }}"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-indigo-50 hover:text-indigo-600"
+                                        title="Historial de entrenamientos"
+                                    >
                                         🏋️
                                     </a>
 
-                                    <button 
-                                         wire:click="archivar({{ $cliente->id }})" 
-                                         wire:confirm="¿Quieres dar de baja a este socio?"
-                                         class="p-2 text-neutral-500 hover:text-amber-600 hover:bg-amber-50 transition rounded-lg cursor-pointer"
-                                         title="Dar de baja socio">
+                                    <button
+                                        type="button"
+                                        wire:click="archivar({{ $cliente->id }})"
+                                        wire:confirm="¿Quieres dar de baja a este socio?"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-amber-50 hover:text-amber-600"
+                                        title="Dar de baja socio"
+                                    >
                                         📦
                                     </button>
 
-                                    <button 
-                                        wire:click="delete({{ $cliente->id }})" 
+                                    <button
+                                        type="button"
+                                        wire:click="delete({{ $cliente->id }})"
                                         wire:confirm="¿Estás seguro de que deseas eliminar permanentemente a este socio?"
-                                        class="p-2 text-neutral-500 hover:text-red-600 hover:bg-red-50 transition rounded-lg cursor-pointer"
-                                        title="Eliminar Permanentemente">
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-red-50 hover:text-red-600"
+                                        title="Eliminar permanentemente"
+                                    >
                                         🗑️
                                     </button>
 
@@ -221,87 +294,287 @@
 
     @endif
 
-    {{-- FORMULARIO RENOVACIÓN --}}
-@if($clientePagoId)
+    {{-- FORMULARIO DE RENOVACIÓN --}}
+    @if($clientePagoId)
 
-    <div class="mt-6 rounded-xl border border-stone-300 bg-stone-200 p-4 md:p-6 shadow-sm">
+        @php
+            $nuevoVencimientoCalculado = $fechaBasePago
+                ? \Carbon\Carbon::parse($fechaBasePago)->addDays(30)
+                : null;
+        @endphp
 
-        <h2 class="text-lg font-bold text-orange-600 mb-4">
-            💳 Registrar pago y renovar cuota
-        </h2>
+        <div
+            class="mt-6 rounded-xl border border-orange-300 bg-orange-50 p-4 shadow-sm md:p-6"
+        >
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="mb-5">
 
-            {{-- MONTO --}}
-            <div>
-                <label class="block text-sm font-bold mb-1 text-neutral-700">
-                    Monto
-                </label>
+                <h2 class="text-lg font-bold text-orange-700">
+                    💳 Registrar pago y renovar cuota
+                </h2>
 
-                <input
-                    type="number"
-                    wire:model="montoPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Ej: 25000"
-                >
+                <p class="mt-1 text-sm text-neutral-600">
+                    Elegí la fecha desde la cual se calcularán los próximos 30 días.
+                </p>
+
             </div>
 
-            {{-- MÉTODO --}}
-            <div>
-                <label class="block text-sm font-bold mb-1 text-neutral-700">
-                    Método de pago
-                </label>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
 
-                <select
-                    wire:model="metodoPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                >
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Transferencia">Transferencia</option>
-                    <option value="Débito">Débito</option>
-                    <option value="Crédito">Crédito</option>
-                    <option value="Mercado Pago">Mercado Pago</option>
-                </select>
+                {{-- MONTO --}}
+                <div>
+
+                    <label class="mb-1 block text-sm font-bold text-neutral-700">
+                        Monto
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        wire:model="montoPago"
+                        class="w-full rounded-xl border border-stone-300 bg-white px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                        placeholder="Ej: 25000"
+                    >
+
+                    @error('montoPago')
+                        <p class="mt-1 text-xs font-bold text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                {{-- MÉTODO --}}
+                <div>
+
+                    <label class="mb-1 block text-sm font-bold text-neutral-700">
+                        Método de pago
+                    </label>
+
+                    <select
+                        wire:model="metodoPago"
+                        class="w-full rounded-xl border border-stone-300 bg-white px-4 py-2 text-neutral-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                    >
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Débito">Débito</option>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Mercado Pago">Mercado Pago</option>
+                    </select>
+
+                    @error('metodoPago')
+                        <p class="mt-1 text-xs font-bold text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                {{-- FECHA BASE --}}
+                <div>
+
+                    <label class="mb-1 block text-sm font-bold text-neutral-700">
+                        Fecha base
+                    </label>
+
+                    <input
+                        type="date"
+                        wire:model.live="fechaBasePago"
+                        class="w-full cursor-pointer rounded-xl border border-stone-300 bg-white px-4 py-2 text-neutral-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                    >
+
+                    @error('fechaBasePago')
+                        <p class="mt-1 text-xs font-bold text-red-600">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                {{-- NUEVO VENCIMIENTO --}}
+                <div>
+
+                    <label class="mb-1 block text-sm font-bold text-neutral-700">
+                        Nuevo vencimiento
+                    </label>
+
+                    <div
+                        class="flex min-h-[42px] items-center rounded-xl border border-green-300 bg-green-100 px-4 py-2 font-black text-green-800"
+                    >
+                        @if($nuevoVencimientoCalculado)
+                            📅 {{ $nuevoVencimientoCalculado->format('d/m/Y') }}
+                        @else
+                            Fecha pendiente
+                        @endif
+                    </div>
+
+                </div>
+
             </div>
 
             {{-- OBSERVACIÓN --}}
-            <div>
-                <label class="block text-sm font-bold mb-1 text-neutral-700">
+            <div class="mt-4">
+
+                <label class="mb-1 block text-sm font-bold text-neutral-700">
                     Observación
                 </label>
 
                 <input
                     type="text"
                     wire:model="observacionPago"
-                    class="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Opcional"
+                    class="w-full rounded-xl border border-stone-300 bg-white px-4 py-2 text-neutral-900 placeholder-neutral-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                    placeholder="Ej: Pago realizado con 5 días de atraso"
                 >
+
+                @error('observacionPago')
+                    <p class="mt-1 text-xs font-bold text-red-600">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+            </div>
+
+            {{-- RESUMEN --}}
+            @if($fechaBasePago && $nuevoVencimientoCalculado)
+
+                <div
+                    class="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800"
+                >
+                    <span class="font-black">Resumen:</span>
+
+                    la cuota se renovará desde el
+
+                    <span class="font-black">
+                        {{ \Carbon\Carbon::parse($fechaBasePago)->format('d/m/Y') }}
+                    </span>
+
+                    hasta el
+
+                    <span class="font-black">
+                        {{ $nuevoVencimientoCalculado->format('d/m/Y') }}.
+                    </span>
+                </div>
+
+            @endif
+
+            {{-- BOTONES --}}
+            <div class="mt-5 flex flex-wrap gap-2">
+
+                <button
+                    type="button"
+                    wire:click="renovarCuota"
+                    wire:loading.attr="disabled"
+                    wire:target="renovarCuota"
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600 disabled:cursor-wait disabled:opacity-60"
+                >
+                    <span wire:loading.remove wire:target="renovarCuota">
+                        ✅ Confirmar pago y renovación
+                    </span>
+
+                    <span wire:loading wire:target="renovarCuota">
+                        Procesando...
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    wire:click="cancelarRenovacion"
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 transition hover:bg-stone-300"
+                >
+                    ❌ Cancelar
+                </button>
+
             </div>
 
         </div>
 
-        {{-- BOTONES --}}
-        <div class="mt-5 flex gap-2">
+    @endif
 
-            <button
-                wire:click="renovarCuota"
-                class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white hover:bg-orange-600 transition"
-            >
-                ✅ Confirmar pago
-            </button>
+    {{-- FORMULARIO DE EDICIÓN MANUAL DEL VENCIMIENTO --}}
+    @if($clienteVencimientoId)
 
-            <button
-                wire:click="cancelarRenovacion"
-                class="inline-flex items-center gap-2 rounded-xl bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 hover:bg-stone-300 transition border border-stone-300"
+        <div
+            class="mt-6 rounded-xl border border-purple-300 bg-purple-50 p-4 shadow-sm md:p-6"
+        >
+
+            <div class="mb-5">
+
+                <h2 class="text-lg font-bold text-purple-700">
+                    📅 Editar fecha de vencimiento
+                </h2>
+
+                <p class="mt-1 text-sm text-neutral-600">
+                    Esta acción modifica solamente el vencimiento de la cuota y no registra un pago.
+                </p>
+
+            </div>
+
+            <div class="max-w-md">
+
+                <label class="mb-1 block text-sm font-bold text-neutral-700">
+                    Nueva fecha de vencimiento
+                </label>
+
+                <input
+                    type="date"
+                    wire:model="fechaVencimientoManual"
+                    class="w-full cursor-pointer rounded-xl border border-stone-300 bg-white px-4 py-2 text-neutral-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-500"
+                >
+
+                @error('fechaVencimientoManual')
+                    <p class="mt-1 text-xs font-bold text-red-600">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+            </div>
+
+            <div
+                class="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800"
             >
-                ❌ Cancelar
-            </button>
+                ⚠️ Esta modificación no aparecerá como un pago nuevo en el historial.
+                Utilizala para correcciones, días de cortesía o acuerdos especiales.
+            </div>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+
+                <button
+                    type="button"
+                    wire:click="guardarVencimientoManual"
+                    wire:confirm="¿Confirmás la nueva fecha de vencimiento?"
+                    wire:loading.attr="disabled"
+                    wire:target="guardarVencimientoManual"
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-purple-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-purple-700 disabled:cursor-wait disabled:opacity-60"
+                >
+                    <span
+                        wire:loading.remove
+                        wire:target="guardarVencimientoManual"
+                    >
+                        ✅ Guardar vencimiento
+                    </span>
+
+                    <span
+                        wire:loading
+                        wire:target="guardarVencimientoManual"
+                    >
+                        Guardando...
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    wire:click="cancelarEdicionVencimiento"
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 transition hover:bg-stone-300"
+                >
+                    ❌ Cancelar
+                </button>
+
+            </div>
 
         </div>
 
-    </div>
-
-@endif
+    @endif
 
 </div>
 

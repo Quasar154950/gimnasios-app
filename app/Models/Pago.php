@@ -12,7 +12,15 @@ class Pago extends Model
         'metodo_pago',
         'observacion',
         'fecha_pago',
+        'fecha_base',
         'vencimiento_cuota',
+    ];
+
+    protected $casts = [
+        'fecha_pago' => 'date',
+        'fecha_base' => 'date',
+        'vencimiento_cuota' => 'date',
+        'monto' => 'decimal:2',
     ];
 
     /*
