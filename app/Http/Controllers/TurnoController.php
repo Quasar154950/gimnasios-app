@@ -176,10 +176,15 @@ class TurnoController extends Controller
             abort(403);
         }
 
-        $inicioTurno = Carbon::parse($reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio);
+        $inicioTurno = Carbon::parse(
+            $reserva->turno->fecha . ' ' . $reserva->turno->hora_inicio
+        );
 
         if ($inicioTurno->lessThanOrEqualTo(now()->copy()->addHour())) {
-            return back()->with('error', 'No se puede cancelar una reserva dentro de la hora previa o cuando la actividad ya comenzó.');
+            return back()->with(
+                'error',
+                'No se puede cancelar una reserva dentro de la hora previa o cuando la actividad ya comenzó.'
+            );
         }
 
         $reserva->delete();
@@ -207,7 +212,9 @@ class TurnoController extends Controller
             return back()->with('error', 'Seleccioná un socio válido.');
         }
 
-        $inicioTurno = Carbon::parse($turno->fecha . ' ' . $turno->hora_inicio);
+        $inicioTurno = Carbon::parse(
+            $turno->fecha . ' ' . $turno->hora_inicio
+        );
 
         if ($inicioTurno->isPast()) {
             return back()->with('error', 'Este turno ya comenzó o ya pasó.');
@@ -226,19 +233,24 @@ class TurnoController extends Controller
                 continue;
             }
 
-            if ($reserva->turno_id === $turno->id) {
-                return back()->with('error', 'Este socio ya tiene reservado este turno.');
+            // No permite reservar exactamente el mismo turno dos veces.
+            if ((int) $reserva->turno_id === (int) $turno->id) {
+                return back()->with(
+                    'error',
+                    'Este socio ya tiene reservado este turno.'
+                );
             }
 
-            if ($reserva->turno->actividad === $turno->actividad) {
-                return back()->with('error', 'Este socio ya tiene una reserva de ' . $turno->actividad . ' para este día.');
-            }
-
+            // El administrador puede asignar varios turnos de la misma
+            // actividad, pero nunca en horarios superpuestos.
             if (
                 $reserva->turno->hora_inicio < $turno->hora_fin &&
                 $reserva->turno->hora_fin > $turno->hora_inicio
             ) {
-                return back()->with('error', 'Este socio ya tiene otra reserva en un horario que se superpone.');
+                return back()->with(
+                    'error',
+                    'Este socio ya tiene otra reserva en un horario que se superpone.'
+                );
             }
         }
 
@@ -254,7 +266,10 @@ class TurnoController extends Controller
             'estado' => 'reservado',
         ]);
 
-        return back()->with('success', 'Turno reservado manualmente.');
+        return back()->with(
+            'success',
+            'Turno reservado manualmente.'
+        );
     }
 
     public function cancelarReservaAdmin(ReservaTurno $reserva)
@@ -266,19 +281,28 @@ class TurnoController extends Controller
         $reserva->load('turno', 'cliente');
 
         if (!$reserva->turno) {
-            return back()->with('error', 'No se encontró el turno asociado a esta reserva.');
+            return back()->with(
+                'error',
+                'No se encontró el turno asociado a esta reserva.'
+            );
         }
 
         if ((int) $reserva->turno->abogado_id !== (int) auth()->id()) {
             abort(403);
         }
 
-        if (!$reserva->cliente || (int) $reserva->cliente->abogado_id !== (int) auth()->id()) {
+        if (
+            !$reserva->cliente ||
+            (int) $reserva->cliente->abogado_id !== (int) auth()->id()
+        ) {
             abort(403);
         }
 
         $reserva->delete();
 
-        return back()->with('success', 'Reserva cancelada manualmente.');
+        return back()->with(
+            'success',
+            'Reserva cancelada manualmente.'
+        );
     }
 }
