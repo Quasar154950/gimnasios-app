@@ -483,15 +483,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-use Illuminate\Support\Facades\Artisan;
-
-Route::get('/migrar-cuotas', function () {
-
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return '<pre>' . Artisan::output() . '</pre>';
-});
-
 require __DIR__ . '/settings.php';
