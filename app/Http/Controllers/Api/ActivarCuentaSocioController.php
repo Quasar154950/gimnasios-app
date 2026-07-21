@@ -74,7 +74,7 @@ class ActivarCuentaSocioController extends Controller
 
         if ($cliente->user_id) {
             return response()->json([
-                'message' => 'Este socio ya tiene una cuenta activada. Iniciá sesión o recuperá tu contraseña.',
+                'message' => 'Esta cuenta ya fue activada. Iniciá sesión con tu email y contraseña.',
             ], 409);
         }
 
@@ -121,7 +121,7 @@ class ActivarCuentaSocioController extends Controller
         }
 
         return response()->json([
-            'message' => 'Cuenta activada correctamente.',
+            'message' => '¡Cuenta activada correctamente! Bienvenido a SportGym Tandil.',
             'token' => $resultado['token'],
             'token_type' => 'Bearer',
             'user' => [
