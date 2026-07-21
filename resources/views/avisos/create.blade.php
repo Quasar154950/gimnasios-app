@@ -155,12 +155,14 @@
         style="color-scheme: dark;"
     >
 
-    <span
-        class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl"
-        aria-hidden="true"
-    >
-        📅
-    </span>
+    <button
+    type="button"
+    class="absolute right-3 top-1/2 -translate-y-1/2 text-xl"
+    onclick="this.previousElementSibling.showPicker()"
+    aria-label="Abrir calendario"
+>
+    📅
+</button>
 </div>
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
@@ -187,12 +189,14 @@
         style="color-scheme: dark;"
     >
 
-    <span
-        class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xl"
-        aria-hidden="true"
-    >
-        📅
-    </span>
+    <button
+    type="button"
+    class="absolute right-3 top-1/2 -translate-y-1/2 text-xl"
+    onclick="this.previousElementSibling.showPicker()"
+    aria-label="Abrir calendario"
+>
+    📅
+</button>
 </div>
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
