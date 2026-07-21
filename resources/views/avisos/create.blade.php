@@ -48,10 +48,10 @@
 
                 <div class="rounded-xl border border-stone-300 bg-stone-200 p-6 shadow-sm dark:border-stone-600 dark:bg-stone-800">
 
-                    {{-- TITULO --}}
+                    {{-- TÍTULO --}}
                     <div>
 
-                        <label class="mb-2 block text-sm font-black">
+                        <label class="mb-2 block text-sm font-black text-stone-900 dark:text-stone-100">
                             Título
                         </label>
 
@@ -59,7 +59,13 @@
                             type="text"
                             name="titulo"
                             value="{{ old('titulo') }}"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 dark:border-stone-600 dark:bg-stone-900"
+                            placeholder="Ejemplo: Cambio de horario"
+                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 placeholder:text-zinc-500
+                                   outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white
+                                   dark:placeholder:text-zinc-500"
                             maxlength="255"
                             required
                         >
@@ -69,14 +75,20 @@
                     {{-- MENSAJE --}}
                     <div class="mt-5">
 
-                        <label class="mb-2 block text-sm font-black">
+                        <label class="mb-2 block text-sm font-black text-stone-900 dark:text-stone-100">
                             Mensaje
                         </label>
 
                         <textarea
                             name="mensaje"
                             rows="6"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 dark:border-stone-600 dark:bg-stone-900"
+                            placeholder="Escribí aquí la información que recibirán los socios..."
+                            class="w-full resize-y rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 placeholder:text-zinc-500
+                                   outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white
+                                   dark:placeholder:text-zinc-500"
                             required
                         >{{ old('mensaje') }}</textarea>
 
@@ -85,17 +97,39 @@
                     {{-- PRIORIDAD --}}
                     <div class="mt-5">
 
-                        <label class="mb-2 block text-sm font-black">
+                        <label class="mb-2 block text-sm font-black text-stone-900 dark:text-stone-100">
                             Prioridad
                         </label>
 
                         <select
                             name="prioridad"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 dark:border-stone-600 dark:bg-stone-900"
+                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                            style="color-scheme: dark;"
+                            required
                         >
-                            <option value="informativo">🟢 Informativo</option>
-                            <option value="importante">🟡 Importante</option>
-                            <option value="urgente">🔴 Urgente</option>
+                            <option
+                                value="informativo"
+                                @selected(old('prioridad', 'informativo') === 'informativo')
+                            >
+                                🟢 Informativo
+                            </option>
+
+                            <option
+                                value="importante"
+                                @selected(old('prioridad') === 'importante')
+                            >
+                                🟡 Importante
+                            </option>
+
+                            <option
+                                value="urgente"
+                                @selected(old('prioridad') === 'urgente')
+                            >
+                                🔴 Urgente
+                            </option>
                         </select>
 
                     </div>
@@ -105,7 +139,7 @@
 
                         <div>
 
-                            <label class="mb-2 block text-sm font-black">
+                            <label class="mb-2 block text-sm font-black text-stone-900 dark:text-stone-100">
                                 Publicar desde
                             </label>
 
@@ -113,14 +147,22 @@
                                 type="datetime-local"
                                 name="fecha_publicacion"
                                 value="{{ old('fecha_publicacion') }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 dark:border-stone-600 dark:bg-stone-900"
+                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                       text-zinc-900 outline-none transition
+                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                style="color-scheme: dark;"
                             >
+
+                            <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
+                                Si queda vacío, se publicará inmediatamente.
+                            </p>
 
                         </div>
 
                         <div>
 
-                            <label class="mb-2 block text-sm font-black">
+                            <label class="mb-2 block text-sm font-black text-stone-900 dark:text-stone-100">
                                 Visible hasta
                             </label>
 
@@ -128,30 +170,45 @@
                                 type="datetime-local"
                                 name="fecha_vencimiento"
                                 value="{{ old('fecha_vencimiento') }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 dark:border-stone-600 dark:bg-stone-900"
+                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                       text-zinc-900 outline-none transition
+                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                style="color-scheme: dark;"
                             >
+
+                            <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
+                                Si queda vacío, el aviso no vencerá automáticamente.
+                            </p>
 
                         </div>
 
                     </div>
 
                     {{-- ACTIVO --}}
-                    <div class="mt-6">
+                    <div class="mt-6 rounded-xl border border-stone-300 bg-stone-100 p-4 dark:border-stone-600 dark:bg-stone-700">
 
-                        <label class="inline-flex items-center gap-3">
+                        <label class="inline-flex cursor-pointer items-center gap-3">
 
                             <input
                                 type="checkbox"
                                 name="activo"
                                 value="1"
-                                checked
+                                @checked(old('activo', true))
+                                class="h-4 w-4 rounded border-stone-400 text-orange-500
+                                       focus:ring-2 focus:ring-orange-500/30
+                                       dark:border-stone-500 dark:bg-zinc-950"
                             >
 
-                            <span class="font-black">
+                            <span class="font-black text-stone-900 dark:text-stone-100">
                                 Publicar este aviso
                             </span>
 
                         </label>
+
+                        <p class="mt-2 text-xs text-stone-500 dark:text-stone-300">
+                            Si lo desmarcás, el aviso se guardará pero no será visible.
+                        </p>
 
                     </div>
 
@@ -162,14 +219,18 @@
 
                     <button
                         type="submit"
-                        class="rounded-xl bg-orange-500 px-5 py-3 font-black text-white transition hover:bg-orange-600"
+                        class="rounded-xl bg-orange-500 px-5 py-3 font-black text-white
+                               transition hover:bg-orange-600
+                               focus:outline-none focus:ring-2 focus:ring-orange-500/40"
                     >
                         💾 Guardar aviso
                     </button>
 
                     <a
                         href="{{ route('avisos.index') }}"
-                        class="rounded-xl bg-stone-600 px-5 py-3 font-black text-white transition hover:bg-stone-700"
+                        class="rounded-xl bg-stone-600 px-5 py-3 font-black text-white
+                               transition hover:bg-stone-700
+                               focus:outline-none focus:ring-2 focus:ring-stone-500/40"
                     >
                         Cancelar
                     </a>

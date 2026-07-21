@@ -90,7 +90,13 @@
                             type="text"
                             name="titulo"
                             value="{{ old('titulo', $aviso->titulo) }}"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+                            placeholder="Ejemplo: Cambio de horario"
+                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 placeholder:text-zinc-500
+                                   outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white
+                                   dark:placeholder:text-zinc-500"
                             maxlength="255"
                             required
                         >
@@ -107,7 +113,13 @@
                         <textarea
                             name="mensaje"
                             rows="6"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+                            placeholder="Escribí aquí la información que recibirán los socios..."
+                            class="w-full resize-y rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 placeholder:text-zinc-500
+                                   outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white
+                                   dark:placeholder:text-zinc-500"
                             required
                         >{{ old('mensaje', $aviso->mensaje) }}</textarea>
 
@@ -122,7 +134,11 @@
 
                         <select
                             name="prioridad"
-                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+                            class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                   text-zinc-900 outline-none transition
+                                   focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                   dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                            style="color-scheme: dark;"
                             required
                         >
 
@@ -169,7 +185,11 @@
                                         ? $aviso->fecha_publicacion->format('Y-m-d\TH:i')
                                         : ''
                                 ) }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                       text-zinc-900 outline-none transition
+                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                style="color-scheme: dark;"
                             >
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
@@ -193,7 +213,11 @@
                                         ? $aviso->fecha_vencimiento->format('Y-m-d\TH:i')
                                         : ''
                                 ) }}"
-                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100"
+                                class="w-full rounded-xl border border-stone-300 bg-white px-4 py-3
+                                       text-zinc-900 outline-none transition
+                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20
+                                       dark:border-stone-600 dark:bg-zinc-950 dark:text-white"
+                                style="color-scheme: dark;"
                             >
 
                             <p class="mt-2 text-xs text-stone-500 dark:text-stone-400">
@@ -214,6 +238,9 @@
                                 name="activo"
                                 value="1"
                                 @checked(old('activo', $aviso->activo))
+                                class="h-4 w-4 rounded border-stone-400 text-orange-500
+                                       focus:ring-2 focus:ring-orange-500/30
+                                       dark:border-stone-500 dark:bg-zinc-950"
                             >
 
                             <span class="font-black text-stone-900 dark:text-stone-100">
@@ -235,14 +262,18 @@
 
                     <button
                         type="submit"
-                        class="rounded-xl bg-orange-500 px-5 py-3 font-black text-white transition hover:bg-orange-600"
+                        class="rounded-xl bg-orange-500 px-5 py-3 font-black text-white
+                               transition hover:bg-orange-600
+                               focus:outline-none focus:ring-2 focus:ring-orange-500/40"
                     >
                         💾 Guardar cambios
                     </button>
 
                     <a
                         href="{{ route('avisos.index') }}"
-                        class="rounded-xl bg-stone-600 px-5 py-3 font-black text-white transition hover:bg-stone-700"
+                        class="rounded-xl bg-stone-600 px-5 py-3 font-black text-white
+                               transition hover:bg-stone-700
+                               focus:outline-none focus:ring-2 focus:ring-stone-500/40"
                     >
                         Cancelar
                     </a>
