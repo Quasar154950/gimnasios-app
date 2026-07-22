@@ -1,4 +1,4 @@
-<x-layouts.app>
+<x-layouts::app :title="'Novedades'">
 
     <div class="max-w-7xl mx-auto p-6">
 
@@ -81,4 +81,4 @@
 
     </div>
 
-</x-layouts.app>
+</x-layouts::app>
