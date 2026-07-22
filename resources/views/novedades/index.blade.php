@@ -1,21 +1,21 @@
 <x-layouts::app :title="'Novedades'">
 
-    <div class="max-w-7xl mx-auto p-6">
+    <div class="mx-auto max-w-7xl p-6">
 
-        <div class="flex items-center justify-between mb-6">
+        <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold">
                     📰 Novedades
                 </h1>
 
-                <p class="text-zinc-400 mt-1">
+                <p class="mt-1 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
                     Administrá las publicaciones que verán los socios en la app.
                 </p>
             </div>
 
             <a
                 href="{{ route('novedades.create') }}"
-                class="px-5 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition"
+                class="rounded-xl bg-orange-600 px-5 py-3 font-bold text-white shadow-sm transition hover:bg-orange-700"
             >
                 ➕ Nueva publicación
             </a>
@@ -29,7 +29,7 @@
 
         @if ($novedades->isEmpty())
 
-            <div class="bg-zinc-900 border border-zinc-800 rounded-xl shadow p-8 text-center text-zinc-400">
+            <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-8 text-center text-zinc-400 shadow">
                 Todavía no hay publicaciones.
             </div>
 
@@ -39,13 +39,13 @@
 
                 @foreach ($novedades as $novedad)
 
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+                    <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
 
                         <div class="flex items-start justify-between gap-4">
 
                             <div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-xs uppercase font-semibold text-orange-400">
+                                <div class="mb-2 flex items-center gap-2">
+                                    <span class="text-xs font-semibold uppercase text-orange-400">
                                         {{ $novedad->tipo }}
                                     </span>
 
