@@ -495,17 +495,17 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/ejecutar-migraciones-temporal', function () {
+Route::get('/ejecutar-migraciones-temporal/{clave}', function (string $clave) {
 
-    if (app()->environment('production')) {
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--force' => true,
-        ]);
-
-        return nl2br(\Illuminate\Support\Facades\Artisan::output());
+    if ($clave !== 'migrar-novedades-2026') {
+        abort(403);
     }
 
-    abort(403);
+    \Illuminate\Support\Facades\Artisan::call('migrate', [
+        '--force' => true,
+    ]);
+
+    return '<pre>' . e(\Illuminate\Support\Facades\Artisan::output()) . '</pre>';
 });
 
 require __DIR__ . '/settings.php';
