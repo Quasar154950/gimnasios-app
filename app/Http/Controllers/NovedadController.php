@@ -59,13 +59,18 @@ class NovedadController extends Controller
     }
 
     /**
-     * Formulario de edición.
+     * Diagnóstico temporal de edición.
      */
-    public function edit(Novedad $novedad): View
+    public function edit(Novedad $novedad)
     {
-        $this->validarPropietario($novedad);
-
-        return view('novedades.edit', compact('novedad'));
+        dd([
+            'novedad_id' => $novedad->id,
+            'abogado_id_novedad' => $novedad->abogado_id,
+            'usuario_actual_id' => auth()->id(),
+            'usuario_actual_email' => auth()->user()?->email,
+            'usuario_actual_role' => auth()->user()?->role,
+            'usuario_actual_slug' => auth()->user()?->slug_estudio,
+        ]);
     }
 
     /**
