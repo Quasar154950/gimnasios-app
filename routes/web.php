@@ -495,27 +495,5 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/ver-error-temporal/{clave}', function (string $clave) {
-
-    if ($clave !== 'ver-error-novedades-2026') {
-        abort(403);
-    }
-
-    $archivo = storage_path('logs/laravel.log');
-
-    if (! file_exists($archivo)) {
-        return response('<pre>No existe storage/logs/laravel.log</pre>', 200)
-            ->header('Content-Type', 'text/html');
-    }
-
-    $contenido = file_get_contents($archivo);
-
-    $ultimosCaracteres = substr($contenido, -30000);
-
-    return response(
-        '<pre style="white-space: pre-wrap;">' . e($ultimosCaracteres) . '</pre>',
-        200
-    )->header('Content-Type', 'text/html');
-});
 
 require __DIR__ . '/settings.php';
