@@ -40,7 +40,11 @@ class NovedadController extends Controller
         $datos = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string'],
-            'tipo' => ['required', 'string', 'in:novedad,promocion,evento,consejo'],
+            'tipo' => [
+                'required',
+                'string',
+                'in:novedad,promocion,evento,consejo',
+            ],
         ]);
 
         Novedad::create([
@@ -59,31 +63,32 @@ class NovedadController extends Controller
     }
 
     /**
-     * Diagnóstico temporal de edición.
+     * Formulario de edición.
      */
-    public function edit(Novedad $novedad)
+    public function edit(Novedad $novedad): View
     {
-        dd([
-            'novedad_id' => $novedad->id,
-            'abogado_id_novedad' => $novedad->abogado_id,
-            'usuario_actual_id' => auth()->id(),
-            'usuario_actual_email' => auth()->user()?->email,
-            'usuario_actual_role' => auth()->user()?->role,
-            'usuario_actual_slug' => auth()->user()?->slug_estudio,
-        ]);
+        $this->validarPropietario($novedad);
+
+        return view('novedades.edit', compact('novedad'));
     }
 
     /**
      * Actualizar publicación.
      */
-    public function update(Request $request, Novedad $novedad): RedirectResponse
-    {
+    public function update(
+        Request $request,
+        Novedad $novedad
+    ): RedirectResponse {
         $this->validarPropietario($novedad);
 
         $datos = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string'],
-            'tipo' => ['required', 'string', 'in:novedad,promocion,evento,consejo'],
+            'tipo' => [
+                'required',
+                'string',
+                'in:novedad,promocion,evento,consejo',
+            ],
         ]);
 
         $novedad->update([

@@ -56,6 +56,9 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         // 📰 NOVEDADES
         Route::resource('novedades', NovedadController::class)
+            ->parameters([
+              'novedades' => 'novedad',
+            ])
             ->except(['show']);
 
         // 🔥 SUSCRIPCIÓN
