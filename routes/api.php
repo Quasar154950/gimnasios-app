@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\ActivarCuentaSocioController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MobileAvisoController;
 use App\Http\Controllers\Api\MobileHomeController;
 use App\Http\Controllers\Api\MobileMensajeController;
-use App\Http\Controllers\Api\MobileReservaController;
+use App\Http\Controllers\Api\MobileNovedadController;
 use App\Http\Controllers\Api\MobileProgresoController;
-use App\Http\Controllers\Api\ActivarCuentaSocioController;
-use App\Http\Controllers\Api\MobileAvisoController;
+use App\Http\Controllers\Api\MobileReservaController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
@@ -97,16 +98,27 @@ Route::prefix('mobile')->group(function () {
             '/mensajes',
             [MobileMensajeController::class, 'clear']
         );
-        
-        /*
-       |--------------------------------------------------------------------------
-       | AVISOS
-       |--------------------------------------------------------------------------
-       */
 
-       Route::get(
-           '/avisos',
-           [MobileAvisoController::class, 'index']
+        /*
+        |--------------------------------------------------------------------------
+        | AVISOS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/avisos',
+            [MobileAvisoController::class, 'index']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | NOVEDADES
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/novedades',
+            [MobileNovedadController::class, 'index']
         );
 
         /*
@@ -119,7 +131,5 @@ Route::prefix('mobile')->group(function () {
             '/logout',
             [AuthController::class, 'logout']
         );
-
     });
-
 });

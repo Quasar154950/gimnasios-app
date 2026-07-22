@@ -127,6 +127,15 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
+                            icon="newspaper"
+                            :href="route('novedades.index')"
+                            :current="request()->routeIs('novedades.*')"
+                            wire:navigate
+                        >
+                            Novedades
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
                           icon="credit-card"
                           :href="route('suscripcion.index')"
                           :current="request()->routeIs('suscripcion.*')"

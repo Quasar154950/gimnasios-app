@@ -14,6 +14,7 @@ use App\Http\Controllers\SaasPagoController;
 use App\Http\Controllers\MercadoPagoSaasWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Http\Controllers\AvisoController;
+use App\Http\Controllers\NovedadController;
 use App\Models\User;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
@@ -51,6 +52,10 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         // 📢 AVISOS
         Route::resource('avisos', AvisoController::class)
+            ->except(['show']);
+
+        // 📰 NOVEDADES
+        Route::resource('novedades', NovedadController::class)
             ->except(['show']);
 
         // 🔥 SUSCRIPCIÓN
@@ -489,5 +494,18 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
+
+Route::get('/ejecutar-migraciones-temporal', function () {
+
+    if (app()->environment('production')) {
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--force' => true,
+        ]);
+
+        return nl2br(\Illuminate\Support\Facades\Artisan::output());
+    }
+
+    abort(403);
+});
 
 require __DIR__ . '/settings.php';
