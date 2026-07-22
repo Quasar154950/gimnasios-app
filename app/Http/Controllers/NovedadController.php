@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Novedad;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -34,19 +35,19 @@ class NovedadController extends Controller
     /**
      * Guardar nueva publicación.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $datos = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string'],
-            'tipo' => ['required', 'string'],
+            'tipo' => ['required', 'string', 'in:novedad,promocion,evento,consejo'],
         ]);
 
         Novedad::create([
             'abogado_id' => auth()->id(),
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'tipo' => $request->tipo,
+            'titulo' => $datos['titulo'],
+            'descripcion' => $datos['descripcion'],
+            'tipo' => $datos['tipo'],
             'fecha_publicacion' => now(),
             'activo' => true,
             'destacado' => false,
@@ -55,5 +56,64 @@ class NovedadController extends Controller
         return redirect()
             ->route('novedades.index')
             ->with('success', 'Publicación creada correctamente.');
+    }
+
+    /**
+     * Formulario de edición.
+     */
+    public function edit(Novedad $novedad): View
+    {
+        $this->validarPropietario($novedad);
+
+        return view('novedades.edit', compact('novedad'));
+    }
+
+    /**
+     * Actualizar publicación.
+     */
+    public function update(Request $request, Novedad $novedad): RedirectResponse
+    {
+        $this->validarPropietario($novedad);
+
+        $datos = $request->validate([
+            'titulo' => ['required', 'string', 'max:255'],
+            'descripcion' => ['required', 'string'],
+            'tipo' => ['required', 'string', 'in:novedad,promocion,evento,consejo'],
+        ]);
+
+        $novedad->update([
+            'titulo' => $datos['titulo'],
+            'descripcion' => $datos['descripcion'],
+            'tipo' => $datos['tipo'],
+        ]);
+
+        return redirect()
+            ->route('novedades.index')
+            ->with('success', 'Publicación actualizada correctamente.');
+    }
+
+    /**
+     * Eliminar publicación.
+     */
+    public function destroy(Novedad $novedad): RedirectResponse
+    {
+        $this->validarPropietario($novedad);
+
+        $novedad->delete();
+
+        return redirect()
+            ->route('novedades.index')
+            ->with('success', 'Publicación eliminada correctamente.');
+    }
+
+    /**
+     * Evita modificar publicaciones de otro gimnasio.
+     */
+    private function validarPropietario(Novedad $novedad): void
+    {
+        abort_unless(
+            (int) $novedad->abogado_id === (int) auth()->id(),
+            403
+        );
     }
 }
