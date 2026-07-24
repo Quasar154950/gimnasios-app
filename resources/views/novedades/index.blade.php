@@ -101,7 +101,7 @@
                             <div class="relative aspect-video overflow-hidden bg-zinc-950">
 
                                 <img
-                                    src="{{ asset('storage/' . $novedad->imagen) }}"
+                                    src="{{ $novedad->imagen }}"
                                     alt="{{ $novedad->titulo }}"
                                     loading="lazy"
                                     class="h-full w-full object-cover"
