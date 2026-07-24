@@ -232,7 +232,7 @@
                         id="vistaPrevia"
                         src=""
                         alt="Vista previa de la imagen"
-                        class="max-h-96 w-full rounded-2xl border border-zinc-700 object-cover"
+                        class="max-h-[32rem] w-full rounded-2xl border border-zinc-700 bg-zinc-950 object-contain"
                     >
                 </div>
 
