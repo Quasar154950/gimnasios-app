@@ -6,6 +6,7 @@ use App\Models\Novedad;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NovedadController extends Controller
@@ -93,9 +94,19 @@ class NovedadController extends Controller
         */
 
         if ($request->hasFile('imagen')) {
+            $archivo = $request->file('imagen');
+
+            $nombreSinExtension = pathinfo(
+                $archivo->getClientOriginalName(),
+                PATHINFO_FILENAME
+            );
+
+            $nombreSeguro = Str::slug($nombreSinExtension);
+
             $media = $novedad
                 ->addMediaFromRequest('imagen')
                 ->usingName($datos['titulo'])
+                ->usingFileName($nombreSeguro)
                 ->toMediaCollection('imagen', 'cloudinary');
 
             $novedad->update([
@@ -183,9 +194,19 @@ class NovedadController extends Controller
         if ($request->hasFile('imagen')) {
             $this->eliminarImagenActual($novedad);
 
+            $archivo = $request->file('imagen');
+
+            $nombreSinExtension = pathinfo(
+                $archivo->getClientOriginalName(),
+                PATHINFO_FILENAME
+            );
+
+            $nombreSeguro = Str::slug($nombreSinExtension);
+
             $media = $novedad
                 ->addMediaFromRequest('imagen')
                 ->usingName($datos['titulo'])
+                ->usingFileName($nombreSeguro)
                 ->toMediaCollection('imagen', 'cloudinary');
 
             $novedad->imagen = $media->getUrl();
