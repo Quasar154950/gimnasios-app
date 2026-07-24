@@ -169,9 +169,9 @@
                         class="mb-4 overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-950"
                     >
                         <img
-                            src="{{ asset('storage/' . $novedad->imagen) }}"
+                            src="{{ $novedad->imagen }}"
                             alt="{{ $novedad->titulo }}"
-                            class="max-h-96 w-full object-cover"
+                            class="max-h-96 w-full bg-zinc-950 object-contain"
                         >
 
                         <div class="flex items-center justify-between gap-3 p-4">
