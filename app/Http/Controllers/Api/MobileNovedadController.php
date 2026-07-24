@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Novedad;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MobileNovedadController extends Controller
 {
@@ -35,7 +36,11 @@ class MobileNovedadController extends Controller
             ->where(function ($query) {
                 $query
                     ->whereNull('fecha_publicacion')
-                    ->orWhereDate('fecha_publicacion', '<=', now()->toDateString());
+                    ->orWhereDate(
+                        'fecha_publicacion',
+                        '<=',
+                        now()->toDateString()
+                    );
             })
             ->orderByDesc('destacado')
             ->orderByDesc('fecha_publicacion')
@@ -47,10 +52,18 @@ class MobileNovedadController extends Controller
                     'titulo' => $novedad->titulo,
                     'descripcion' => $novedad->descripcion,
                     'tipo' => $novedad->tipo,
-                    'imagen' => $novedad->imagen,
-                    'fecha_publicacion' => $novedad->fecha_publicacion?->format('Y-m-d'),
-                    'destacado' => $novedad->destacado,
-                    'created_at' => $novedad->created_at?->toIso8601String(),
+
+                    'imagen' => $novedad->imagen
+                        ? url(Storage::url($novedad->imagen))
+                        : null,
+
+                    'fecha_publicacion' =>
+                        $novedad->fecha_publicacion?->format('Y-m-d'),
+
+                    'destacado' => (bool) $novedad->destacado,
+
+                    'created_at' =>
+                        $novedad->created_at?->toIso8601String(),
                 ];
             })
             ->values();
