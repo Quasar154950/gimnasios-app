@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Novedad;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class NovedadController extends Controller
@@ -38,23 +39,53 @@ class NovedadController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $datos = $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'descripcion' => ['required', 'string'],
+            'titulo' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'descripcion' => [
+                'required',
+                'string',
+            ],
             'tipo' => [
                 'required',
                 'string',
                 'in:novedad,promocion,evento,consejo',
             ],
+            'imagen' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
+            'activo' => [
+                'nullable',
+                'boolean',
+            ],
+            'destacado' => [
+                'nullable',
+                'boolean',
+            ],
         ]);
+
+        $rutaImagen = null;
+
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request
+                ->file('imagen')
+                ->store('novedades', 'public');
+        }
 
         Novedad::create([
             'abogado_id' => auth()->id(),
             'titulo' => $datos['titulo'],
             'descripcion' => $datos['descripcion'],
             'tipo' => $datos['tipo'],
+            'imagen' => $rutaImagen,
             'fecha_publicacion' => now(),
-            'activo' => true,
-            'destacado' => false,
+            'activo' => $request->boolean('activo'),
+            'destacado' => $request->boolean('destacado'),
         ]);
 
         return redirect()
@@ -82,19 +113,75 @@ class NovedadController extends Controller
         $this->validarPropietario($novedad);
 
         $datos = $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'descripcion' => ['required', 'string'],
+            'titulo' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'descripcion' => [
+                'required',
+                'string',
+            ],
             'tipo' => [
                 'required',
                 'string',
                 'in:novedad,promocion,evento,consejo',
             ],
+            'imagen' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
+            'eliminar_imagen' => [
+                'nullable',
+                'boolean',
+            ],
+            'activo' => [
+                'nullable',
+                'boolean',
+            ],
+            'destacado' => [
+                'nullable',
+                'boolean',
+            ],
         ]);
+
+        $rutaImagen = $novedad->imagen;
+
+        /*
+        |--------------------------------------------------------------------------
+        | ELIMINAR IMAGEN ACTUAL
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->boolean('eliminar_imagen')) {
+            $this->eliminarImagen($novedad->imagen);
+
+            $rutaImagen = null;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | REEMPLAZAR O AGREGAR IMAGEN
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('imagen')) {
+            $this->eliminarImagen($novedad->imagen);
+
+            $rutaImagen = $request
+                ->file('imagen')
+                ->store('novedades', 'public');
+        }
 
         $novedad->update([
             'titulo' => $datos['titulo'],
             'descripcion' => $datos['descripcion'],
             'tipo' => $datos['tipo'],
+            'imagen' => $rutaImagen,
+            'activo' => $request->boolean('activo'),
+            'destacado' => $request->boolean('destacado'),
         ]);
 
         return redirect()
@@ -109,11 +196,26 @@ class NovedadController extends Controller
     {
         $this->validarPropietario($novedad);
 
+        $this->eliminarImagen($novedad->imagen);
+
         $novedad->delete();
 
         return redirect()
             ->route('novedades.index')
             ->with('success', 'Publicación eliminada correctamente.');
+    }
+
+    /**
+     * Elimina una imagen del disco público.
+     */
+    private function eliminarImagen(?string $rutaImagen): void
+    {
+        if (
+            $rutaImagen &&
+            Storage::disk('public')->exists($rutaImagen)
+        ) {
+            Storage::disk('public')->delete($rutaImagen);
+        }
     }
 
     /**
