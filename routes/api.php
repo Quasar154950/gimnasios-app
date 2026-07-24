@@ -28,6 +28,11 @@ Route::prefix('mobile')->group(function () {
         [ActivarCuentaSocioController::class, 'activar']
     );
 
+    Route::get(
+        '/novedades/imagen/{novedad}',
+        [MobileNovedadController::class, 'imagen']
+    );
+
     /*
     |--------------------------------------------------------------------------
     | RUTAS PROTEGIDAS

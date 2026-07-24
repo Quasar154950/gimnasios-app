@@ -7,6 +7,7 @@ use App\Models\Novedad;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MobileNovedadController extends Controller
 {
@@ -54,7 +55,10 @@ class MobileNovedadController extends Controller
                     'tipo' => $novedad->tipo,
 
                     'imagen' => $novedad->imagen
-                        ? url(Storage::url($novedad->imagen))
+                        ? url(
+                            '/api/mobile/novedades/imagen/' .
+                            $novedad->id
+                        )
                         : null,
 
                     'fecha_publicacion' =>
@@ -77,5 +81,22 @@ class MobileNovedadController extends Controller
             'cantidad' => $novedades->count(),
             'novedades' => $novedades,
         ]);
+    }
+
+    public function imagen(
+        Novedad $novedad
+    ): StreamedResponse {
+        if (
+            ! $novedad->imagen ||
+            ! Storage::disk('public')->exists(
+                $novedad->imagen
+            )
+        ) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response(
+            $novedad->imagen
+        );
     }
 }
