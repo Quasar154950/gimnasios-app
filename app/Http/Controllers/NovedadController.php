@@ -69,24 +69,39 @@ class NovedadController extends Controller
             ],
         ]);
 
-        $rutaImagen = null;
+        /*
+        |--------------------------------------------------------------------------
+        | CREAR PUBLICACIÓN
+        |--------------------------------------------------------------------------
+        */
 
-        if ($request->hasFile('imagen')) {
-            $rutaImagen = $request
-                ->file('imagen')
-                ->store('novedades', 'public');
-        }
-
-        Novedad::create([
+        $novedad = Novedad::create([
             'abogado_id' => auth()->id(),
             'titulo' => $datos['titulo'],
             'descripcion' => $datos['descripcion'],
             'tipo' => $datos['tipo'],
-            'imagen' => $rutaImagen,
+            'imagen' => null,
             'fecha_publicacion' => now(),
             'activo' => $request->boolean('activo'),
             'destacado' => $request->boolean('destacado'),
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUBIR IMAGEN A CLOUDINARY
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('imagen')) {
+            $media = $novedad
+                ->addMediaFromRequest('imagen')
+                ->usingName($datos['titulo'])
+                ->toMediaCollection('imagen', 'cloudinary');
+
+            $novedad->update([
+                'imagen' => $media->getUrl(),
+            ]);
+        }
 
         return redirect()
             ->route('novedades.index')
@@ -147,8 +162,6 @@ class NovedadController extends Controller
             ],
         ]);
 
-        $rutaImagen = $novedad->imagen;
-
         /*
         |--------------------------------------------------------------------------
         | ELIMINAR IMAGEN ACTUAL
@@ -156,9 +169,9 @@ class NovedadController extends Controller
         */
 
         if ($request->boolean('eliminar_imagen')) {
-            $this->eliminarImagen($novedad->imagen);
+            $this->eliminarImagenActual($novedad);
 
-            $rutaImagen = null;
+            $novedad->imagen = null;
         }
 
         /*
@@ -168,18 +181,27 @@ class NovedadController extends Controller
         */
 
         if ($request->hasFile('imagen')) {
-            $this->eliminarImagen($novedad->imagen);
+            $this->eliminarImagenActual($novedad);
 
-            $rutaImagen = $request
-                ->file('imagen')
-                ->store('novedades', 'public');
+            $media = $novedad
+                ->addMediaFromRequest('imagen')
+                ->usingName($datos['titulo'])
+                ->toMediaCollection('imagen', 'cloudinary');
+
+            $novedad->imagen = $media->getUrl();
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACTUALIZAR PUBLICACIÓN
+        |--------------------------------------------------------------------------
+        */
 
         $novedad->update([
             'titulo' => $datos['titulo'],
             'descripcion' => $datos['descripcion'],
             'tipo' => $datos['tipo'],
-            'imagen' => $rutaImagen,
+            'imagen' => $novedad->imagen,
             'activo' => $request->boolean('activo'),
             'destacado' => $request->boolean('destacado'),
         ]);
@@ -196,7 +218,7 @@ class NovedadController extends Controller
     {
         $this->validarPropietario($novedad);
 
-        $this->eliminarImagen($novedad->imagen);
+        $this->eliminarImagenActual($novedad);
 
         $novedad->delete();
 
@@ -206,12 +228,35 @@ class NovedadController extends Controller
     }
 
     /**
-     * Elimina una imagen del disco público.
+     * Elimina la imagen de Cloudinary.
+     *
+     * También contempla imágenes antiguas guardadas
+     * en el disco público local.
      */
-    private function eliminarImagen(?string $rutaImagen): void
+    private function eliminarImagenActual(Novedad $novedad): void
     {
+        /*
+        |--------------------------------------------------------------------------
+        | IMAGEN DE CLOUDINARY / SPATIE
+        |--------------------------------------------------------------------------
+        */
+
+        if ($novedad->getMedia('imagen')->isNotEmpty()) {
+            $novedad->clearMediaCollection('imagen');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMAGEN LOCAL ANTIGUA
+        |--------------------------------------------------------------------------
+        */
+
+        $rutaImagen = $novedad->imagen;
+
         if (
             $rutaImagen &&
+            ! str_starts_with($rutaImagen, 'http://') &&
+            ! str_starts_with($rutaImagen, 'https://') &&
             Storage::disk('public')->exists($rutaImagen)
         ) {
             Storage::disk('public')->delete($rutaImagen);
