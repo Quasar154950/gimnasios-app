@@ -98,13 +98,13 @@
 
                         @if ($novedad->imagen)
 
-                            <div class="relative aspect-video overflow-hidden bg-zinc-950">
+                            <div class="relative flex min-h-64 items-center justify-center overflow-hidden bg-zinc-950">
 
                                 <img
                                     src="{{ $novedad->imagen }}"
                                     alt="{{ $novedad->titulo }}"
                                     loading="lazy"
-                                    class="h-full w-full object-cover"
+                                    class="max-h-[32rem] w-full object-contain"
                                 >
 
                                 @if ($novedad->destacado)
