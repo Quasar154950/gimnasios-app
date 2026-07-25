@@ -19,7 +19,12 @@
         >
 
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <x-app-logo
+                    :sidebar="true"
+                    href="{{ route('dashboard') }}"
+                    wire:navigate
+                />
+
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
@@ -27,12 +32,17 @@
             <div class="px-3 mt-4 mb-2">
 
                 <button
+                    type="button"
                     x-on:click="$dispatch('open-global-search')"
                     class="w-full flex items-center justify-between pl-3 pr-2 py-1.5 text-xs rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-orange-500 transition-all cursor-text group"
                 >
 
                     <div class="flex items-center gap-2">
-                        <flux:icon name="magnifying-glass" variant="micro" />
+                        <flux:icon
+                            name="magnifying-glass"
+                            variant="micro"
+                        />
+
                         <span>Buscar...</span>
                     </div>
 
@@ -48,12 +58,18 @@
             {{-- SIDEBAR --}}
             <flux:sidebar.nav>
 
-                <flux:sidebar.group heading="Navegación" class="grid">
+                <flux:sidebar.group
+                    heading="Navegación"
+                    class="grid"
+                >
 
                     {{-- SOPORTE --}}
                     @if(auth()->user()->email === 'soporte@tuempresa.com')
 
-                        <flux:sidebar.item icon="home" href="/soporte">
+                        <flux:sidebar.item
+                            icon="home"
+                            href="/soporte"
+                        >
                             Panel de soporte
                         </flux:sidebar.item>
 
@@ -64,7 +80,6 @@
                             icon="home"
                             :href="route('cliente.dashboard')"
                             :current="request()->routeIs('cliente.dashboard')"
-                            
                         >
                             Panel
                         </flux:sidebar.item>
@@ -109,6 +124,15 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
+                            icon="book-open"
+                            :href="route('ejercicios.index')"
+                            :current="request()->routeIs('ejercicios.*')"
+                            wire:navigate
+                        >
+                            Biblioteca de ejercicios
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
                             icon="banknotes"
                             :href="route('pagos.index')"
                             :current="request()->routeIs('pagos.*')"
@@ -116,7 +140,7 @@
                         >
                             Pagos / Cuotas
                         </flux:sidebar.item>
-                        
+
                         <flux:sidebar.item
                             icon="megaphone"
                             :href="route('avisos.index')"
@@ -136,21 +160,21 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
-                          icon="credit-card"
-                          :href="route('suscripcion.index')"
-                          :current="request()->routeIs('suscripcion.*')"
-                          wire:navigate
+                            icon="credit-card"
+                            :href="route('suscripcion.index')"
+                            :current="request()->routeIs('suscripcion.*')"
+                            wire:navigate
                         >
-                           Suscripción
+                            Suscripción
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
-                        icon="credit-card"
-                       :href="route('mercadopago.index')"
-                       :current="request()->routeIs('mercadopago.*')"
-                       wire:navigate
-                       >
-                          Mercado Pago
+                            icon="credit-card"
+                            :href="route('mercadopago.index')"
+                            :current="request()->routeIs('mercadopago.*')"
+                            wire:navigate
+                        >
+                            Mercado Pago
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
@@ -166,7 +190,6 @@
                             icon="camera"
                             :href="route('asistencias.escanear')"
                             :current="request()->routeIs('asistencias.escanear')"
-                            
                         >
                             Escanear QR
                         </flux:sidebar.item>
@@ -189,11 +212,17 @@
         {{-- HEADER MOBILE --}}
         <flux:header class="lg:hidden">
 
-            <flux:sidebar.toggle icon="bars-2" inset="left" />
+            <flux:sidebar.toggle
+                icon="bars-2"
+                inset="left"
+            />
 
             <flux:spacer />
 
-            <flux:dropdown position="top" align="end">
+            <flux:dropdown
+                position="top"
+                align="end"
+            >
 
                 <flux:profile
                     :initials="auth()->user()->initials()"
@@ -206,10 +235,16 @@
                         Configuración
                     </flux:menu.item>
 
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                    >
                         @csrf
 
-                        <flux:menu.item as="button" type="submit">
+                        <flux:menu.item
+                            as="button"
+                            type="submit"
+                        >
                             Cerrar sesión
                         </flux:menu.item>
                     </form>
@@ -238,17 +273,22 @@
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function () {
-
-                    navigator.serviceWorker.register('/service-worker.js')
+                    navigator.serviceWorker
+                        .register('/service-worker.js')
                         .then(function () {
-                            console.log('Service Worker registrado correctamente.');
+                            console.log(
+                                'Service Worker registrado correctamente.'
+                            );
                         })
                         .catch(function (error) {
-                            console.log('Error registrando Service Worker:', error);
+                            console.log(
+                                'Error registrando Service Worker:',
+                                error
+                            );
                         });
-
                 });
             }
         </script>
-     </body>
+
+    </body>
 </html>
