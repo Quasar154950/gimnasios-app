@@ -39,52 +39,83 @@ class Create extends Component
     protected function messages(): array
     {
         return [
-            'nombre.required' => 'El nombre del ejercicio es obligatorio.',
-            'grupo_muscular.required' => 'Seleccioná un grupo muscular.',
-            'video_url.url' => 'El enlace del video debe ser una URL válida.',
-            'imagen.image' => 'El archivo seleccionado debe ser una imagen.',
-            'imagen.mimes' => 'La imagen debe ser JPG, JPEG, PNG o WEBP.',
-            'imagen.max' => 'La imagen no puede superar los 5 MB.',
+            'nombre.required' =>
+                'El nombre del ejercicio es obligatorio.',
+
+            'grupo_muscular.required' =>
+                'Seleccioná un grupo muscular.',
+
+            'video_url.url' =>
+                'El enlace del video debe ser una URL válida.',
+
+            'imagen.image' =>
+                'El archivo seleccionado debe ser una imagen.',
+
+            'imagen.mimes' =>
+                'La imagen debe ser JPG, JPEG, PNG o WEBP.',
+
+            'imagen.max' =>
+                'La imagen no puede superar los 5 MB.',
         ];
     }
 
     public function guardar()
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        $ejercicio = Ejercicio::create([
-            'abogado_id' => auth()->id(),
-            'nombre' => trim($this->nombre),
-            'grupo_muscular' => $this->grupo_muscular,
-            'descripcion' => $this->descripcion ?: null,
-            'video_url' => $this->video_url ?: null,
-            'activo' => $this->activo,
-        ]);
+            $ejercicio = Ejercicio::create([
+                'abogado_id' => auth()->id(),
+                'nombre' => trim($this->nombre),
+                'grupo_muscular' => $this->grupo_muscular,
+                'descripcion' => $this->descripcion ?: null,
+                'video_url' => $this->video_url ?: null,
+                'activo' => $this->activo,
+            ]);
 
-        if ($this->imagen) {
-            $nombreSinExtension = pathinfo(
-                $this->imagen->getClientOriginalName(),
-                PATHINFO_FILENAME
+            if ($this->imagen) {
+                $nombreSinExtension = pathinfo(
+                    $this->imagen->getClientOriginalName(),
+                    PATHINFO_FILENAME
+                );
+
+                $nombreSeguro = str($nombreSinExtension)
+                    ->slug('-')
+                    ->append('-' . uniqid())
+                    ->toString();
+
+                $ejercicio
+                    ->addMedia($this->imagen->getRealPath())
+                    ->usingName($nombreSinExtension)
+                    ->usingFileName($nombreSeguro)
+                    ->toMediaCollection('imagen');
+            }
+
+            session()->flash(
+                'success',
+                'Ejercicio creado correctamente.'
             );
 
-            $nombreSeguro = str($nombreSinExtension)
-                ->slug('-')
-                ->append('-' . uniqid())
-                ->toString();
+            return redirect()->route('ejercicios.index');
 
-            $ejercicio
-                ->addMedia($this->imagen->getRealPath())
-                ->usingName($nombreSinExtension)
-                ->usingFileName($nombreSeguro)
-                ->toMediaCollection('imagen');
+        } catch (\Throwable $e) {
+            $error = implode(PHP_EOL, [
+                'FECHA: ' . now(),
+                'ERROR: ' . $e->getMessage(),
+                'ARCHIVO: ' . $e->getFile(),
+                'LÍNEA: ' . $e->getLine(),
+                '',
+                'TRACE:',
+                $e->getTraceAsString(),
+            ]);
+
+            file_put_contents(
+                storage_path('error-ejercicio.txt'),
+                $error
+            );
+
+            throw $e;
         }
-
-        session()->flash(
-            'success',
-            'Ejercicio creado correctamente.'
-        );
-
-        return redirect()->route('ejercicios.index');
     }
 
     public function render()
