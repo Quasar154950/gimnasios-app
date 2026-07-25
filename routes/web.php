@@ -512,4 +512,33 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
+Route::get('/ver-error-railway/{clave}', function (string $clave) {
+
+    $claveCorrecta = env('MIGRATION_KEY');
+
+    if (
+        ! $claveCorrecta ||
+        ! hash_equals($claveCorrecta, $clave)
+    ) {
+        abort(403);
+    }
+
+    $archivo = storage_path('logs/laravel.log');
+
+    if (! file_exists($archivo)) {
+        return response()->json([
+            'ok' => false,
+            'mensaje' => 'No existe storage/logs/laravel.log',
+        ]);
+    }
+
+    $lineas = file($archivo);
+
+    return response(
+        implode('', array_slice($lineas, -150)),
+        200,
+        ['Content-Type' => 'text/plain; charset=UTF-8']
+    );
+});
+
 require __DIR__ . '/settings.php';
