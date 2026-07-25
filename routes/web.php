@@ -15,6 +15,9 @@ use App\Http\Controllers\MercadoPagoSaasWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Http\Controllers\AvisoController;
 use App\Http\Controllers\NovedadController;
+use App\Livewire\Ejercicios\Index as EjerciciosIndex;
+use App\Livewire\Ejercicios\Create as EjerciciosCreate;
+use App\Livewire\Ejercicios\Edit as EjerciciosEdit;
 use App\Models\User;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
@@ -60,6 +63,17 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
               'novedades' => 'novedad',
             ])
             ->except(['show']);
+
+        // 💪 BIBLIOTECA DE EJERCICIOS
+        Route::get('/ejercicios', EjerciciosIndex::class)
+            ->name('ejercicios.index');
+        
+        Route::get('/ejercicios/nuevo', EjerciciosCreate::class)
+            ->name('ejercicios.create');
+
+        Route::get('/ejercicios/{ejercicio}/editar', EjerciciosEdit::class)
+            ->name('ejercicios.edit');
+
 
         // 🔥 SUSCRIPCIÓN
         Route::get('/suscripcion', function () {
@@ -498,5 +512,42 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
+
+/*
+|--------------------------------------------------------------------------
+| MIGRACIONES TEMPORALES RAILWAY
+|--------------------------------------------------------------------------
+| Eliminar esta ruta después de ejecutar las migraciones.
+*/
+
+Route::get('/migrar-railway/{clave}', function (string $clave) {
+
+    $claveCorrecta = env('MIGRATION_KEY');
+
+    if (
+        ! $claveCorrecta ||
+        ! hash_equals($claveCorrecta, $clave)
+    ) {
+        abort(403);
+    }
+
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--force' => true,
+        ]);
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Migraciones ejecutadas correctamente.',
+            'resultado' => \Illuminate\Support\Facades\Artisan::output(),
+        ]);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'ok' => false,
+            'mensaje' => $e->getMessage(),
+        ], 500);
+    }
+});
 
 require __DIR__ . '/settings.php';

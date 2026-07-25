@@ -2,39 +2,71 @@
 
 namespace App\Support;
 
-use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Models\Cliente;
+use App\Models\Ejercicio;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 
 class EstudioPathGenerator implements PathGenerator
 {
     public function getPath(Media $media): string
     {
-        $slug = 'general';
+        /*
+        |--------------------------------------------------------------------------
+        | EJERCICIOS DEL GIMNASIO
+        |--------------------------------------------------------------------------
+        |
+        | Cada ejercicio tendrá su propia carpeta.
+        | Esto evita que imágenes con el mismo nombre se sobrescriban.
+        |
+        */
 
-        // SI EL MODELO ES CLIENTE
-        if ($media->model instanceof Cliente) {
+        if ($media->model instanceof Ejercicio) {
+            $ejercicio = $media->model;
 
-            $cliente = $media->model;
+            $gimnasioId = $ejercicio->abogado_id ?? 'general';
+            $ejercicioId = $ejercicio->id ?? $media->model_id;
 
-            // BUSCAR ABOGADO DUEÑO
-            $abogado = $cliente->abogado;
-
-            if ($abogado && $abogado->slug_estudio) {
-                $slug = $abogado->slug_estudio;
-            }
+            return "gimnasios/{$gimnasioId}/ejercicios/{$ejercicioId}/";
         }
 
-        return "estudios/{$slug}/documentos/";
+        /*
+        |--------------------------------------------------------------------------
+        | DOCUMENTOS DE CLIENTES
+        |--------------------------------------------------------------------------
+        */
+
+        if ($media->model instanceof Cliente) {
+            $cliente = $media->model;
+
+            $slug = $cliente->abogado?->slug_estudio ?? 'general';
+
+            return "estudios/{$slug}/documentos/{$cliente->id}/";
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | OTROS ARCHIVOS
+        |--------------------------------------------------------------------------
+        |
+        | Se separan por modelo e ID para evitar colisiones entre archivos.
+        |
+        */
+
+        $modelo = class_basename($media->model_type);
+        $modelo = strtolower($modelo);
+        $modeloId = $media->model_id;
+
+        return "general/{$modelo}/{$modeloId}/";
     }
 
     public function getPathForConversions(Media $media): string
     {
-        return $this->getPath($media) . 'conversions/';
+        return $this->getPath($media).'conversions/';
     }
 
     public function getPathForResponsiveImages(Media $media): string
     {
-        return $this->getPath($media) . 'responsive/';
+        return $this->getPath($media).'responsive/';
     }
 }
