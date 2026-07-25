@@ -512,42 +512,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-
-/*
-|--------------------------------------------------------------------------
-| MIGRACIONES TEMPORALES RAILWAY
-|--------------------------------------------------------------------------
-| Eliminar esta ruta después de ejecutar las migraciones.
-*/
-
-Route::get('/migrar-railway/{clave}', function (string $clave) {
-
-    $claveCorrecta = env('MIGRATION_KEY');
-
-    if (
-        ! $claveCorrecta ||
-        ! hash_equals($claveCorrecta, $clave)
-    ) {
-        abort(403);
-    }
-
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--force' => true,
-        ]);
-
-        return response()->json([
-            'ok' => true,
-            'mensaje' => 'Migraciones ejecutadas correctamente.',
-            'resultado' => \Illuminate\Support\Facades\Artisan::output(),
-        ]);
-
-    } catch (\Throwable $e) {
-        return response()->json([
-            'ok' => false,
-            'mensaje' => $e->getMessage(),
-        ], 500);
-    }
-});
-
 require __DIR__ . '/settings.php';
