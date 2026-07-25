@@ -217,7 +217,7 @@
                             <img
                                 src="{{ $ejercicio->getFirstMediaUrl('imagen') }}"
                                 alt="{{ $ejercicio->nombre }}"
-                                class="h-full w-full object-cover"
+                                class="h-full w-full object-contain p-2"
                             >
 
                         @else

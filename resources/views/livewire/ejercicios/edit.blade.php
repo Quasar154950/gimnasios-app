@@ -160,7 +160,7 @@
                         <img
                             src="{{ $ejercicio->getFirstMediaUrl('imagen') }}"
                             alt="{{ $ejercicio->nombre }}"
-                            class="h-56 w-full object-cover"
+                            class="h-56 w-full object-contain p-2"
                         >
 
                     @else
@@ -265,7 +265,7 @@
                 <img
                     src="{{ $imagen->temporaryUrl() }}"
                     alt="Vista previa de la nueva imagen"
-                    class="h-64 w-full rounded-lg border border-green-800 object-cover"
+                    class="h-64 w-full rounded-lg border border-green-800 bg-zinc-900 object-contain p-2"
                 >
 
                 <label
