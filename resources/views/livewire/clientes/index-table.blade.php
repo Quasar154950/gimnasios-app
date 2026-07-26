@@ -246,6 +246,14 @@
                                     </a>
 
                                     <a
+                                        href="{{ route('clientes.rutina', $cliente->id) }}"
+                                        class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-green-50 hover:text-green-600"
+                                        title="Rutina del socio"
+                                    >
+                                        💪
+                                    </a>
+                                        
+                                    <a
                                         href="{{ route('clientes.entrenamientos', $cliente->id) }}"
                                         class="cursor-pointer rounded-lg p-2 text-neutral-500 transition hover:bg-indigo-50 hover:text-indigo-600"
                                         title="Historial de entrenamientos"

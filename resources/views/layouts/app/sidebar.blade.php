@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+
     <head>
         @include('partials.head')
+
         <link rel="stylesheet" href="{{ asset('css/app-effects.css') }}">
     </head>
 
@@ -19,6 +21,7 @@
         >
 
             <flux:sidebar.header>
+
                 <x-app-logo
                     :sidebar="true"
                     href="{{ route('dashboard') }}"
@@ -26,7 +29,9 @@
                 />
 
                 <flux:sidebar.collapse class="lg:hidden" />
+
             </flux:sidebar.header>
+
 
             {{-- BUSCADOR --}}
             <div class="px-3 mt-4 mb-2">
@@ -38,12 +43,14 @@
                 >
 
                     <div class="flex items-center gap-2">
+
                         <flux:icon
                             name="magnifying-glass"
                             variant="micro"
                         />
 
                         <span>Buscar...</span>
+
                     </div>
 
                     <div class="hidden sm:flex items-center gap-1 bg-zinc-800 px-1.5 py-0.5 rounded text-[9px] text-zinc-300">
@@ -55,16 +62,17 @@
 
             </div>
 
+
             {{-- SIDEBAR --}}
             <flux:sidebar.nav>
 
-                <flux:sidebar.group
-                    heading="Navegación"
-                    class="grid"
-                >
+                {{-- SOPORTE --}}
+                @if(auth()->user()->email === 'soporte@tuempresa.com')
 
-                    {{-- SOPORTE --}}
-                    @if(auth()->user()->email === 'soporte@tuempresa.com')
+                    <flux:sidebar.group
+                        heading="Navegación"
+                        class="grid"
+                    >
 
                         <flux:sidebar.item
                             icon="home"
@@ -73,9 +81,17 @@
                             Panel de soporte
                         </flux:sidebar.item>
 
-                    @elseif(auth()->user()->role === 'cliente')
+                    </flux:sidebar.group>
 
-                        {{-- SOCIO GIMNASIO --}}
+
+                {{-- SOCIO GIMNASIO --}}
+                @elseif(auth()->user()->role === 'cliente')
+
+                    <flux:sidebar.group
+                        heading="Navegación"
+                        class="grid"
+                    >
+
                         <flux:sidebar.item
                             icon="home"
                             :href="route('cliente.dashboard')"
@@ -93,9 +109,18 @@
                             Reservas
                         </flux:sidebar.item>
 
-                    @else
+                    </flux:sidebar.group>
 
-                        {{-- ADMIN GIMNASIO --}}
+
+                {{-- ADMIN GIMNASIO --}}
+                @else
+
+                    {{-- NAVEGACIÓN PRINCIPAL --}}
+                    <flux:sidebar.group
+                        heading="Navegación"
+                        class="grid"
+                    >
+
                         <flux:sidebar.item
                             icon="home"
                             :href="route('dashboard')"
@@ -123,6 +148,18 @@
                             Reservas
                         </flux:sidebar.item>
 
+                    </flux:sidebar.group>
+
+
+                    {{-- ENTRENAMIENTO --}}
+                    <flux:sidebar.group
+                        expandable
+                        heading="Entrenamiento"
+                        icon="rectangle-stack"
+                        :expanded="request()->routeIs('ejercicios.*') || request()->routeIs('rutinas.*')"
+                        class="grid"
+                    >
+
                         <flux:sidebar.item
                             icon="book-open"
                             :href="route('ejercicios.index')"
@@ -131,6 +168,24 @@
                         >
                             Biblioteca de ejercicios
                         </flux:sidebar.item>
+
+                        <flux:sidebar.item
+                            icon="clipboard-document-list"
+                            :href="route('rutinas.index')"
+                            :current="request()->routeIs('rutinas.*')"
+                            wire:navigate
+                        >
+                            Rutinas
+                        </flux:sidebar.item>
+
+                    </flux:sidebar.group>
+
+
+                    {{-- GESTIÓN --}}
+                    <flux:sidebar.group
+                        heading="Gestión"
+                        class="grid"
+                    >
 
                         <flux:sidebar.item
                             icon="banknotes"
@@ -194,13 +249,15 @@
                             Escanear QR
                         </flux:sidebar.item>
 
-                    @endif
+                    </flux:sidebar.group>
 
-                </flux:sidebar.group>
+                @endif
 
             </flux:sidebar.nav>
 
+
             <flux:spacer />
+
 
             <x-desktop-user-menu
                 class="hidden lg:block"
@@ -208,6 +265,7 @@
             />
 
         </flux:sidebar>
+
 
         {{-- HEADER MOBILE --}}
         <flux:header class="lg:hidden">
@@ -247,6 +305,7 @@
                         >
                             Cerrar sesión
                         </flux:menu.item>
+
                     </form>
 
                 </flux:menu>
@@ -254,6 +313,7 @@
             </flux:dropdown>
 
         </flux:header>
+
 
         {{-- CONTENIDO --}}
         <flux:main class="w-full bg-zinc-950">
@@ -264,31 +324,46 @@
 
         </flux:main>
 
+
         <livewire:actions.global-search />
+
 
         @fluxScripts
 
+
         <script src="{{ asset('js/app-effects.js') }}"></script>
 
+
         <script>
+
             if ('serviceWorker' in navigator) {
+
                 window.addEventListener('load', function () {
+
                     navigator.serviceWorker
                         .register('/service-worker.js')
                         .then(function () {
+
                             console.log(
                                 'Service Worker registrado correctamente.'
                             );
+
                         })
                         .catch(function (error) {
+
                             console.log(
                                 'Error registrando Service Worker:',
                                 error
                             );
+
                         });
+
                 });
+
             }
+
         </script>
 
     </body>
+
 </html>

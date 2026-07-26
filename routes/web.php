@@ -18,6 +18,12 @@ use App\Http\Controllers\NovedadController;
 use App\Livewire\Ejercicios\Index as EjerciciosIndex;
 use App\Livewire\Ejercicios\Create as EjerciciosCreate;
 use App\Livewire\Ejercicios\Edit as EjerciciosEdit;
+use App\Livewire\Rutinas\Index as RutinasIndex;
+use App\Livewire\Rutinas\Create as RutinasCreate;
+use App\Livewire\Rutinas\Edit as RutinasEdit;
+use App\Livewire\Rutinas\Show as RutinasShow;
+use App\Livewire\Rutinas\Dia;
+use App\Livewire\Rutinas\Asignar;
 use App\Models\User;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
@@ -74,7 +80,30 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         Route::get('/ejercicios/{ejercicio}/editar', EjerciciosEdit::class)
             ->name('ejercicios.edit');
 
+               
+        // 🗓️ RUTINAS
+        Route::get('/rutinas', RutinasIndex::class)
+            ->name('rutinas.index');
 
+        Route::get('/rutinas/nueva', RutinasCreate::class)
+            ->name('rutinas.create');
+
+        Route::get(
+            '/rutinas/{rutina}/dias/{dia}',
+            Dia::class
+        )->name('rutinas.dias.show');
+
+        Route::get('/rutinas/{rutina}/editar', RutinasEdit::class)
+            ->name('rutinas.edit');
+
+        Route::get(
+            '/rutinas/{rutina}/asignar',
+            Asignar::class
+        )->name('rutinas.asignar');
+
+        Route::get('/rutinas/{rutina}', RutinasShow::class)
+            ->name('rutinas.show');
+                  
         // 🔥 SUSCRIPCIÓN
         Route::get('/suscripcion', function () {
             $user = auth()->user();
@@ -122,6 +151,13 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         
         Route::get('clientes/{cliente}/entrenamientos', [ClienteController::class, 'entrenamientos'])
             ->name('clientes.entrenamientos');
+
+// 💪 RUTINA DEL SOCIO
+        Route::get(
+             'clientes/{cliente}/rutina',
+            \App\Livewire\Clientes\Rutina::class
+            )->name('clientes.rutina');
+
 
         Route::resource('clientes', ClienteController::class);
 

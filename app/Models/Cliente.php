@@ -100,4 +100,9 @@ class Cliente extends Model implements HasMedia
     {
         return $this->hasMany(Asistencia::class);
     }
+
+     public function rutinaAsignaciones(): HasMany
+    {
+        return $this->hasMany(RutinaAsignacion::class);
+    }
 }
