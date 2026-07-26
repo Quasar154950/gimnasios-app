@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\MobileMensajeController;
 use App\Http\Controllers\Api\MobileNovedadController;
 use App\Http\Controllers\Api\MobileProgresoController;
 use App\Http\Controllers\Api\MobileReservaController;
+use App\Http\Controllers\Api\MobileRutinaController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
@@ -65,6 +66,17 @@ Route::prefix('mobile')->group(function () {
         Route::delete(
             '/reservas/{reserva}',
             [MobileReservaController::class, 'cancelar']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | RUTINAS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/rutina',
+            [MobileRutinaController::class, 'index']
         );
 
         /*
