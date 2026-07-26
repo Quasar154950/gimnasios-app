@@ -347,14 +347,19 @@
                                             <div class="min-w-0 flex-1">
 
                                                 <h5 class="text-base font-bold text-white">
-                                                    {{ $ejercicio->nombre }}
-                                                </h5>
+    {{ $ejercicio->ejercicioBiblioteca?->nombre ?? $ejercicio->ejercicio ?? 'Ejercicio sin nombre' }}
+</h5>
 
-                                                @if($ejercicio->grupo_muscular)
-                                                    <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                                                        {{ $ejercicio->grupo_muscular }}
-                                                    </p>
-                                                @endif
+@php
+    $grupoMuscular = $ejercicio->ejercicio?->grupo_muscular
+        ?? $ejercicio->grupo_muscular;
+@endphp
+
+@if($grupoMuscular)
+    <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+        {{ $grupoMuscular }}
+    </p>
+@endif
 
                                                 <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
 
