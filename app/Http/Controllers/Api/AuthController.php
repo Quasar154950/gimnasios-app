@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -80,6 +81,55 @@ class AuthController extends Controller
                 'dni' => $cliente->dni ?? null,
             ],
         ]);
+    }
+
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $genericMessage = 'Si el email está registrado, recibirás un enlace para restablecer tu contraseña.';
+
+        $user = User::where('email', $validated['email'])
+            ->where('role', 'cliente')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA SEGURA
+        |--------------------------------------------------------------------------
+        |
+        | Siempre devolvemos el mismo mensaje aunque el email no exista.
+        | Así evitamos revelar qué usuarios están registrados.
+        |
+        */
+
+        if (! $user) {
+            return response()->json([
+                'message' => $genericMessage,
+            ]);
+        }
+
+        $status = Password::broker('users')->sendResetLink([
+            'email' => $user->email,
+        ]);
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json([
+                'message' => $genericMessage,
+            ]);
+        }
+
+        if ($status === Password::RESET_THROTTLED) {
+            return response()->json([
+                'message' => 'Ya se solicitó un enlace recientemente. Esperá unos minutos antes de volver a intentarlo.',
+            ], 429);
+        }
+
+        return response()->json([
+            'message' => 'No pudimos enviar el correo en este momento. Intentá nuevamente más tarde.',
+        ], 500);
     }
 
     public function me(Request $request): JsonResponse

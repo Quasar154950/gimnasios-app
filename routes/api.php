@@ -25,6 +25,11 @@ Route::prefix('mobile')->group(function () {
     );
 
     Route::post(
+        '/forgot-password',
+        [AuthController::class, 'forgotPassword']
+    );
+
+    Route::post(
         '/activar-cuenta',
         [ActivarCuentaSocioController::class, 'activar']
     );
