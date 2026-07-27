@@ -1,5 +1,21 @@
 <x-layouts::auth :title="'Recuperar contraseña'">
+    @php
+    $slug = session('slug_estudio', 'sportgym');
+
+    $logoRelativo = "images/logo-{$slug}.png";
+
+    $logo = file_exists(public_path($logoRelativo))
+        ? $logoRelativo
+        : 'images/logo-sportgym.png';
+@endphp
     <div class="flex flex-col gap-6">
+        <div class="flex justify-center">
+    <img
+        src="{{ asset($logo) }}"
+        alt="Logo"
+        style="height:100px;width:auto;"
+    >
+</div>
         <x-auth-header
             :title="'Recuperar contraseña'"
             :description="'Ingresá tu email para recibir un enlace de recuperación.'"

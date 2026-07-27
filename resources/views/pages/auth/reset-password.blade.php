@@ -1,5 +1,24 @@
 <x-layouts::auth :title="'Restablecer contraseña'">
+    @php
+        $slug = session('slug_estudio', 'sportgym');
+
+        $logoRelativo = "images/logo-{$slug}.png";
+
+        $logo = file_exists(public_path($logoRelativo))
+            ? $logoRelativo
+            : 'images/logo-sportgym.png';
+    @endphp
+
     <div class="flex flex-col gap-6">
+
+        <div class="flex justify-center">
+            <img
+                src="{{ asset($logo) }}"
+                alt="Logo"
+                style="height:100px;width:auto;"
+            >
+        </div>
+
         <x-auth-header
             :title="'Restablecer contraseña'"
             :description="'Ingresá tu nueva contraseña.'"
@@ -43,7 +62,12 @@
             />
 
             <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
+                <flux:button
+                    type="submit"
+                    variant="primary"
+                    class="w-full"
+                    data-test="reset-password-button"
+                >
                     Restablecer contraseña
                 </flux:button>
             </div>

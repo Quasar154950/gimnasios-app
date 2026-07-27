@@ -1,21 +1,60 @@
 <x-layouts::auth :title="__('Acceso al sistema')">
 
     @php
-    $slug = $userEstudio->slug_estudio ?? null;
+    /*
+    |--------------------------------------------------------------------------
+    | MARCA DINÁMICA DEL GIMNASIO
+    |--------------------------------------------------------------------------
+    */
 
-    $esDemoGym = $slug === 'demo';
+    $slug = strtolower($userEstudio->slug_estudio ?? 'sportgym');
 
-    $splashImage = $esDemoGym
-        ? 'images/splash-demogym.png'
-        : 'images/splash-sportgym.png';
+    // Solo permite letras, números, guiones y guiones bajos.
+    $slugSeguro = preg_replace('/[^a-z0-9_-]/', '', $slug);
 
-    $logoLogin = $esDemoGym
-        ? 'images/logo-demogym.png'
+    $nombreGimnasio = $userEstudio->nombre_estudio ?? 'SportGym';
+
+    /*
+    |--------------------------------------------------------------------------
+    | ARCHIVOS DE MARCA
+    |--------------------------------------------------------------------------
+    |
+    | Convención:
+    | logo-{slug}.png
+    | splash-{slug}.png
+    |
+    */
+
+    $logoRelativo = "images/logo-{$slugSeguro}.png";
+    $splashRelativo = "images/splash-{$slugSeguro}.png";
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPALDO
+    |--------------------------------------------------------------------------
+    */
+
+    $logoLogin = file_exists(public_path($logoRelativo))
+        ? $logoRelativo
         : 'images/logo-sportgym.png';
 
-    $marcaUno = $esDemoGym ? 'Demo' : 'Sport';
-    $marcaDos = 'Gym';
+    $splashImage = file_exists(public_path($splashRelativo))
+        ? $splashRelativo
+        : 'images/splash-sportgym.png';
 
+    /*
+    |--------------------------------------------------------------------------
+    | NOMBRE VISUAL
+    |--------------------------------------------------------------------------
+    */
+
+    if (str_ends_with(strtolower($nombreGimnasio), 'gym')) {
+        $marcaUno = substr($nombreGimnasio, 0, -3);
+        $marcaDos = 'Gym';
+    } else {
+        $marcaUno = $nombreGimnasio;
+        $marcaDos = '';
+    }
 @endphp
 
     {{-- SPLASH PWA / APP --}}
@@ -35,7 +74,7 @@
             <div class="splash-logo-wrap">
                 <img
                     src="{{ asset($splashImage) }}"
-                    alt="{{ $userEstudio->nombre_estudio ?? 'Estudio Jurídico' }}"
+                    alt="{{ $nombreGimnasio }}"
                     class="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover"
                 >
             </div>
@@ -103,7 +142,7 @@
 
         {{-- TITULO --}}
         <x-auth-header 
-            :title="$userEstudio->nombre_estudio ?? __('Acceso al sistema')" 
+            :title="$nombreGimnasio" 
             :description="__('Ingresá con tu email y contraseña para continuar')" 
         />
 
