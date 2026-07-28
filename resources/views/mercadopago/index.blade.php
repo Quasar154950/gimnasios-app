@@ -66,14 +66,19 @@
 
                 {{-- BOTÓN VISUAL: LA CONEXIÓN OAUTH SE AGREGARÁ DESPUÉS --}}
                 <button
-                    type="button"
-                    disabled
-                    title="La conexión estará disponible próximamente"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-sky-500 px-5 py-3 text-sm font-black text-white opacity-70 cursor-not-allowed"
-                >
-                    <span>🔐</span>
-                    Conectar con Mercado Pago
-                </button>
+    type="button"
+    disabled
+    title="La conexión estará disponible próximamente"
+    class="inline-flex items-center justify-center gap-3 rounded-xl bg-[#009EE3] px-5 py-3 text-sm font-black text-white opacity-70 cursor-not-allowed"
+>
+    <img
+        src="{{ asset('images/mp-logo.png') }}"
+        alt="Mercado Pago"
+        class="h-6 w-auto"
+    >
+
+    <span>Conectar con Mercado Pago</span>
+</button>
 
             </div>
 
