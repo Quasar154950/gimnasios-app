@@ -113,11 +113,18 @@
                         @csrf
 
                         <button
-                            type="submit"
-                            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition"
-                        >
-                            💳 Pagar con Mercado Pago
-                        </button>
+    type="submit"
+    class="flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl
+           border border-stone-300 dark:border-stone-600
+           bg-white px-4 shadow-sm
+           transition hover:shadow-md active:scale-[0.99]"
+>
+    <img
+        src="{{ asset('images/mp-logo-web.png') }}"
+        alt="Pagar con Mercado Pago"
+        class="w-64 max-h-16 object-contain"
+    >
+</button>
 
                     </form>
 
