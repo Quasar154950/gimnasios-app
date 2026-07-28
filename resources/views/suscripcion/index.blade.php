@@ -6,7 +6,7 @@
             Mi Suscripción
         </h1>
 
-        <div class="bg-white dark:bg-neutral-900 rounded-xl shadow p-6 space-y-4">
+        <div class="bg-stone-100 dark:bg-neutral-900 rounded-xl shadow p-6 space-y-4">
 
             {{-- ESTADO --}}
             <div>
