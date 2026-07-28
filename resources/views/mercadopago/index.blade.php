@@ -30,46 +30,51 @@
 
 
         {{-- CONEXIÓN MERCADO PAGO --}}
-        <div class="rounded-2xl border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-800 shadow-sm p-6">
+<div class="rounded-2xl border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-800 shadow-sm p-6">
 
-            <div class="max-w-xl mx-auto text-center">
+    <div class="flex flex-col items-center text-center">
 
-                {{-- BOTÓN VISUAL: EL OAUTH SE AGREGARÁ DESPUÉS --}}
-                <button
-                    type="button"
-                    disabled
-                    title="La conexión estará disponible próximamente"
-                    class="group block w-full overflow-hidden rounded-2xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 shadow-md opacity-80 cursor-not-allowed"
-                >
-                    <img
-                        src="{{ asset('images/mp-logo.png') }}"
-                        alt="Mercado Pago"
-                        class="block w-full h-44 sm:h-56 object-contain p-6 sm:p-8"
-                    >
-                </button>
+        {{-- BOTÓN VISUAL: EL OAUTH SE AGREGARÁ DESPUÉS --}}
+        <button
+            type="button"
+            disabled
+            title="La conexión estará disponible próximamente"
+            class="inline-flex items-center justify-center overflow-hidden rounded-xl
+                   border border-stone-300 dark:border-stone-600
+                   bg-white dark:bg-stone-900
+                   px-5 py-2.5 shadow-sm
+                   opacity-80 cursor-not-allowed"
+        >
+            <img
+                src="{{ asset('images/mp-logo.png') }}"
+                alt="Mercado Pago"
+                class="h-9 w-auto object-contain"
+            >
+        </button>
 
-                <p class="mt-4 text-base font-black text-stone-900 dark:text-stone-100">
-                    Conectar con Mercado Pago
-                </p>
+        <p class="mt-3 text-sm font-black text-stone-900 dark:text-stone-100">
+            Conectar con Mercado Pago
+        </p>
 
-                <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 px-4 py-2">
+        <div class="mt-4 inline-flex items-center gap-2 rounded-full
+                    border border-red-300 dark:border-red-800
+                    bg-red-50 dark:bg-red-950/30 px-4 py-2">
 
-                    <span class="h-3 w-3 rounded-full bg-red-500"></span>
+            <span class="h-3 w-3 rounded-full bg-red-500"></span>
 
-                    <span class="text-sm font-black text-red-700 dark:text-red-300">
-                        Estado: No conectado
-                    </span>
-
-                </div>
-
-                <p class="mt-3 text-sm text-stone-600 dark:text-stone-300">
-                    Todavía no vinculaste una cuenta de Mercado Pago.
-                </p>
-
-            </div>
+            <span class="text-sm font-black text-red-700 dark:text-red-300">
+                Estado: No conectado
+            </span>
 
         </div>
 
+        <p class="mt-3 text-sm text-stone-600 dark:text-stone-300">
+            Todavía no vinculaste una cuenta de Mercado Pago.
+        </p>
+
+    </div>
+
+</div>
 
         {{-- FUNCIONAMIENTO --}}
         <div class="rounded-2xl border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-800 shadow-sm p-6">
