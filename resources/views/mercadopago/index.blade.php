@@ -29,56 +29,42 @@
         </div>
 
 
-        {{-- ESTADO DE LA CUENTA --}}
+        {{-- CONEXIÓN MERCADO PAGO --}}
         <div class="rounded-2xl border border-stone-300 dark:border-stone-700 bg-stone-200 dark:bg-stone-800 shadow-sm p-6">
 
-            <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div class="max-w-xl mx-auto text-center">
 
-                <div class="flex items-center gap-4">
+                {{-- BOTÓN VISUAL: EL OAUTH SE AGREGARÁ DESPUÉS --}}
+                <button
+                    type="button"
+                    disabled
+                    title="La conexión estará disponible próximamente"
+                    class="group block w-full overflow-hidden rounded-2xl border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 shadow-md opacity-80 cursor-not-allowed"
+                >
+                    <img
+                        src="{{ asset('images/mp-logo.png') }}"
+                        alt="Mercado Pago"
+                        class="block w-full h-44 sm:h-56 object-contain p-6 sm:p-8"
+                    >
+                </button>
 
-                    <div class="relative">
+                <p class="mt-4 text-base font-black text-stone-900 dark:text-stone-100">
+                    Conectar con Mercado Pago
+                </p>
 
-                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/40">
-                            <span class="text-2xl">🔗</span>
-                        </div>
+                <div class="mt-4 inline-flex items-center gap-2 rounded-full border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 px-4 py-2">
 
-                        <span class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-stone-200 dark:border-stone-800 bg-red-500"></span>
+                    <span class="h-3 w-3 rounded-full bg-red-500"></span>
 
-                    </div>
-
-                    <div>
-
-                        <p class="text-xs font-bold uppercase tracking-wide text-stone-500 dark:text-stone-400">
-                            Estado de la cuenta
-                        </p>
-
-                        <h2 class="mt-1 text-lg font-black text-stone-900 dark:text-stone-100">
-                            Cuenta no conectada
-                        </h2>
-
-                        <p class="mt-1 text-sm text-stone-600 dark:text-stone-300">
-                            Todavía no vinculaste una cuenta de Mercado Pago.
-                        </p>
-
-                    </div>
+                    <span class="text-sm font-black text-red-700 dark:text-red-300">
+                        Estado: No conectado
+                    </span>
 
                 </div>
 
-                {{-- BOTÓN VISUAL: LA CONEXIÓN OAUTH SE AGREGARÁ DESPUÉS --}}
-                <button
-    type="button"
-    disabled
-    title="La conexión estará disponible próximamente"
-    class="inline-flex items-center justify-center gap-3 rounded-xl bg-[#009EE3] px-5 py-3 text-sm font-black text-white opacity-70 cursor-not-allowed"
->
-    <img
-        src="{{ asset('images/mp-logo.png') }}"
-        alt="Mercado Pago"
-        class="h-6 w-auto"
-    >
-
-    <span>Conectar con Mercado Pago</span>
-</button>
+                <p class="mt-3 text-sm text-stone-600 dark:text-stone-300">
+                    Todavía no vinculaste una cuenta de Mercado Pago.
+                </p>
 
             </div>
 
