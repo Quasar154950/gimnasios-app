@@ -6,7 +6,7 @@
             Mi Suscripción
         </h1>
 
-        <div class="bg-stone-100 dark:bg-neutral-900 rounded-xl shadow p-6 space-y-4">
+        <div class="bg-stone-300 dark:bg-neutral-900 rounded-xl shadow p-6 space-y-4">
 
             {{-- ESTADO --}}
             <div>
@@ -31,8 +31,7 @@
                     Fecha de vencimiento
                 </p>
 
-                <p class="font-semibold"
-                   style="color: #111827 !important;">
+                <p class="font-semibold" style="color: #111827 !important;">
                     {{ $user->fecha_vencimiento
                         ? \Carbon\Carbon::parse($user->fecha_vencimiento)->format('d/m/Y')
                         : 'Sin fecha' }}
@@ -45,8 +44,7 @@
                     Plan
                 </p>
 
-                <p class="font-semibold"
-                   style="color: #111827 !important;">
+                <p class="font-semibold" style="color: #111827 !important;">
                     {{ strtoupper($user->plan ?? 'Sin plan') }}
                 </p>
             </div>
@@ -57,8 +55,7 @@
                     Precio mensual
                 </p>
 
-                <p class="font-semibold"
-                   style="color: #111827 !important;">
+                <p class="font-semibold" style="color: #111827 !important;">
                     ${{ number_format($user->precio_suscripcion ?? 0, 0, ',', '.') }}
                 </p>
             </div>
@@ -82,25 +79,29 @@
                 @endphp
 
                 @if($dias === null)
-                    <p class="font-semibold"
-                       style="color: #111827 !important;">
+
+                    <p class="font-semibold" style="color: #111827 !important;">
                         —
                     </p>
 
                 @elseif($dias < 0)
+
                     <p class="font-semibold text-red-600">
                         Suscripción vencida
                     </p>
 
                 @elseif($dias <= 5)
+
                     <p class="font-semibold text-yellow-600">
                         Te quedan {{ $dias }} días
                     </p>
 
                 @else
+
                     <p class="font-semibold text-green-600">
                         Te quedan {{ $dias }} días
                     </p>
+
                 @endif
             </div>
 
@@ -113,18 +114,19 @@
                         @csrf
 
                         <button
-    type="submit"
-    class="flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl
-           border border-stone-300 dark:border-stone-600
-           bg-white px-4 shadow-sm
-           transition hover:shadow-md active:scale-[0.99]"
->
-    <img
-        src="{{ asset('images/mp-logo-web.png') }}"
-        alt="Pagar con Mercado Pago"
-        class="w-64 max-h-16 object-contain"
-    >
-</button>
+                            type="submit"
+                            class="flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl
+                                   border border-stone-300 dark:border-stone-600
+                                   bg-white px-4 shadow-sm
+                                   transition hover:shadow-md active:scale-[0.99]
+                                   cursor-pointer"
+                        >
+                            <img
+                                src="{{ asset('images/mp-logo-web.png') }}"
+                                alt="Pagar con Mercado Pago"
+                                class="w-64 max-h-16 object-contain"
+                            >
+                        </button>
 
                     </form>
 
