@@ -336,8 +336,6 @@
 
         <!-- PWA desactivada -->
 
-        </script>
-
     </body>
 
 </html>
