@@ -1,365 +1,140 @@
-<x-layouts::auth :title="__('Acceso al sistema')">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
 
-    @php
-    /*
-    |--------------------------------------------------------------------------
-    | MARCA DINÁMICA DEL GIMNASIO
-    |--------------------------------------------------------------------------
-    */
-
-    $slug = strtolower($userEstudio->slug_estudio ?? 'sportgym');
-
-    // Solo permite letras, números, guiones y guiones bajos.
-    $slugSeguro = preg_replace('/[^a-z0-9_-]/', '', $slug);
-
-    $nombreGimnasio = $userEstudio->nombre_estudio ?? 'SportGym';
-
-    /*
-    |--------------------------------------------------------------------------
-    | ARCHIVOS DE MARCA
-    |--------------------------------------------------------------------------
-    |
-    | Convención:
-    | logo-{slug}.png
-    | splash-{slug}.png
-    |
-    */
-
-    $logoRelativo = "images/logo-{$slugSeguro}.png";
-    $splashRelativo = "images/splash-{$slugSeguro}.png";
-
-    /*
-    |--------------------------------------------------------------------------
-    | RESPALDO
-    |--------------------------------------------------------------------------
-    */
-
-    $logoLogin = file_exists(public_path($logoRelativo))
-        ? $logoRelativo
-        : 'images/logo-sportgym.png';
-
-    $splashImage = file_exists(public_path($splashRelativo))
-        ? $splashRelativo
-        : 'images/splash-sportgym.png';
-
-    /*
-    |--------------------------------------------------------------------------
-    | NOMBRE VISUAL
-    |--------------------------------------------------------------------------
-    */
-
-    if (str_ends_with(strtolower($nombreGimnasio), 'gym')) {
-        $marcaUno = substr($nombreGimnasio, 0, -3);
-        $marcaDos = 'Gym';
-    } else {
-        $marcaUno = $nombreGimnasio;
-        $marcaDos = '';
-    }
-@endphp
-
-    {{-- SPLASH PWA / APP --}}
-    <div 
-        id="app-splash" 
-        class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden transition-opacity duration-700"
-        style="background: radial-gradient(circle at center, #1e293b 0%, #020617 72%);"
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
-        {{-- Fondo decorativo --}}
-        <div class="absolute inset-0 opacity-40"
-             style="background: radial-gradient(circle at center, rgba(245,158,11,0.18) 0%, transparent 45%);">
-        </div>
 
-        <div class="relative flex flex-col items-center text-center px-6">
-
-            {{-- Logo splash --}}
-            <div class="splash-logo-wrap">
-                <img
-                    src="{{ asset($splashImage) }}"
-                    alt="{{ $nombreGimnasio }}"
-                    class="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover"
-                >
-            </div>
-
-            {{-- Nombre --}}
-            <h1 class="mt-8 text-3xl sm:text-4xl font-black tracking-wide">
-              
-               <span class="text-stone-100">
-                  {{ $marcaUno }}
-               </span>
-
-               <span class="text-orange-500">
-                  {{ $marcaDos }}
-               </span>
-
-        </h1>
-
-<p class="mt-1 text-orange-400 text-sm font-black tracking-[0.35em]">
-    TANDIL
-</p>
-
-            <p class="mt-2 text-amber-300 tracking-[0.45em] text-sm font-serif">
-                FITNESS CLUB
-            </p>
-
-            {{-- Texto carga --}}
-<p class="mt-8 text-gray-300 text-sm tracking-[0.25em] uppercase">
-    Cargando tu mejor versión
-</p>
-
-{{-- Barra POWER --}}
-<div class="mt-5 w-64 h-4 rounded-full bg-white/10 overflow-hidden border border-orange-500/30 shadow-lg">
-
-    <div class="splash-bar-power h-full"></div>
-
-</div>
-
-{{-- PESA FITNESS --}}
-<div class="mt-8 dumbbell-wrap">
-
-    <div class="dumbbell">
-
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </div>
-
-</div>
-
-</div>
-</div>
-
-    {{-- LOGIN --}}
-    <div id="login-content" class="flex flex-col gap-6 opacity-0 transition-opacity duration-500">
-
-        {{-- LOGO DEL ESTUDIO --}}
-        <div class="flex justify-center">
-            <img 
-                src="{{ asset($logoLogin) }}" 
-                alt="Logo" 
-                style="height: 100px; width: auto;"
-            >
-        </div>
-
-        {{-- TITULO --}}
-        <x-auth-header 
-            :title="$nombreGimnasio" 
-            :description="__('Ingresá con tu email y contraseña para continuar')" 
-        />
-
-        <x-auth-session-status class="text-center" :status="session('status')" />
-
-        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
-            @csrf
-
-            <flux:input
-                name="email"
-                :label="__('Email')"
-                :value="old('email')"
-                type="email"
-                required
-                autofocus
-                autocomplete="email"
-                placeholder="cliente@email.com"
-            />
-
-            <div class="relative">
-                <flux:input
-                    name="password"
-                    :label="__('Contraseña')"
-                    type="password"
-                    required
-                    autocomplete="current-password"
-                    :placeholder="__('Ingresá tu contraseña')"
-                    viewable
-                />
-
-                @if (Route::has('password.request'))
-                    <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
-                        {{ __('¿Olvidaste tu contraseña?') }}
-                    </flux:link>
-                @endif
-            </div>
-
-            <flux:checkbox name="remember" :label="__('Recordarme')" :checked="old('remember')" />
-
-            <div class="flex items-center justify-end">
-                <flux:button variant="primary" type="submit" class="w-full">
-                    {{ __('Ingresar') }}
-                </flux:button>
-            </div>
-        </form>
-
-    <div class="mt-6 text-center">
-
-    <p class="text-sm text-zinc-500 mb-2">
-        ¿Sos socio y todavía no activaste tu cuenta?
-    </p>
-
-    <a
-        href="{{ route('activar-cuenta-socio.show') }}"
-        class="inline-flex items-center justify-center rounded-xl bg-orange-500 hover:bg-orange-600 transition px-5 py-2 text-white font-bold"
-    >
-        Activar mi cuenta
-    </a>
-
-</div>
-            
-    </div>
+    <title>Contraseña restablecida</title>
 
     <style>
-        .splash-logo-wrap {
-            padding: 10px;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow:
-                0 0 0 1px rgba(245, 158, 11, 0.35),
-                0 25px 80px rgba(0, 0, 0, 0.55),
-                0 0 45px rgba(245, 158, 11, 0.25);
-            animation: splashLogo 1.4s ease-out both, splashBreath 2.4s ease-in-out infinite;
+        * {
+            box-sizing: border-box;
         }
 
-        .splash-bar-power {
-    width: 45%;
-    height: 100%;
-    border-radius: 9999px;
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
 
-    background:
-        repeating-linear-gradient(
-            -45deg,
-            #f97316 0px,
-            #f97316 10px,
-            #fb923c 10px,
-            #fb923c 20px
-        );
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
-    box-shadow:
-        0 0 12px rgba(249, 115, 22, 0.8),
-        0 0 24px rgba(249, 115, 22, 0.35);
+            background:
+                linear-gradient(
+                    145deg,
+                    #07111f,
+                    #10263e
+                );
 
-    animation: splashBar 1.6s linear infinite;
-}
+            color: #ffffff;
+        }
 
-.dumbbell-wrap {
+        .card {
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 28px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+            text-align: center;
 
-    animation: dumbbellFloat 2.4s ease-in-out infinite;
-}
+            background: rgba(255, 255, 255, 0.08);
 
-.dumbbell {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 24px;
 
-    display: flex;
-    align-items: center;
-    gap: 6px;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.35);
+        }
 
-    filter:
-        drop-shadow(0 0 8px rgba(249,115,22,0.8))
-        drop-shadow(0 0 20px rgba(249,115,22,0.35));
-}
+        .icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 24px;
 
-.dumbbell span:nth-child(1),
-.dumbbell span:nth-child(3) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    width: 18px;
-    height: 38px;
+            border-radius: 50%;
 
-    border-radius: 6px;
+            background: #22c55e;
 
-    background:
-        linear-gradient(180deg, #fb923c, #ea580c);
-}
+            font-size: 40px;
+            font-weight: bold;
 
-.dumbbell span:nth-child(2) {
+            box-shadow:
+                0 12px 28px rgba(34, 197, 94, 0.32);
+        }
 
-    width: 78px;
-    height: 8px;
+        h1 {
+            margin: 0 0 16px;
 
-    border-radius: 9999px;
+            font-size: 27px;
+            line-height: 1.2;
+        }
 
-    background:
-        linear-gradient(90deg, #f97316, #fdba74, #f97316);
-}
+        p {
+            margin: 0;
 
-@keyframes dumbbellFloat {
+            color: #d5deea;
 
-    0%, 100% {
-        transform: translateY(0) scale(1);
-        opacity: 0.9;
-    }
+            font-size: 17px;
+            line-height: 1.6;
+        }
 
-    50% {
-        transform: translateY(-6px) scale(1.06);
-        opacity: 1;
-    }
-}
+        .highlight {
+            display: block;
+            margin-top: 20px;
 
-@keyframes splashLogo {
-    0% {
-        opacity: 0;
-        transform: scale(0.72) rotate(-6deg);
-    }
+            color: #ffffff;
 
-    60% {
-        opacity: 1;
-        transform: scale(1.05) rotate(0deg);
-    }
+            font-weight: bold;
+        }
 
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
+        .close-message {
+            margin-top: 28px;
 
-@keyframes splashBreath {
-    0%, 100% {
-        transform: scale(1);
-    }
+            color: #9fb0c5;
 
-    50% {
-        transform: scale(1.035);
-    }
-}
+            font-size: 14px;
+        }
+    </style>
+</head>
 
-@keyframes splashBar {
-    0% {
-        transform: translateX(-100%);
-    }
+<body>
 
-    100% {
-        transform: translateX(240%);
-    }
-}
-</style>
+    <main class="card">
 
-<script>
-    window.addEventListener('load', function () {
+        <div class="icon">
+            ✓
+        </div>
 
-        const splash = document.getElementById('app-splash');
-        const loginContent = document.getElementById('login-content');
+        <h1>
+            Contraseña restablecida
+        </h1>
 
-        setTimeout(function () {
+        <p>
+            Tu contraseña fue actualizada correctamente.
 
-            if (splash) {
+            <span class="highlight">
+                Volvé a la aplicación del gimnasio e iniciá sesión
+                con tu nueva contraseña.
+            </span>
+        </p>
 
-                splash.classList.add('opacity-0');
+        <div class="close-message">
+            Ya podés cerrar esta página.
+        </div>
 
-                setTimeout(function () {
+    </main>
 
-                    splash.remove();
-
-                    if (loginContent) {
-                        loginContent.classList.remove('opacity-0');
-                        loginContent.classList.add('opacity-100');
-                    }
-
-                }, 700);
-            }
-
-        }, 1800);
-
-    });
-</script>
-
-</x-layouts::auth>
+</body>
+</html>

@@ -6,36 +6,16 @@
 </title>
 
 @php
-    $slug = auth()->check() ? auth()->user()->slug_estudio : null;
-
-    $manifest = match($slug) {
-        'demo' => '/manifest-demo.json',
-        'sportgym' => '/manifest-sportgym.json',
-        default => '/manifest-sportgym.json',
-    };
-
     $logo = auth()->check()
         ? asset(auth()->user()->logo_estudio ?? 'images/logo-sportgym.png')
         : asset('images/logo-sportgym.png');
-
-    $appName = auth()->check()
-        ? auth()->user()->nombre_estudio
-        : 'SportGym';
 @endphp
 
 {{-- FAVICON PERSONALIZADO --}}
 <link rel="icon" href="{{ $logo }}">
 <link rel="apple-touch-icon" href="{{ $logo }}">
 
-{{-- PWA DINÁMICA --}}
-<link rel="manifest" href="{{ $manifest }}">
-
 <meta name="theme-color" content="#111827">
-
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-title" content="{{ $appName }}">
 
 {{-- FUENTES --}}
 <link rel="preconnect" href="https://fonts.bunny.net">
