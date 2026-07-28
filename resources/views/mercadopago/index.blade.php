@@ -54,7 +54,7 @@
             <img
                 src="{{ asset('images/mp-logo.png') }}"
                 alt="Mercado Pago"
-                class="h-26 w-auto object-contain"
+                class="h-14 w-64 object-contain"
             >
         </button>
 
