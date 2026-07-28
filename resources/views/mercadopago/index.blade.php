@@ -43,20 +43,20 @@
 
         {{-- BOTÓN VISUAL: EL OAUTH SE AGREGARÁ DESPUÉS --}}
         <button
-            type="button"
-            disabled
-            title="La conexión estará disponible próximamente"
-            class="mt-6 flex w-full items-center justify-center rounded-2xl
-                   border border-stone-300 dark:border-stone-600
-                   bg-white px-4 py-1.5
-                   shadow-sm opacity-80 cursor-not-allowed"
-        >
-            <img
-    src="{{ asset('images/mp-logo-web.png') }}"
-    alt="Mercado Pago"
-    class="w-72 h-auto"
+    type="button"
+    disabled
+    title="La conexión estará disponible próximamente"
+    class="mt-6 flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl
+           border border-stone-300 dark:border-stone-600
+           bg-white px-4
+           shadow-sm opacity-80 cursor-not-allowed"
 >
-        </button>
+    <img
+        src="{{ asset('images/mp-logo-web.png') }}"
+        alt="Mercado Pago"
+        class="w-64 max-h-16 object-contain"
+    >
+</button>
 
         <div class="mt-5 inline-flex items-center gap-2 rounded-full
                     border border-red-300 dark:border-red-800
