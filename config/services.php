@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'mercadopago_oauth' => [
+        'client_id' => env('MERCADOPAGO_OAUTH_CLIENT_ID'),
+        'client_secret' => env('MERCADOPAGO_OAUTH_CLIENT_SECRET'),
+        'redirect_uri' => env('MERCADOPAGO_OAUTH_REDIRECT_URI'),
+    ],
+
 ];

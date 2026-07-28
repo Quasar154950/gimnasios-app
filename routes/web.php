@@ -141,10 +141,19 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         // 💳 MERCADO PAGO
         Route::get('mercadopago', [MercadoPagoController::class, 'index'])
-        ->name('mercadopago.index');
+            ->name('mercadopago.index');
 
         Route::post('mercadopago', [MercadoPagoController::class, 'update'])
-        ->name('mercadopago.update');
+            ->name('mercadopago.update');
+
+        Route::get('mercadopago/conectar', [MercadoPagoController::class, 'conectar'])
+            ->name('mercadopago.conectar');
+
+        Route::get('mercadopago/callback', [MercadoPagoController::class, 'callback'])
+            ->name('mercadopago.callback');
+
+        Route::post('mercadopago/desconectar', [MercadoPagoController::class, 'desconectar'])
+            ->name('mercadopago.desconectar');
         
         Route::get('clientes/{cliente}/pagos', [ClienteController::class, 'pagos'])
             ->name('clientes.pagos');

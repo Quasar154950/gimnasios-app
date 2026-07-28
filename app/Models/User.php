@@ -36,6 +36,10 @@ class User extends Authenticatable
         'mercadopago_enabled',
         'mercadopago_public_key',
         'mercadopago_access_token',
+        'mercadopago_refresh_token',
+        'mercadopago_user_id',
+        'mercadopago_token_expires_at',
+        'mercadopago_connected_at',
         'mercadopago_sandbox',
     ];
 
@@ -57,6 +61,8 @@ class User extends Authenticatable
 
             'mercadopago_enabled' => 'boolean',
             'mercadopago_sandbox' => 'boolean',
+            'mercadopago_token_expires_at' => 'datetime',
+            'mercadopago_connected_at' => 'datetime',
         ];
     }
 
