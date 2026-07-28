@@ -52,10 +52,10 @@
                    shadow-sm opacity-80 cursor-not-allowed"
         >
             <img
-                src="{{ asset('images/mp-logo.png') }}"
-                alt="Mercado Pago"
-                class="h-14 w-64 object-contain"
-            >
+    src="{{ asset('images/mp-logo-web.png') }}"
+    alt="Mercado Pago"
+    class="w-72 h-auto"
+>
         </button>
 
         <div class="mt-5 inline-flex items-center gap-2 rounded-full
