@@ -11,20 +11,31 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\PasswordResetResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, function () {
-            return new class implements \Laravel\Fortify\Contracts\LoginResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA DESPUÉS DEL LOGIN
+        |--------------------------------------------------------------------------
+        */
+
+        $this->app->singleton(LoginResponse::class, function () {
+            return new class implements LoginResponse {
                 public function toResponse($request)
                 {
                     $user = auth()->user();
 
                     if ($request->wantsJson()) {
-                        return new \Illuminate\Http\JsonResponse(['two_factor' => false]);
+                        return new \Illuminate\Http\JsonResponse([
+                            'two_factor' => false,
+                        ]);
                     }
 
                     if ($user && $user->email === 'soporte@tuempresa.com') {
@@ -40,9 +51,14 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
 
-        // 🔐 LOGOUT INTELIGENTE
-        $this->app->singleton(\Laravel\Fortify\Contracts\LogoutResponse::class, function () {
-            return new class implements \Laravel\Fortify\Contracts\LogoutResponse {
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA DESPUÉS DEL LOGOUT
+        |--------------------------------------------------------------------------
+        */
+
+        $this->app->singleton(LogoutResponse::class, function () {
+            return new class implements LogoutResponse {
                 public function toResponse($request)
                 {
                     $context = $request->cookie('last_login_context');
@@ -57,6 +73,31 @@ class FortifyServiceProvider extends ServiceProvider
                     }
 
                     return redirect('/login');
+                }
+            };
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPUESTA DESPUÉS DE RESTABLECER LA CONTRASEÑA
+        |--------------------------------------------------------------------------
+        |
+        | El socio no es enviado al login web.
+        | Se muestra una pantalla final indicando que debe volver a Flutter.
+        |
+        */
+
+        $this->app->singleton(PasswordResetResponse::class, function () {
+            return new class implements PasswordResetResponse {
+                public function toResponse($request)
+                {
+                    if ($request->wantsJson()) {
+                        return new \Illuminate\Http\JsonResponse([
+                            'message' => trans('passwords.reset'),
+                        ]);
+                    }
+
+                    return response()->view('auth.password-reset-success');
                 }
             };
         });
@@ -79,6 +120,12 @@ class FortifyServiceProvider extends ServiceProvider
             $slugEstudio = session('slug_estudio');
             $context = session('login_context');
 
+            /*
+            |--------------------------------------------------------------------------
+            | ACCESO DE SOPORTE
+            |--------------------------------------------------------------------------
+            */
+
             if ($context === 'soporte') {
                 if ($user->email !== 'soporte@tuempresa.com') {
                     return null;
@@ -87,44 +134,60 @@ class FortifyServiceProvider extends ServiceProvider
                 return $user;
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | ACCESO POR GIMNASIO
+            |--------------------------------------------------------------------------
+            */
+
             if ($context === 'estudio') {
 
-    if (! $slugEstudio) {
-        return null;
-    }
+                if (! $slugEstudio) {
+                    return null;
+                }
 
-    // Si entra un abogado, validamos su propio slug
-    if ($user->role === 'abogado') {
-        if ($user->slug_estudio !== $slugEstudio) {
-            return null;
-        }
+                /*
+                |--------------------------------------------------------------
+                | ADMINISTRADOR DEL GIMNASIO
+                |--------------------------------------------------------------
+                */
 
-        return $user;
-    }
+                if ($user->role === 'abogado') {
+                    if ($user->slug_estudio !== $slugEstudio) {
+                        return null;
+                    }
 
-    // Si entra un cliente, validamos que pertenezca al estudio del slug
-    if ($user->role === 'cliente') {
-        $abogado = User::where('role', 'abogado')
-            ->where('slug_estudio', $slugEstudio)
-            ->first();
+                    return $user;
+                }
 
-        if (! $abogado) {
-            return null;
-        }
+                /*
+                |--------------------------------------------------------------
+                | SOCIO DEL GIMNASIO
+                |--------------------------------------------------------------
+                */
 
-        $cliente = \App\Models\Cliente::where('user_id', $user->id)
-            ->where('abogado_id', $abogado->id)
-            ->first();
+                if ($user->role === 'cliente') {
+                    $abogado = User::where('role', 'abogado')
+                        ->where('slug_estudio', $slugEstudio)
+                        ->first();
 
-        if (! $cliente) {
-            return null;
-        }
+                    if (! $abogado) {
+                        return null;
+                    }
 
-        return $user;
-    }
+                    $cliente = \App\Models\Cliente::where('user_id', $user->id)
+                        ->where('abogado_id', $abogado->id)
+                        ->first();
 
-    return null;
-}
+                    if (! $cliente) {
+                        return null;
+                    }
+
+                    return $user;
+                }
+
+                return null;
+            }
 
             return null;
         });
@@ -139,22 +202,45 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         Fortify::loginView(fn () => view('pages::auth.login'));
-        Fortify::verifyEmailView(fn () => view('pages::auth.verify-email'));
-        Fortify::twoFactorChallengeView(fn () => view('pages::auth.two-factor-challenge'));
-        Fortify::confirmPasswordView(fn () => view('pages::auth.confirm-password'));
-        Fortify::registerView(fn () => view('pages::auth.register'));
-        Fortify::resetPasswordView(fn () => view('pages::auth.reset-password'));
-        Fortify::requestPasswordResetLinkView(fn () => view('pages::auth.forgot-password'));
+
+        Fortify::verifyEmailView(
+            fn () => view('pages::auth.verify-email')
+        );
+
+        Fortify::twoFactorChallengeView(
+            fn () => view('pages::auth.two-factor-challenge')
+        );
+
+        Fortify::confirmPasswordView(
+            fn () => view('pages::auth.confirm-password')
+        );
+
+        Fortify::registerView(
+            fn () => view('pages::auth.register')
+        );
+
+        Fortify::resetPasswordView(
+            fn () => view('pages::auth.reset-password')
+        );
+
+        Fortify::requestPasswordResetLinkView(
+            fn () => view('pages::auth.forgot-password')
+        );
     }
 
     private function configureRateLimiting(): void
     {
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            return Limit::perMinute(5)
+                ->by($request->session()->get('login.id'));
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(
+                Str::lower($request->input(Fortify::username()))
+                . '|' .
+                $request->ip()
+            );
 
             return Limit::perMinute(5)->by($throttleKey);
         });
