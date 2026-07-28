@@ -585,12 +585,4 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
-Route::get('/quien-soy', function () {
-    dd([
-        'email' => auth()->user()?->email,
-        'slug_estudio' => auth()->user()?->slug_estudio,
-        'nombre_estudio' => auth()->user()?->nombre_estudio,
-    ]);
-})->middleware('auth');
-
 require __DIR__ . '/settings.php';
