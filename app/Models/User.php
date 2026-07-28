@@ -107,22 +107,32 @@ class User extends Authenticatable
     }
 
     public function sendPasswordResetNotification($token): void
-    {
-        ResetPassword::toMailUsing(function ($notifiable, $token) {
-            $url = url(route('password.reset', [
-                'token' => $token,
-                'email' => $notifiable->getEmailForPasswordReset(),
-            ], false));
+{
+    ResetPassword::toMailUsing(function ($notifiable, $token) {
+        $url = url(route('password.reset', [
+            'token' => $token,
+            'email' => $notifiable->getEmailForPasswordReset(),
+        ], false));
 
-            return (new \Illuminate\Notifications\Messages\MailMessage)
-                ->subject('Restablecer contraseña - MCTandil')
-                ->greeting('Hola')
-                ->line('Recibimos una solicitud para restablecer la contraseña de tu cuenta.')
-                ->action('Restablecer contraseña', $url)
-                ->line('Este enlace vencerá en 60 minutos.')
-                ->line('Si no solicitaste este cambio, no hace falta hacer nada.')
-                ->salutation('Saludos, MCTandil');
-        });
+        $slug = $notifiable->slug_estudio
+            ?? $notifiable->cliente?->abogado?->slug_estudio
+            ?? 'sportgym';
+
+        $nombreGimnasio = match ($slug) {
+            'demo' => 'DemoGym',
+            'sportgym' => 'SportGym',
+            default => Str::headline($slug),
+        };
+
+        return (new \Illuminate\Notifications\Messages\MailMessage)
+            ->subject("Restablecer contraseña - {$nombreGimnasio}")
+            ->greeting('Hola')
+            ->line('Recibimos una solicitud para restablecer la contraseña de tu cuenta.')
+            ->action('Restablecer contraseña', $url)
+            ->line('Este enlace vencerá en 60 minutos.')
+            ->line('Si no solicitaste este cambio, no hace falta hacer nada.')
+            ->salutation("Saludos, {$nombreGimnasio}");
+    });
 
         $this->notify(new ResetPassword($token));
     }
