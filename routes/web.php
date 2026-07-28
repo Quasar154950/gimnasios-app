@@ -514,18 +514,26 @@ Route::middleware(['auth'])->post('/soporte/volver', function () {
 })->name('soporte.volver');
 
 
-// 🔐 Login por estudio
+/// 🔐 Login por estudio
 Route::get('/estudio/{slug}', function ($slug) {
 
     $userEstudio = User::where('slug_estudio', $slug)->first();
 
-    if (!$userEstudio) {
+    if (! $userEstudio) {
         abort(404);
+    }
+
+    // Si quedó una sesión anterior, la cerramos antes de mostrar el login.
+    if (auth()->check()) {
+        auth()->logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
     }
 
     session([
         'slug_estudio' => $slug,
-        'login_context' => 'estudio'
+        'login_context' => 'estudio',
     ]);
 
     return response()
@@ -576,5 +584,13 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
         ['Content-Type' => 'text/plain; charset=UTF-8']
     );
 });
+
+Route::get('/quien-soy', function () {
+    dd([
+        'email' => auth()->user()?->email,
+        'slug_estudio' => auth()->user()?->slug_estudio,
+        'nombre_estudio' => auth()->user()?->nombre_estudio,
+    ]);
+})->middleware('auth');
 
 require __DIR__ . '/settings.php';
