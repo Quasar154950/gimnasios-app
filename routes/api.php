@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MobileNovedadController;
 use App\Http\Controllers\Api\MobileProgresoController;
 use App\Http\Controllers\Api\MobileReservaController;
 use App\Http\Controllers\Api\MobileRutinaController;
+use App\Http\Controllers\Api\MobilePagoController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
@@ -136,6 +137,17 @@ Route::prefix('mobile')->group(function () {
         Route::get(
             '/novedades',
             [MobileNovedadController::class, 'index']
+        );
+        
+        /*
+        |--------------------------------------------------------------------------
+        | PAGOS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/cuota/pagar',
+            [MobilePagoController::class, 'crearPago']
         );
 
         /*
