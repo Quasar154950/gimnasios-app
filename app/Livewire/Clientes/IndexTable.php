@@ -3,10 +3,9 @@
 namespace App\Livewire\Clientes;
 
 use App\Models\Cliente;
-use App\Models\Pago;
+use App\Services\PagoService;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -92,52 +91,40 @@ class IndexTable extends Component
         $this->resetValidation();
     }
 
-    public function renovarCuota()
-    {
-        $this->validate([
-            'clientePagoId' => 'required|integer|exists:clientes,id',
-            'montoPago' => 'required|numeric|min:0',
-            'metodoPago' => 'required|string|max:255',
-            'observacionPago' => 'nullable|string|max:1000',
-            'fechaBasePago' => 'required|date',
-        ]);
+    public function renovarCuota(PagoService $pagoService)
+{
+    $this->validate([
+        'clientePagoId' => 'required|integer|exists:clientes,id',
+        'montoPago' => 'required|numeric|min:0',
+        'metodoPago' => 'required|string|max:255',
+        'observacionPago' => 'nullable|string|max:1000',
+        'fechaBasePago' => 'required|date',
+    ]);
 
-        $cliente = Cliente::where('abogado_id', auth()->id())
-            ->find($this->clientePagoId);
+    $cliente = Cliente::where('abogado_id', auth()->id())
+        ->find($this->clientePagoId);
 
-        if (! $cliente) {
-            session()->flash('error', 'No se encontró el socio seleccionado.');
+    if (! $cliente) {
+        session()->flash('error', 'No se encontró el socio seleccionado.');
 
-            return;
-        }
-
-        $fechaBase = Carbon::parse($this->fechaBasePago)->startOfDay();
-        $nuevoVencimiento = $fechaBase->copy()->addDays(30);
-
-        DB::transaction(function () use ($cliente, $fechaBase, $nuevoVencimiento) {
-            $cliente->update([
-                'fecha_vencimiento_cuota' => $nuevoVencimiento->toDateString(),
-            ]);
-
-            Pago::create([
-                'cliente_id' => $cliente->id,
-                'monto' => $this->montoPago,
-                'metodo_pago' => $this->metodoPago,
-                'observacion' => $this->observacionPago
-                    ?: 'Renovación de cuota mensual',
-                'fecha_pago' => now()->toDateString(),
-                'fecha_base' => $fechaBase->toDateString(),
-                'vencimiento_cuota' => $nuevoVencimiento->toDateString(),
-            ]);
-        });
-
-        $this->cancelarRenovacion();
-
-        session()->flash(
-            'success',
-            'Cuota renovada por 30 días y pago registrado correctamente.'
-        );
+        return;
     }
+
+    $pagoService->registrarPago(
+        cliente: $cliente,
+        monto: $this->montoPago,
+        metodoPago: $this->metodoPago,
+        observacion: $this->observacionPago,
+        fechaBase: $this->fechaBasePago,
+    );
+
+    $this->cancelarRenovacion();
+
+    session()->flash(
+        'success',
+        'Cuota renovada por 30 días y pago registrado correctamente.'
+    );
+}
 
     /*
     |--------------------------------------------------------------------------
