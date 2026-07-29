@@ -595,7 +595,6 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
 });
 
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
 
 Route::get('/migrar-railway/{clave}', function ($clave) {
 
