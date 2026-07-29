@@ -594,17 +594,4 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
-use Illuminate\Support\Facades\Artisan;
-
-Route::get('/migrar-railway/{clave}', function ($clave) {
-
-    abort_unless($clave === 'mct2026', 403);
-
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return '<pre>' . Artisan::output() . '</pre>';
-});
-
 require __DIR__ . '/settings.php';
