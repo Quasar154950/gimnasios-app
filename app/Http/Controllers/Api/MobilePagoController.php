@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\Pago;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,6 +28,31 @@ class MobilePagoController extends Controller
                 'message' => 'No se encontró el socio vinculado a tu usuario.',
             ], 422);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMPORTE CONFIGURADO PARA EL SOCIO
+        |--------------------------------------------------------------------------
+        */
+
+        $ultimoPago = Pago::where('cliente_id', $cliente->id)
+            ->latest('fecha_pago')
+            ->latest('id')
+            ->first();
+
+        if (! $ultimoPago || $ultimoPago->monto <= 0) {
+            return response()->json([
+                'message' => 'El administrador todavía no configuró el importe de tu cuota.',
+            ], 422);
+        }
+
+        $montoCuota = (float) $ultimoPago->monto;
+
+        /*
+        |--------------------------------------------------------------------------
+        | MERCADO PAGO DEL GIMNASIO
+        |--------------------------------------------------------------------------
+        */
 
         $gimnasio = User::find($cliente->abogado_id);
 
@@ -52,7 +78,7 @@ class MobilePagoController extends Controller
                     [
                         'title' => 'Cuota mensual gimnasio',
                         'quantity' => 1,
-                        'unit_price' => 1000,
+                        'unit_price' => $montoCuota,
                         'currency_id' => 'ARS',
                     ],
                 ],
@@ -77,6 +103,7 @@ class MobilePagoController extends Controller
                 'message' => 'Pago creado correctamente.',
                 'preference_id' => $preference->id,
                 'init_point' => $preference->init_point,
+                'monto' => $montoCuota,
             ]);
         } catch (Throwable $error) {
             report($error);
