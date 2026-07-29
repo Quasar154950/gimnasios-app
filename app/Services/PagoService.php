@@ -18,7 +18,10 @@ class PagoService
         string $metodoPago,
         ?string $observacion,
         string $fechaBase,
-        ?string $fechaPago = null
+        ?string $fechaPago = null,
+        string $origen = 'manual',
+        string $estado = 'aprobado',
+        ?string $mercadopagoPaymentId = null
     ): Pago {
         $fechaBaseCalculada = Carbon::parse($fechaBase)->startOfDay();
 
@@ -37,7 +40,10 @@ class PagoService
             $observacion,
             $fechaBaseCalculada,
             $nuevoVencimiento,
-            $fechaPagoCalculada
+            $fechaPagoCalculada,
+            $origen,
+            $estado,
+            $mercadopagoPaymentId
         ) {
             $cliente->update([
                 'fecha_vencimiento_cuota' => $nuevoVencimiento->toDateString(),
@@ -47,6 +53,9 @@ class PagoService
                 'cliente_id' => $cliente->id,
                 'monto' => $monto,
                 'metodo_pago' => $metodoPago,
+                'origen' => $origen,
+                'estado' => $estado,
+                'mercadopago_payment_id' => $mercadopagoPaymentId,
                 'observacion' => $observacion
                     ?: 'Renovación de cuota mensual',
                 'fecha_pago' => $fechaPagoCalculada,

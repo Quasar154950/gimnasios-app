@@ -14,6 +14,9 @@ class Pago extends Model
         'fecha_pago',
         'fecha_base',
         'vencimiento_cuota',
+        'origen',
+        'estado',
+        'mercadopago_payment_id',
     ];
 
     protected $casts = [
