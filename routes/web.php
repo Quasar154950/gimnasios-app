@@ -594,12 +594,4 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
-use Illuminate\Support\Facades\Artisan;
-
-Route::get('/migrar-pagos', function () {
-    Artisan::call('migrate', ['--force' => true]);
-
-    return nl2br(Artisan::output());
-});
-
 require __DIR__ . '/settings.php';
