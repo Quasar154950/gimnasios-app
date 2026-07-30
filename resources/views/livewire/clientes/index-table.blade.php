@@ -467,35 +467,49 @@
             @endif
 
             {{-- BOTONES --}}
-            <div class="mt-5 flex flex-wrap gap-2">
+<div class="mt-5 flex flex-wrap gap-2">
 
-                <button
-                    type="button"
-                    wire:click="renovarCuota"
-                    wire:loading.attr="disabled"
-                    wire:target="renovarCuota"
-                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600 disabled:cursor-wait disabled:opacity-60"
-                >
-                    <span wire:loading.remove wire:target="renovarCuota">
-                        ✅ Confirmar pago y renovación
-                    </span>
+    <button
+        type="button"
+        wire:click="renovarCuota"
+        wire:loading.attr="disabled"
+        wire:target="renovarCuota"
+        class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-orange-600 disabled:cursor-wait disabled:opacity-60"
+    >
+        <span wire:loading.remove wire:target="renovarCuota">
+            ✅ Confirmar pago y renovación
+        </span>
 
-                    <span wire:loading wire:target="renovarCuota">
-                        Procesando...
-                    </span>
-                </button>
+        <span wire:loading wire:target="renovarCuota">
+            Procesando...
+        </span>
+    </button>
 
-                <button
-                    type="button"
-                    wire:click="cancelarRenovacion"
-                    class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 transition hover:bg-stone-300"
-                >
-                    ❌ Cancelar
-                </button>
+    <button
+        type="button"
+        wire:click="guardarMontoCuota"
+        wire:loading.attr="disabled"
+        wire:target="guardarMontoCuota"
+        class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60"
+    >
+        <span wire:loading.remove wire:target="guardarMontoCuota">
+            💾 Guardar monto
+        </span>
 
-            </div>
+        <span wire:loading wire:target="guardarMontoCuota">
+            Guardando...
+        </span>
+    </button>
 
-        </div>
+    <button
+        type="button"
+        wire:click="cancelarRenovacion"
+        class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-stone-300 bg-stone-100 px-4 py-2 text-sm font-bold text-neutral-700 transition hover:bg-stone-300"
+    >
+        ❌ Cancelar
+    </button>
+
+</div>
 
     @endif
 
