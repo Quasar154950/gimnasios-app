@@ -32,6 +32,7 @@ class Cliente extends Model implements HasMedia
         'email',
         'direccion',
         'fecha_vencimiento_cuota',
+        'monto_cuota',
         'archivado',
         'user_id',
         'abogado_id',

@@ -137,6 +137,27 @@
 
                 </div>
 
+                {{-- MONTO DE CUOTA --}}
+                <div>
+
+                    <label for="monto_cuota"
+                           class="block text-sm font-bold text-stone-700">
+                        Monto de la cuota mensual
+                    </label>
+
+                    <input
+                        type="number"
+                        name="monto_cuota"
+                        id="monto_cuota"
+                        min="0"
+                        step="0.01"
+                        value="{{ old('monto_cuota', $cliente->monto_cuota) }}"
+                        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+                        placeholder="Ej: 80000"
+                    >
+
+                </div>
+
                 {{-- BOTONES --}}
                 <div class="flex gap-2 pt-2 flex-wrap font-bold">
 

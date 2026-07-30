@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
-use App\Models\Pago;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -35,18 +34,13 @@ class MobilePagoController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $ultimoPago = Pago::where('cliente_id', $cliente->id)
-            ->latest('fecha_pago')
-            ->latest('id')
-            ->first();
+        $montoCuota = (float) $cliente->monto_cuota;
 
-        if (! $ultimoPago || $ultimoPago->monto <= 0) {
-            return response()->json([
-                'message' => 'El administrador todavía no configuró el importe de tu cuota.',
-            ], 422);
-        }
-
-        $montoCuota = (float) $ultimoPago->monto;
+if ($montoCuota <= 0) {
+    return response()->json([
+        'message' => 'El administrador todavía no configuró el importe de tu cuota.',
+    ], 422);
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -88,7 +82,9 @@ class MobilePagoController extends Controller
                     'email' => $user->email,
                 ],
 
-                'external_reference' => 'cuota_cliente_' . $cliente->id,
+                'external_reference' => (string) $cliente->id,
+                
+                'notification_url' => route('webhooks.mercadopago.gimnasio'),
 
                 'back_urls' => [
                     'success' => route('cliente.cuota'),

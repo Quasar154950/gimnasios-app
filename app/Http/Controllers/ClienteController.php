@@ -46,6 +46,7 @@ class ClienteController extends Controller
         'email' => 'required|email|max:255|unique:clientes,email',
         'direccion' => 'required|string|max:255',
         'fecha_vencimiento_cuota' => 'nullable|date',
+        'monto_cuota' => 'required|numeric|min:0',
     ], [
         'nombre.required' => 'El nombre es obligatorio.',
         'dni.required' => 'El DNI es obligatorio.',
@@ -63,6 +64,7 @@ class ClienteController extends Controller
         'email' => $request->email,
         'direccion' => $request->direccion,
         'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
+        'monto_cuota' => $request->monto_cuota,
         'archivado' => false,
         'abogado_id' => auth()->id(),
     ]);
@@ -274,6 +276,7 @@ class ClienteController extends Controller
         'email' => 'required|email|max:255|unique:clientes,email,' . $id,
         'direccion' => 'required|string|max:255',
         'fecha_vencimiento_cuota' => 'nullable|date',
+        'monto_cuota' => 'required|numeric|min:0',
     ], [
         'nombre.required' => 'El nombre es obligatorio.',
         'telefono.required' => 'El teléfono es obligatorio.',
@@ -290,6 +293,7 @@ class ClienteController extends Controller
         'email' => $request->email,
         'direccion' => $request->direccion,
         'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
+        'monto_cuota' => $request->monto_cuota,
     ]);
 
     return redirect()->route('clientes.index')->with('success', 'Socio actualizado correctamente.');
