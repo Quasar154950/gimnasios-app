@@ -192,6 +192,9 @@ public function conectar()
                 "name" => $cliente->nombre,
                 "email" => auth()->user()->email,
             ],
+            "external_reference" => (string) $cliente->id,
+
+            "notification_url" => route('webhooks.mercadopago.gimnasio'),
 
             "back_urls" => [
                 "success" => route('cliente.cuota'),

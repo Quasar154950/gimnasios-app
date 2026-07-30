@@ -12,6 +12,7 @@ use App\Http\Controllers\TurnoController;
 use App\Http\Controllers\MercadoPagoController;
 use App\Http\Controllers\SaasPagoController;
 use App\Http\Controllers\MercadoPagoSaasWebhookController;
+use App\Http\Controllers\MercadoPagoWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Http\Controllers\AvisoController;
 use App\Http\Controllers\NovedadController;
@@ -359,6 +360,10 @@ Route::middleware(['auth'])->group(function () {
 // 🔔 WEBHOOK MERCADO PAGO SAAS
 Route::post('/webhooks/mercadopago/saas', [MercadoPagoSaasWebhookController::class, 'handle'])
     ->name('webhooks.mercadopago.saas');
+
+// 🔔 WEBHOOK MERCADO PAGO GIMNASIOS
+Route::post('/webhooks/mercadopago/gimnasio', [MercadoPagoWebhookController::class, 'handle'])
+    ->name('webhooks.mercadopago.gimnasio');
 
 // 🔑 RESET PASSWORD (SOLO SOPORTE)
 Route::middleware(['auth'])->post('/soporte/reset-password/{user}', function (User $user) {
