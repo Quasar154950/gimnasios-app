@@ -87,10 +87,10 @@ if ($montoCuota <= 0) {
                 'notification_url' => route('webhooks.mercadopago.gimnasio'),
 
                 'back_urls' => [
-                    'success' => route('cliente.cuota'),
-                    'failure' => route('cliente.cuota'),
-                    'pending' => route('cliente.cuota'),
-                ],
+                    'success' => route('pago.exito'),
+                    'failure' => route('pago.error'),
+                    'pending' => route('pago.pendiente'),
+            ],
 
                 'auto_return' => 'approved',
             ]);

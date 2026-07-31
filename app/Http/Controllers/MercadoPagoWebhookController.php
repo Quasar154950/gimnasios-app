@@ -17,11 +17,7 @@ class MercadoPagoWebhookController extends Controller
         PagoService $pagoService
     ) {
 
-        Log::info('=== WEBHOOK MERCADO PAGO RECIBIDO ===', [
-            'payload' => $request->all(),
-        ]);
-
-        $type = $request->input('type')
+            $type = $request->input('type')
             ?? $request->input('topic');
 
         $paymentId = $request->input('data.id')

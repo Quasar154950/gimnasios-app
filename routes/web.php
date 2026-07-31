@@ -357,6 +357,14 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+// 💳 RESULTADO DEL PAGO DE CUOTA
+Route::view('/pago/exito', 'pagos.exito')->name('pago.exito');
+
+Route::view('/pago/pendiente', 'pagos.pendiente')->name('pago.pendiente');
+
+Route::view('/pago/error', 'pagos.error')->name('pago.error');
+
+
 // 🔔 WEBHOOK MERCADO PAGO SAAS
 Route::post('/webhooks/mercadopago/saas', [MercadoPagoSaasWebhookController::class, 'handle'])
     ->name('webhooks.mercadopago.saas');
