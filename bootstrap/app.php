@@ -14,9 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
 
-        // Excluir webhook Mercado Pago del CSRF
+        // Excluir webhooks Mercado Pago del CSRF
         $middleware->validateCsrfTokens(except: [
             'webhooks/mercadopago/saas',
+            'webhooks/mercadopago/gimnasio',
         ]);
 
         $middleware->alias([
