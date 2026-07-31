@@ -87,9 +87,9 @@ if ($montoCuota <= 0) {
                 'notification_url' => route('webhooks.mercadopago.gimnasio'),
 
                 'back_urls' => [
-                    'success' => route('pago.exito'),
-                    'failure' => route('pago.error'),
-                    'pending' => route('pago.pendiente'),
+                    'success' => 'sportgym://pago/exito',
+                    'failure' => 'sportgym://pago/error',
+                    'pending' => 'sportgym://pago/pendiente',
             ],
 
                 'auto_return' => 'approved',
