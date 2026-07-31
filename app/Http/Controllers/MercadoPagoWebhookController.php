@@ -109,10 +109,13 @@ class MercadoPagoWebhookController extends Controller
             return response()->json(['ok' => true]);
         }
 
-        $fechaBase = $cliente->fecha_vencimiento_cuota &&
-            $cliente->fecha_vencimiento_cuota->isFuture()
-                ? $cliente->fecha_vencimiento_cuota->toDateString()
-                : now()->toDateString();
+        $fechaVencimiento = $cliente->fecha_vencimiento_cuota
+    ? \Carbon\Carbon::parse($cliente->fecha_vencimiento_cuota)
+    : null;
+
+$fechaBase = $fechaVencimiento && $fechaVencimiento->isFuture()
+    ? $fechaVencimiento->toDateString()
+    : now()->toDateString();
 
         $pagoService->registrarPago(
             cliente: $cliente,
