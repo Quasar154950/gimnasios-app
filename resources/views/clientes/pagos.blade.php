@@ -56,6 +56,14 @@
                             </th>
 
                             <th class="p-4 text-left">
+                                Origen
+                            </th>
+
+                            <th class="p-4 text-left">
+                                Estado
+                            </th>
+
+                            <th class="p-4 text-left">
                                 Observación
                             </th>
 
@@ -141,6 +149,74 @@
                                             class="inline-flex items-center rounded-full bg-stone-100 px-2 py-1 text-xs font-bold text-stone-700"
                                         >
                                             {{ $pago->metodo_pago }}
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-stone-400">
+                                            Sin especificar
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+                                {{-- ORIGEN --}}
+                                <td class="p-4 text-sm text-stone-700">
+
+                                    @if($pago->origen === 'mercadopago')
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700"
+                                            title="Pago realizado automáticamente desde la aplicación"
+                                        >
+                                            Automático
+                                        </span>
+
+                                    @elseif($pago->origen === 'manual')
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700"
+                                            title="Pago registrado manualmente por el gimnasio"
+                                        >
+                                            Manual
+                                        </span>
+
+                                    @else
+
+                                        <span class="text-stone-400">
+                                            Sin especificar
+                                        </span>
+
+                                    @endif
+
+                                </td>
+
+                                {{-- ESTADO --}}
+                                <td class="p-4 text-sm text-stone-700">
+
+                                    @if($pago->estado === 'aprobado')
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700"
+                                        >
+                                            Aprobado
+                                        </span>
+
+                                    @elseif($pago->estado === 'pendiente')
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs font-bold text-yellow-700"
+                                        >
+                                            Pendiente
+                                        </span>
+
+                                    @elseif($pago->estado === 'rechazado')
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-bold text-red-700"
+                                        >
+                                            Rechazado
                                         </span>
 
                                     @else
