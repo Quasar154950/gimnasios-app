@@ -230,32 +230,38 @@ class MobileProgresoController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | ACTIVIDAD DE LOS ÚLTIMOS 12 MESES
+        | ACTIVIDAD DEL AÑO ACTUAL
         |--------------------------------------------------------------------------
         */
 
         $asistenciasPorMes = collect();
 
-        for ($i = 11; $i >= 0; $i--) {
-            $mes = $hoy->copy()->subMonths($i);
+for ($numeroMes = 1; $numeroMes <= 12; $numeroMes++) {
+    $mes = Carbon::create(
+        $hoy->year,
+        $numeroMes,
+        1
+    )->startOfMonth();
 
-            $cantidad = $fechasAsistencia
-                ->filter(function (Carbon $fecha) use ($mes) {
-                    return $fecha->year === $mes->year
-                        && $fecha->month === $mes->month;
-                })
-                ->count();
+    $cantidad = $fechasAsistencia
+        ->filter(function (Carbon $fecha) use ($mes) {
+            return $fecha->year === $mes->year
+                && $fecha->month === $mes->month;
+        })
+        ->count();
 
-            $asistenciasPorMes->push([
-                'clave' => $mes->format('Y-m'),
-                'mes' => $this->nombreMes($mes),
-                'mes_nombre' => $this->nombreMes($mes),
-                'anio' => $mes->year,
-                'cantidad' => $cantidad,
-                'asistencias' => $cantidad,
-                'entrenamientos' => $cantidad,
-            ]);
-        }
+    $nombreMes = $this->nombreMes($mes);
+
+    $asistenciasPorMes->push([
+        'clave' => $mes->format('Y-m'),
+        'mes' => $nombreMes . ' ' . $mes->year,
+        'mes_nombre' => $nombreMes . ' ' . $mes->year,
+        'anio' => $mes->year,
+        'cantidad' => $cantidad,
+        'asistencias' => $cantidad,
+        'entrenamientos' => $cantidad,
+    ]);
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -314,19 +320,21 @@ class MobileProgresoController extends Controller
                 'desbloqueado' => $mejorRacha >= 3,
             ],
             [
-                'codigo' => 'racha_siete',
-                'titulo' => 'Semana imparable',
-                'descripcion' => 'Entrenaste durante 7 días consecutivos.',
-                'icono' => 'fuego',
-                'desbloqueado' => $mejorRacha >= 7,
-            ],
-            [
-                'codigo' => 'racha_treinta',
-                'titulo' => 'Imparable',
-                'descripcion' => 'Alcanzaste una racha de 30 días.',
-                'icono' => 'fuego',
-                'desbloqueado' => $mejorRacha >= 30,
-            ],
+    'codigo' => 'racha_seis',
+    'titulo' => 'Semana imparable',
+    'descripcion' =>
+        'Entrenaste durante 6 días de apertura consecutivos.',
+    'icono' => 'fuego',
+    'desbloqueado' => $mejorRacha >= 6,
+],
+[
+    'codigo' => 'racha_treinta',
+    'titulo' => 'Imparable',
+    'descripcion' =>
+        'Alcanzaste una racha de 30 días de apertura consecutivos.',
+    'icono' => 'fuego',
+    'desbloqueado' => $mejorRacha >= 30,
+],
             [
                 'codigo' => 'objetivo_mensual',
                 'titulo' => 'Objetivo cumplido',
@@ -409,107 +417,150 @@ class MobileProgresoController extends Controller
     }
 
     private function calcularRachaActual(
-        array $fechas,
-        Carbon $hoy
-    ): int {
-        if (empty($fechas)) {
-            return 0;
-        }
+    array $fechas,
+    Carbon $hoy
+): int {
+    if (empty($fechas)) {
+        return 0;
+    }
 
-        $fechasNormalizadas = collect($fechas)
-            ->map(function ($fecha) {
-                return Carbon::parse($fecha)->format('Y-m-d');
-            })
-            ->unique()
-            ->sort()
-            ->values();
+    $fechasNormalizadas = collect($fechas)
+        ->map(function ($fecha) {
+            return Carbon::parse($fecha)->startOfDay();
+        })
+        ->unique(function (Carbon $fecha) {
+            return $fecha->format('Y-m-d');
+        })
+        ->sort()
+        ->values();
 
-        $ultimaFecha = Carbon::parse(
-            $fechasNormalizadas->last()
-        )->startOfDay();
+    $ultimaFecha = $fechasNormalizadas->last()->copy();
 
-        /*
-        | La racha continúa activa si el último entrenamiento fue
-        | hoy o ayer.
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | ÚLTIMO DÍA DE ENTRENAMIENTO ESPERADO
+    |--------------------------------------------------------------------------
+    |
+    | Los domingos no cuentan como día de entrenamiento y tampoco cortan
+    | la racha. Por ejemplo, si hoy es lunes, una asistencia del sábado
+    | todavía mantiene activa la racha.
+    |
+    */
 
-        if (
-            ! $ultimaFecha->isSameDay($hoy)
-            && ! $ultimaFecha->isSameDay(
-                $hoy->copy()->subDay()
+$ultimaFechaEsperada = $hoy->copy();
+
+if ($hoy->isSunday()) {
+    /*
+    | Si hoy es domingo, el último entrenamiento válido
+    | para mantener la racha debe haber sido el sábado.
+    */
+    $ultimaFechaEsperada->subDay();
+
+    if (! $ultimaFecha->isSameDay($ultimaFechaEsperada)) {
+        return 0;
+    }
+} else {
+    /*
+    | En un día de apertura, la racha sigue activa si el socio
+    | entrenó hoy o en el día de apertura inmediatamente anterior.
+    */
+    if (
+        ! $ultimaFecha->isSameDay($ultimaFechaEsperada)
+        && ! $ultimaFecha->isSameDay(
+            $this->diaAnteriorDeEntrenamiento(
+                $ultimaFechaEsperada
             )
-        ) {
-            return 0;
+        )
+    ) {
+        return 0;
+    }
+}
+
+    $racha = 1;
+    $fechaEsperada = $this->diaAnteriorDeEntrenamiento(
+        $ultimaFecha
+    );
+
+    for (
+        $i = $fechasNormalizadas->count() - 2;
+        $i >= 0;
+        $i--
+    ) {
+        $fecha = $fechasNormalizadas[$i]->copy();
+
+        if ($fecha->isSameDay($fechaEsperada)) {
+            $racha++;
+
+            $fechaEsperada = $this->diaAnteriorDeEntrenamiento(
+                $fechaEsperada
+            );
+
+            continue;
         }
 
-        $racha = 1;
-        $fechaEsperada = $ultimaFecha->copy()->subDay();
-
-        for (
-            $i = $fechasNormalizadas->count() - 2;
-            $i >= 0;
-            $i--
-        ) {
-            $fecha = Carbon::parse(
-                $fechasNormalizadas[$i]
-            )->startOfDay();
-
-            if ($fecha->isSameDay($fechaEsperada)) {
-                $racha++;
-                $fechaEsperada->subDay();
-                continue;
-            }
-
-            if ($fecha->lessThan($fechaEsperada)) {
-                break;
-            }
+        if ($fecha->lessThan($fechaEsperada)) {
+            break;
         }
-
-        return $racha;
     }
 
-    private function calcularMejorRacha(array $fechas): int
-    {
-        if (empty($fechas)) {
-            return 0;
-        }
+    return $racha;
+}
 
-        $fechasOrdenadas = collect($fechas)
-            ->map(function ($fecha) {
-                return Carbon::parse($fecha)->startOfDay();
-            })
-            ->unique(function (Carbon $fecha) {
-                return $fecha->format('Y-m-d');
-            })
-            ->sort()
-            ->values();
-
-        $mejorRacha = 1;
-        $rachaActual = 1;
-
-        for ($i = 1; $i < $fechasOrdenadas->count(); $i++) {
-            $fechaAnterior = $fechasOrdenadas[$i - 1];
-            $fechaActual = $fechasOrdenadas[$i];
-
-            if (
-                $fechaAnterior
-                    ->copy()
-                    ->addDay()
-                    ->isSameDay($fechaActual)
-            ) {
-                $rachaActual++;
-
-                $mejorRacha = max(
-                    $mejorRacha,
-                    $rachaActual
-                );
-            } else {
-                $rachaActual = 1;
-            }
-        }
-
-        return $mejorRacha;
+private function calcularMejorRacha(array $fechas): int
+{
+    if (empty($fechas)) {
+        return 0;
     }
+
+    $fechasOrdenadas = collect($fechas)
+        ->map(function ($fecha) {
+            return Carbon::parse($fecha)->startOfDay();
+        })
+        ->unique(function (Carbon $fecha) {
+            return $fecha->format('Y-m-d');
+        })
+        ->sort()
+        ->values();
+
+    $mejorRacha = 1;
+    $rachaActual = 1;
+
+    for ($i = 1; $i < $fechasOrdenadas->count(); $i++) {
+        $fechaAnterior = $fechasOrdenadas[$i - 1]->copy();
+        $fechaActual = $fechasOrdenadas[$i]->copy();
+
+        $siguienteDiaEsperado = $fechaAnterior->copy()->addDay();
+
+        if ($siguienteDiaEsperado->isSunday()) {
+            $siguienteDiaEsperado->addDay();
+        }
+
+        if ($siguienteDiaEsperado->isSameDay($fechaActual)) {
+            $rachaActual++;
+
+            $mejorRacha = max(
+                $mejorRacha,
+                $rachaActual
+            );
+        } else {
+            $rachaActual = 1;
+        }
+    }
+
+    return $mejorRacha;
+}
+
+    private function diaAnteriorDeEntrenamiento(
+    Carbon $fecha
+): Carbon {
+    $fechaAnterior = $fecha->copy()->subDay();
+
+    if ($fechaAnterior->isSunday()) {
+        $fechaAnterior->subDay();
+    }
+
+    return $fechaAnterior;
+}
 
     private function formatearMinutos(int $minutos): string
     {
