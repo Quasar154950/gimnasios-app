@@ -69,18 +69,99 @@
                 </div>
 
                 <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+                    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+                        DNI
+                    </p>
+
+                    <p class="text-lg text-stone-900">
+                        {{ $cliente->dni ?: 'Sin cargar' }}
+                    </p>
+                </div>
+                    <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+        Fecha de nacimiento
+    </p>
+
+    <p class="text-lg text-stone-900">
+        @if($cliente->fecha_nacimiento)
+            {{ \Carbon\Carbon::parse($cliente->fecha_nacimiento)->format('d/m/Y') }}
+        @else
+            Sin cargar
+        @endif
+    </p>
+</div>
+
+
+                <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
                     <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">Teléfono</p>
                     <p class="text-lg text-stone-900">{{ $cliente->telefono }}</p>
                 </div>
 
+                    <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+        Peso
+    </p>
+
+    <p class="text-lg text-stone-900">
+        @if($cliente->peso)
+            {{ number_format($cliente->peso, 2, ',', '.') }} kg
+        @else
+            Sin cargar
+        @endif
+    </p>
+</div>
+
+    <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+        Altura
+    </p>
+
+    <p class="text-lg text-stone-900">
+        @if($cliente->altura)
+            {{ $cliente->altura }} cm
+        @else
+            Sin cargar
+        @endif
+    </p>
+</div>
+
                 <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
-                    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">Email</p>
-                    <p class="text-lg text-stone-900 break-all">{{ $cliente->email }}</p>
+                    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+                        Email
+                    </p>
+
+                    <p class="text-lg text-stone-900 break-all">
+                        {{ $cliente->user?->email ?? $cliente->email }}
+                    </p>
                 </div>
 
                 <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
                     <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">Dirección</p>
                     <p class="text-lg text-stone-900">{{ $cliente->direccion ?: 'Sin cargar' }}</p>
+                </div>
+
+                    <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+        Contacto de emergencia
+    </p>
+
+    <p class="text-lg text-stone-900">
+        {{ $cliente->contacto_emergencia ?: 'Sin cargar' }}
+    </p>
+</div>
+
+                <div class="rounded-xl border border-stone-300 bg-stone-100 p-4">
+                    <p class="text-[10px] font-bold uppercase text-stone-500 mb-1">
+                        Monto de la cuota mensual
+                    </p>
+
+                    <p class="text-lg font-bold text-stone-900">
+                        @if(! is_null($cliente->monto_cuota))
+                            $ {{ number_format($cliente->monto_cuota, 0, ',', '.') }}
+                        @else
+                            Sin cargar
+                        @endif
+                    </p>
                 </div>
 
                 <div class="rounded-xl border border-stone-300 bg-stone-100 p-4 md:col-span-2">
@@ -192,7 +273,8 @@
                         </label>
 
                         <p class="text-sm text-stone-500">
-                            Generá un email y contraseña para que el socio pueda ingresar a su panel.
+                            El acceso se creará utilizando automáticamente el email registrado del socio.
+Solo debés definir la contraseña inicial.
                         </p>
 
                     </div>
@@ -200,16 +282,7 @@
                     <form method="POST" action="{{ route('clientes.crearAcceso', $cliente->id) }}" class="space-y-3" autocomplete="off">
                         @csrf
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-
-                            <input
-                                type="email"
-                                name="email_acceso"
-                                placeholder="Email de acceso"
-                                autocomplete="off"
-                                value="{{ old('email_acceso') }}"
-                                class="w-full rounded-xl border border-stone-300 bg-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:ring-2 focus:ring-orange-500"
-                            >
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                             <input
                                 type="password"

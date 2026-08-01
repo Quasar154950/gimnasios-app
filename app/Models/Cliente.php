@@ -37,6 +37,11 @@ class Cliente extends Model implements HasMedia
         'user_id',
         'abogado_id',
         'dni',
+        'fecha_nacimiento',
+        'peso',
+        'altura',
+        'contacto_emergencia',
+
     ];
 
     /**

@@ -43,6 +43,10 @@ class ClienteController extends Controller
     $request->validate([
         'nombre' => 'required|string|max:255',
         'dni' => 'required|string|max:30',
+        'fecha_nacimiento' => 'nullable|date',
+        'peso' => 'nullable|numeric|min:0|max:500',
+        'altura' => 'nullable|integer|min:30|max:300',
+        'contacto_emergencia' => 'nullable|string|max:255',
         'telefono' => 'required|string|max:255',
         'email' => 'required|email|max:255|unique:clientes,email',
         'direccion' => 'required|string|max:255',
@@ -68,6 +72,11 @@ class ClienteController extends Controller
         'monto_cuota' => $request->monto_cuota,
         'archivado' => false,
         'abogado_id' => auth()->id(),
+        'fecha_nacimiento' => $request->fecha_nacimiento,
+        'peso' => $request->peso,
+        'altura' => $request->altura,
+        'contacto_emergencia' => $request->contacto_emergencia,
+
     ]);
 
     return redirect()->route('clientes.index')->with('success', 'Socio creado correctamente.');
@@ -285,7 +294,7 @@ $user = User::create([
 
     $request->validate([
         'nombre' => 'required|string|max:255',
-        'dni' => 'nullable|string|max:30',
+        'dni' => 'required|string|max:30',
         'telefono' => 'required|string|max:255',
         'email' => [
             'required',
@@ -297,6 +306,12 @@ $user = User::create([
         'direccion' => 'required|string|max:255',
         'fecha_vencimiento_cuota' => 'nullable|date',
         'monto_cuota' => 'required|numeric|min:0',
+        'fecha_nacimiento' => 'nullable|date',
+        'peso' => 'nullable|numeric|min:0|max:500',
+        'altura' => 'nullable|integer|min:30|max:300',
+        'contacto_emergencia' => 'nullable|string|max:255',
+
+
     ], [
         'nombre.required' => 'El nombre es obligatorio.',
         'telefono.required' => 'El teléfono es obligatorio.',
@@ -315,6 +330,11 @@ $user = User::create([
         'fecha_vencimiento_cuota' =>
             $request->fecha_vencimiento_cuota,
         'monto_cuota' => $request->monto_cuota,
+        'fecha_nacimiento' => $request->fecha_nacimiento,
+        'peso' => $request->peso,
+        'altura' => $request->altura,
+        'contacto_emergencia' => $request->contacto_emergencia,
+
     ]);
 
     if ($cliente->user) {

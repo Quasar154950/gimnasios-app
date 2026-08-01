@@ -65,6 +65,77 @@
 
 </div>
 
+    {{-- FECHA DE NACIMIENTO --}}
+<div>
+    <label for="fecha_nacimiento"
+           class="block text-sm font-bold text-stone-700">
+        Fecha de nacimiento
+    </label>
+
+    <input
+        type="date"
+        name="fecha_nacimiento"
+        id="fecha_nacimiento"
+        value="{{ old('fecha_nacimiento', $cliente->fecha_nacimiento) }}"
+        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+    >
+</div>
+
+{{-- PESO --}}
+<div>
+    <label for="peso"
+           class="block text-sm font-bold text-stone-700">
+        Peso (kg)
+    </label>
+
+    <input
+        type="number"
+        name="peso"
+        id="peso"
+        min="0"
+        step="0.01"
+        value="{{ old('peso', $cliente->peso) }}"
+        placeholder="Ej: 82.50"
+        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+    >
+</div>
+
+{{-- ALTURA --}}
+<div>
+    <label for="altura"
+           class="block text-sm font-bold text-stone-700">
+        Altura (cm)
+    </label>
+
+    <input
+        type="number"
+        name="altura"
+        id="altura"
+        min="0"
+        step="1"
+        value="{{ old('altura', $cliente->altura) }}"
+        placeholder="Ej: 175"
+        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+    >
+</div>
+
+{{-- CONTACTO DE EMERGENCIA --}}
+<div>
+    <label for="contacto_emergencia"
+           class="block text-sm font-bold text-stone-700">
+        Contacto de emergencia
+    </label>
+
+    <input
+        type="text"
+        name="contacto_emergencia"
+        id="contacto_emergencia"
+        value="{{ old('contacto_emergencia', $cliente->contacto_emergencia) }}"
+        placeholder="Ej: María García (Madre) - 2494-123456"
+        class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
+    >
+</div>
+
                 {{-- TELÉFONO --}}
                 <div>
 
