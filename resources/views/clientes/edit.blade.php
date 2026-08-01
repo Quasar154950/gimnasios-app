@@ -95,7 +95,7 @@
                         type="text"
                         name="email"
                         id="email"
-                        value="{{ old('email', $cliente->email) }}"
+                        value="{{ old('email', $cliente->user?->email ?? $cliente->email) }}"
                         class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
                     >
 

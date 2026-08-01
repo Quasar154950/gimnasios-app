@@ -11,6 +11,7 @@ use App\Models\Asistencia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
@@ -170,23 +171,34 @@ class ClienteController extends Controller
         }
 
         $request->validate([
-            'email_acceso' => 'required|email|max:255|unique:users,email',
             'password_acceso' => 'required|string|min:6|confirmed',
         ], [
-            'email_acceso.required' => 'El email de acceso es obligatorio.',
-            'email_acceso.email' => 'El email de acceso no es válido.',
-            'email_acceso.unique' => 'Ese email ya está en uso.',
+
             'password_acceso.required' => 'La contraseña es obligatoria.',
             'password_acceso.min' => 'La contraseña debe tener al menos 6 caracteres.',
             'password_acceso.confirmed' => 'La confirmación de contraseña no coincide.',
         ]);
 
-        $user = User::create([
-            'name' => $cliente->nombre,
-            'email' => $request->email_acceso,
-            'password' => Hash::make($request->password_acceso),
-            'role' => 'cliente',
-        ]);
+if (! $cliente->email) {
+    return back()->with(
+        'error',
+        'El socio debe tener un email cargado antes de crear el acceso.'
+    );
+}
+
+if (User::where('email', $cliente->email)->exists()) {
+    return back()->with(
+        'error',
+        'Ese email ya está siendo utilizado por otro usuario.'
+    );
+}
+
+$user = User::create([
+    'name' => $cliente->nombre,
+    'email' => $cliente->email,
+    'password' => Hash::make($request->password_acceso),
+    'role' => 'cliente',
+]);
 
         $cliente->update([
             'user_id' => $user->id,
@@ -267,13 +279,21 @@ class ClienteController extends Controller
 
     public function update(Request $request, string $id)
 {
-    $cliente = Cliente::where('abogado_id', auth()->id())->findOrFail($id);
+    $cliente = Cliente::where('abogado_id', auth()->id())
+        ->with('user')
+        ->findOrFail($id);
 
     $request->validate([
         'nombre' => 'required|string|max:255',
         'dni' => 'nullable|string|max:30',
         'telefono' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:clientes,email,' . $id,
+        'email' => [
+            'required',
+            'email',
+            'max:255',
+            Rule::unique('clientes', 'email')->ignore($cliente->id),
+            Rule::unique('users', 'email')->ignore($cliente->user_id),
+        ],
         'direccion' => 'required|string|max:255',
         'fecha_vencimiento_cuota' => 'nullable|date',
         'monto_cuota' => 'required|numeric|min:0',
@@ -292,11 +312,21 @@ class ClienteController extends Controller
         'telefono' => $request->telefono,
         'email' => $request->email,
         'direccion' => $request->direccion,
-        'fecha_vencimiento_cuota' => $request->fecha_vencimiento_cuota,
+        'fecha_vencimiento_cuota' =>
+            $request->fecha_vencimiento_cuota,
         'monto_cuota' => $request->monto_cuota,
     ]);
 
-    return redirect()->route('clientes.index')->with('success', 'Socio actualizado correctamente.');
+    if ($cliente->user) {
+        $cliente->user->update([
+            'name' => $request->nombre,
+            'email' => $request->email,
+        ]);
+    }
+
+    return redirect()
+        ->route('clientes.index')
+        ->with('success', 'Socio actualizado correctamente.');
 }
 
     public function destroy(string $id)
