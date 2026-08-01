@@ -157,15 +157,25 @@ class AuthController extends Controller
             ],
 
             'cliente' => [
-                'id' => $cliente->id,
-                'nombre' => $cliente->nombre ?? $user->name,
-                'apellido' => $cliente->apellido ?? null,
-                'dni' => $cliente->dni ?? null,
-                'contacto' => $cliente->contacto ?? null,
-                'telefono' => $cliente->telefono ?? null,
-                'fecha_vencimiento_cuota' =>
-                    $cliente->fecha_vencimiento_cuota ?? null,
-            ],
+    'id' => $cliente->id,
+    'nombre' => $cliente->nombre ?? $user->name,
+    'apellido' => $cliente->apellido ?? null,
+    'dni' => $cliente->dni ?? null,
+    'contacto' => $cliente->contacto ?? null,
+    'telefono' => $cliente->telefono ?? null,
+    'direccion' => $cliente->direccion ?? null,
+    'fecha_nacimiento' => $cliente->fecha_nacimiento ?? null,
+    'peso' => ! is_null($cliente->peso)
+        ? (float) $cliente->peso
+        : null,
+    'altura' => ! is_null($cliente->altura)
+        ? (int) $cliente->altura
+        : null,
+    'contacto_emergencia' =>
+        $cliente->contacto_emergencia ?? null,
+    'fecha_vencimiento_cuota' =>
+        $cliente->fecha_vencimiento_cuota ?? null,
+],
 
             'gimnasio' => [
                 'id' => $gimnasio?->id,
