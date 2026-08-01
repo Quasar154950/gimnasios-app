@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ExpedienteController;
 use App\Http\Controllers\DashboardController;
@@ -606,14 +605,6 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
         200,
         ['Content-Type' => 'text/plain; charset=UTF-8']
     );
-});
-
-Route::get('/migrar-perfil-socios-8f4c2a91', function () {
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return '<pre>' . Artisan::output() . '</pre>';
 });
 
 require __DIR__ . '/settings.php';
