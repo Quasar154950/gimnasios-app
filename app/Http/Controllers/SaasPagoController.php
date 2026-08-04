@@ -87,7 +87,7 @@ class SaasPagoController extends Controller
                 'checkout_url' => $checkoutUrl,
             ]);
 
-            return redirect('/soporte?success=Link de pago SaaS generado correctamente');
+            return redirect()->away($checkoutUrl);
 
         } catch (MPApiException $e) {
 
