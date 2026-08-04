@@ -49,6 +49,8 @@ return [
              * first time you try to access a component of the Firebase Admin SDK.
              *
              */
+            
+            'project_id' => env('FIREBASE_PROJECT_ID'),
 
             'credentials' => filled(env('FIREBASE_CREDENTIALS_JSON'))
     ? json_decode(
