@@ -45,6 +45,8 @@ class SaasPagoController extends Controller
 
         $client = new PreferenceClient();
 
+        $baseUrl = rtrim(config('app.url'), '/');
+
         $payload = [
             'items' => [
                 [
@@ -58,14 +60,14 @@ class SaasPagoController extends Controller
             'external_reference' => $pago->external_reference,
 
             'back_urls' => [
-                'success' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/exito',
-                'failure' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/error',
-                'pending' => 'https://app-abogados-production.up.railway.app/soporte/saas-pagos/pendiente',
+                'success' => $baseUrl . '/soporte/saas-pagos/exito',
+                'failure' => $baseUrl . '/soporte/saas-pagos/error',
+                'pending' => $baseUrl . '/soporte/saas-pagos/pendiente',
             ],
 
             'auto_return' => 'approved',
             
-            'notification_url' => 'https://app-abogados-production.up.railway.app/webhooks/mercadopago/saas',
+            'notification_url' => $baseUrl . '/webhooks/mercadopago/saas',
         ];
 
         Log::info('MP SaaS payload', $payload);
@@ -144,6 +146,8 @@ class SaasPagoController extends Controller
 
     $client = new PreferenceClient();
 
+    $baseUrl = rtrim(config('app.url'), '/');
+
     $payload = [
         'items' => [
             [
@@ -157,14 +161,14 @@ class SaasPagoController extends Controller
         'external_reference' => $pago->external_reference,
 
         'back_urls' => [
-            'success' => 'https://app-abogados-production.up.railway.app/suscripcion',
-            'failure' => 'https://app-abogados-production.up.railway.app/suscripcion',
-            'pending' => 'https://app-abogados-production.up.railway.app/suscripcion',
+            'success' => $baseUrl . '/suscripcion',
+            'failure' => $baseUrl . '/suscripcion',
+            'pending' => $baseUrl . '/suscripcion',
         ],
 
         'auto_return' => 'approved',
 
-        'notification_url' => 'https://app-abogados-production.up.railway.app/webhooks/mercadopago/saas',
+        'notification_url' => $baseUrl . '/webhooks/mercadopago/saas',
     ];
 
     try {
