@@ -628,6 +628,7 @@ Route::get('/probar-push/{clave}', function (string $clave) {
         ], 404);
     }
 
+    try {
     $resultado = app(
         \App\Services\FirebasePushService::class
     )->enviar(
@@ -639,6 +640,14 @@ Route::get('/probar-push/{clave}', function (string $clave) {
             'pantalla' => 'inicio',
         ],
     );
+} catch (\Throwable $e) {
+    return response()->json([
+        'ok' => false,
+        'error' => $e->getMessage(),
+        'archivo' => $e->getFile(),
+        'linea' => $e->getLine(),
+    ], 500);
+}
 
     return response()->json([
         'dispositivo_id' => $dispositivo->id,
