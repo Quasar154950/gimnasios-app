@@ -607,4 +607,44 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
+Route::get('/probar-push/{clave}', function (string $clave) {
+    $claveCorrecta = env('MIGRATION_KEY');
+
+    if (
+        ! $claveCorrecta ||
+        ! hash_equals($claveCorrecta, $clave)
+    ) {
+        abort(403);
+    }
+
+    $dispositivo = \App\Models\DispositivoPush::query()
+        ->latest('ultimo_uso_at')
+        ->first();
+
+    if (! $dispositivo) {
+        return response()->json([
+            'ok' => false,
+            'message' => 'No hay dispositivos push registrados.',
+        ], 404);
+    }
+
+    $resultado = app(
+        \App\Services\FirebasePushService::class
+    )->enviar(
+        token: $dispositivo->token,
+        titulo: '🎉 ¡Hola desde SportGym!',
+        mensaje: 'Si estás viendo esto, las notificaciones Push funcionan correctamente.',
+        data: [
+            'tipo' => 'prueba',
+            'pantalla' => 'inicio',
+        ],
+    );
+
+    return response()->json([
+        'dispositivo_id' => $dispositivo->id,
+        'user_id' => $dispositivo->user_id,
+        'resultado' => $resultado,
+    ]);
+});
+
 require __DIR__ . '/settings.php';
