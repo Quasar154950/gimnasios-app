@@ -607,26 +607,4 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
-Route::get('/migrar-push/{clave}', function (string $clave) {
-    $claveCorrecta = env('MIGRATION_KEY');
-
-    if (
-        ! $claveCorrecta ||
-        ! hash_equals($claveCorrecta, $clave)
-    ) {
-        abort(403);
-    }
-
-    \Illuminate\Support\Facades\Artisan::call(
-        'migrate',
-        ['--force' => true]
-    );
-
-    return response()->json([
-        'ok' => true,
-        'message' => 'Migraciones ejecutadas correctamente.',
-        'output' => \Illuminate\Support\Facades\Artisan::output(),
-    ]);
-});
-
 require __DIR__ . '/settings.php';
