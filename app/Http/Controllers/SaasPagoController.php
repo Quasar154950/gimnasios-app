@@ -181,12 +181,19 @@ class SaasPagoController extends Controller
         return redirect($preference->init_point);
 
     } catch (\Throwable $e) {
-        $pago->update([
-            'estado' => 'error',
-        ]);
+    Log::error('MP SaaS pagarMiSuscripcion error', [
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'base_url' => $baseUrl,
+    ]);
 
-        return redirect('/suscripcion?error=No se pudo generar el pago');
-    }
+    $pago->update([
+        'estado' => 'error',
+    ]);
+
+    return redirect('/suscripcion?error=No se pudo generar el pago');
+}
     }
 
     public function exito()
