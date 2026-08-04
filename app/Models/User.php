@@ -96,6 +96,11 @@ class User extends Authenticatable
     return $this->hasMany(DispositivoPush::class);
     }
 
+    public function notificacionesPush(): HasMany
+    {
+    return $this->hasMany(NotificacionPush::class);
+    }
+
     public function renovarSuscripcion(int $dias = 30): void
     {
         $fechaBase = $this->fecha_vencimiento && $this->fecha_vencimiento->isFuture()

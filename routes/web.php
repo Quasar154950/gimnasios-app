@@ -607,4 +607,18 @@ Route::get('/ver-error-railway/{clave}', function (string $clave) {
     );
 });
 
+Route::get('/migrar/{clave}', function ($clave) {
+
+    if ($clave !== env('MIGRATION_KEY')) {
+        abort(403);
+    }
+
+    \Artisan::call('migrate', [
+        '--force' => true,
+    ]);
+
+    return nl2br(\Artisan::output());
+
+});
+
 require __DIR__ . '/settings.php';
