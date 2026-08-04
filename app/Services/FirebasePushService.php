@@ -27,8 +27,10 @@ class FirebasePushService
             $mensaje
         );
 
-        $mensajeFirebase = CloudMessage::new()
-            ->withToken($token)
+        $mensajeFirebase = CloudMessage::withTarget(
+            'token',
+            $token
+        )
             ->withNotification($notificacion)
             ->withData($dataComoTexto)
             ->withDefaultSounds()
