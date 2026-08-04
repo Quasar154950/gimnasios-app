@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\MobileProgresoController;
 use App\Http\Controllers\Api\MobileReservaController;
 use App\Http\Controllers\Api\MobileRutinaController;
 use App\Http\Controllers\Api\MobilePagoController;
+use App\Http\Controllers\Api\MobilePushTokenController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
@@ -148,6 +149,17 @@ Route::prefix('mobile')->group(function () {
         Route::post(
             '/cuota/pagar',
             [MobilePagoController::class, 'crearPago']
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | PUSH NOTIFICATIONS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/push-token',
+            [MobilePushTokenController::class, 'store']
         );
 
         /*

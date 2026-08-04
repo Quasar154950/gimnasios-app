@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\Cliente;
@@ -88,6 +89,11 @@ class User extends Authenticatable
     public function saasPagos()
     {
         return $this->hasMany(SaasPago::class);
+    }
+
+    public function dispositivosPush(): HasMany
+    {
+    return $this->hasMany(DispositivoPush::class);
     }
 
     public function renovarSuscripcion(int $dias = 30): void
