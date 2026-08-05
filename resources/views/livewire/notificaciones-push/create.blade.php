@@ -1,5 +1,3 @@
-<x-layouts::app :title="'Nueva notificación Push'">
-
     <div class="mx-auto max-w-4xl p-6">
 
         <div class="mb-8">
@@ -14,7 +12,7 @@
 
         </div>
 
-        <form wire:submit="guardar" class="space-y-6">
+        <form wire:submit.prevent="guardar" class="space-y-6">
 
             <div>
 
@@ -181,4 +179,3 @@
 
     </div>
 
-</x-layouts::app>
