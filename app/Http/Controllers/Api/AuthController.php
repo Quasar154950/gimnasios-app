@@ -192,12 +192,27 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()
-            ->currentAccessToken()
-            ?->delete();
+    $validated = $request->validate([
+        'fcm_token' => [
+            'nullable',
+            'string',
+            'max:500',
+        ],
+    ]);
 
-        return response()->json([
-            'message' => 'Sesión cerrada correctamente.',
-        ]);
+    if (! empty($validated['fcm_token'])) {
+        $request->user()
+            ->dispositivosPush()
+            ->where('token', $validated['fcm_token'])
+            ->delete();
     }
+
+    $request->user()
+        ->currentAccessToken()
+        ?->delete();
+
+    return response()->json([
+        'message' => 'Sesión cerrada correctamente.',
+    ]);
+ }
 }
