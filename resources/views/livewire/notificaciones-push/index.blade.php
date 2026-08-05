@@ -21,14 +21,15 @@
 
             </div>
 
-            <button
-                type="button"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 py-3 font-semibold text-zinc-950 shadow-lg shadow-orange-950/40 transition hover:bg-orange-400 active:scale-95"
+            <a
+                 href="{{ route('notificaciones-push.create') }}"
+                 wire:navigate
+                 class="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 py-3 font-semibold text-zinc-950 shadow-lg shadow-orange-950/40 transition hover:bg-orange-400 active:scale-95"
             >
                 ➕ Nueva notificación
-            </button>
+            </a>
 
-        </div>
+            </div>
 
         @if (session()->has('success'))
 
