@@ -45,6 +45,7 @@ class Index extends Component
     {
         $notificaciones = NotificacionPush::query()
             ->where('user_id', auth()->id())
+            ->with('cliente')
             ->when(
                 $this->buscar !== '',
                 function (Builder $query): void {
