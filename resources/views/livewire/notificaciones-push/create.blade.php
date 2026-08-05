@@ -58,7 +58,7 @@
 
                 <select
                     wire:model.live="destinatario"
-                    class="w-full rounded-xl border p-3"
+                    class="w-full cursor-pointer rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
                 >
                     <option value="todos">
                         Todos los socios
@@ -86,7 +86,7 @@
 
                     <select
                         wire:model="clienteId"
-                        class="w-full rounded-xl border p-3"
+                        class="w-full cursor-pointer rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20"
                     >
 
                         <option value="">
