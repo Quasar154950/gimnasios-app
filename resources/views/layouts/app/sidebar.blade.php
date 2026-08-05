@@ -215,6 +215,15 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
+                            icon="bell-alert"
+                            :href="route('notificaciones-push.index')"
+                            :current="request()->routeIs('notificaciones-push.*')"
+                            wire:navigate
+                        >
+                            Notificaciones Push
+                        </flux:sidebar.item>
+
+                        <flux:sidebar.item
                             icon="credit-card"
                             :href="route('suscripcion.index')"
                             :current="request()->routeIs('suscripcion.*')"

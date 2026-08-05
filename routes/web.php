@@ -25,6 +25,7 @@ use App\Livewire\Rutinas\Edit as RutinasEdit;
 use App\Livewire\Rutinas\Show as RutinasShow;
 use App\Livewire\Rutinas\Dia;
 use App\Livewire\Rutinas\Asignar;
+use App\Livewire\NotificacionesPush\Index as NotificacionesPushIndex;
 use App\Models\User;
 
 Route::redirect('/', '/estudio/sportgym')->name('home');
@@ -104,6 +105,10 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         Route::get('/rutinas/{rutina}', RutinasShow::class)
             ->name('rutinas.show');
+
+        // 📲 NOTIFICACIONES PUSH
+        Route::get('/notificaciones-push', NotificacionesPushIndex::class)
+            ->name('notificaciones-push.index');
                   
         // 🔥 SUSCRIPCIÓN
         Route::get('/suscripcion', function () {
