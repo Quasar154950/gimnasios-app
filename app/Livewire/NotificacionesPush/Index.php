@@ -107,7 +107,7 @@ class Index extends Component
                     mensaje: $notificacion->mensaje,
                     data: [
                         'tipo' => $notificacion->tipo,
-                        'pantalla' => 'inicio',
+                        'pantalla' => $notificacion->pantalla ?? 'inicio',
                         'notificacion_id' => (string) $notificacion->id,
                     ],
                 );
