@@ -289,13 +289,21 @@
                         <div class="mt-auto grid grid-cols-2 gap-3 p-5">
 
                             <button
-                                type="button"
-                                disabled
-                                class="inline-flex cursor-not-allowed items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-semibold text-zinc-500 opacity-70"
-                                title="Lo activaremos en el próximo paso"
-                            >
-                                🔁 Reenviar
-                            </button>
+    type="button"
+    wire:click="reenviar({{ $notificacion->id }})"
+    wire:confirm="¿Querés volver a enviar esta notificación?"
+    wire:loading.attr="disabled"
+    wire:target="reenviar({{ $notificacion->id }})"
+    class="inline-flex items-center justify-center rounded-xl border border-orange-800 bg-orange-950/80 px-4 py-2.5 text-sm font-semibold text-orange-300 transition hover:bg-orange-900 active:scale-95 disabled:cursor-wait disabled:opacity-60"
+>
+    <span wire:loading.remove wire:target="reenviar({{ $notificacion->id }})">
+        🔁 Reenviar
+    </span>
+
+    <span wire:loading wire:target="reenviar({{ $notificacion->id }})">
+        Enviando...
+    </span>
+</button>
 
                             <button
                                 type="button"
