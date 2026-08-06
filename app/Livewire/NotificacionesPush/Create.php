@@ -3,12 +3,9 @@
 namespace App\Livewire\NotificacionesPush;
 
 use App\Models\Cliente;
-use App\Models\DispositivoPush;
 use App\Models\NotificacionPush;
-use App\Services\FirebasePushService;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\NotificacionPushService;
 use Livewire\Component;
-use Throwable;
 
 class Create extends Component
 {
@@ -107,7 +104,7 @@ class Create extends Component
     }
 
     public function guardar(
-        FirebasePushService $firebasePushService
+        NotificacionPushService $notificacionPushService
     ): void {
         $this->validate();
 
@@ -180,129 +177,30 @@ class Create extends Component
 
         /*
         |--------------------------------------------------------------------------
-        | OBTENER DISPOSITIVOS DESTINATARIOS
+        | ENVIAR AHORA
         |--------------------------------------------------------------------------
         */
 
-        $dispositivos = DispositivoPush::query()
-            ->whereHas(
-                'user.cliente',
-                function (Builder $query): void {
-                    $query->where(
-                        'abogado_id',
-                        auth()->id()
-                    );
+        $resultado = $notificacionPushService->enviar(
+            $notificacion
+        );
 
-                    if ($this->destinatario === 'cliente') {
-                        $query->where(
-                            'id',
-                            $this->clienteId
-                        );
-                    }
-
-                    if ($this->destinatario === 'cuota_vencida') {
-                        $query
-                            ->whereNotNull(
-                                'fecha_vencimiento_cuota'
-                            )
-                            ->whereDate(
-                                'fecha_vencimiento_cuota',
-                                '<',
-                                now()->toDateString()
-                            );
-                    }
-                }
-            )
-            ->get();
-
-        if ($dispositivos->isEmpty()) {
-            $notificacion->update([
-                'estado' => 'error',
-                'error' => 'No se encontraron dispositivos registrados para los destinatarios seleccionados.',
-            ]);
-
-            session()->flash(
-                'error',
-                'La notificación fue guardada, pero no hay celulares registrados para esos destinatarios.'
+        if ($resultado['ok'] ?? false) {
+            $cantidad = (int) (
+                $resultado['cantidad_enviada'] ?? 0
             );
-
-            $this->redirectRoute(
-                'notificaciones-push.index',
-                navigate: true
-            );
-
-            return;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ENVIAR PUSH
-        |--------------------------------------------------------------------------
-        */
-
-        $cantidadEnviada = 0;
-        $errores = [];
-
-        foreach ($dispositivos as $dispositivo) {
-            try {
-                $resultado = $firebasePushService->enviar(
-                    token: $dispositivo->token,
-                    titulo: trim($this->titulo),
-                    mensaje: trim($this->mensaje),
-                    data: [
-                        'tipo' => 'manual',
-                        'pantalla' => $this->pantalla,
-                        'notificacion_id' => (string) $notificacion->id,
-                    ],
-                );
-
-                if ($resultado['ok'] ?? false) {
-                    $cantidadEnviada++;
-
-                    continue;
-                }
-
-                $errores[] = $resultado['error']
-                    ?? 'Firebase devolvió un error desconocido.';
-            } catch (Throwable $e) {
-                $errores[] = $e->getMessage();
-            }
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ACTUALIZAR HISTORIAL
-        |--------------------------------------------------------------------------
-        */
-
-        if ($cantidadEnviada > 0) {
-            $notificacion->update([
-                'estado' => 'enviada',
-                'enviada_at' => now(),
-                'cantidad_enviada' => $cantidadEnviada,
-                'error' => $errores !== []
-                    ? implode(' | ', array_unique($errores))
-                    : null,
-            ]);
 
             session()->flash(
                 'success',
-                $cantidadEnviada === 1
+                $cantidad === 1
                     ? 'La notificación fue enviada correctamente a 1 dispositivo.'
-                    : "La notificación fue enviada correctamente a {$cantidadEnviada} dispositivos."
+                    : "La notificación fue enviada correctamente a {$cantidad} dispositivos."
             );
         } else {
-            $notificacion->update([
-                'estado' => 'error',
-                'cantidad_enviada' => 0,
-                'error' => $errores !== []
-                    ? implode(' | ', array_unique($errores))
-                    : 'No se pudo enviar la notificación.',
-            ]);
-
             session()->flash(
                 'error',
-                'La notificación fue guardada, pero no pudo enviarse.'
+                $resultado['error']
+                    ?? 'La notificación fue guardada, pero no pudo enviarse.'
             );
         }
 
