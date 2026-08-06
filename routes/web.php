@@ -588,16 +588,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/migrar/{clave}', function (string $clave) {
-    if ($clave !== env('MIGRATION_KEY')) {
-        abort(403);
-    }
-
-    \Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return nl2br(e(\Artisan::output()));
-});
-
 require __DIR__ . '/settings.php';
