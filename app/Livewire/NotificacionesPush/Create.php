@@ -20,6 +20,8 @@ class Create extends Component
 
     public ?int $clienteId = null;
 
+    public string $pantalla = 'inicio';
+
     public string $modoEnvio = 'ahora';
 
     public ?string $programadaPara = null;
@@ -49,6 +51,11 @@ class Create extends Component
                 'integer',
             ],
 
+            'pantalla' => [
+                'required',
+                'in:inicio,reservas,cuota,mensajes,rutinas,novedades,perfil,qr,musculacion',
+            ],
+
             'modoEnvio' => [
                 'required',
                 'in:ahora,programar',
@@ -74,6 +81,9 @@ class Create extends Component
             'destinatario.in' => 'Seleccioná un destinatario válido.',
 
             'clienteId.integer' => 'El socio seleccionado no es válido.',
+
+            'pantalla.required' => 'Seleccioná la pantalla que se abrirá.',
+            'pantalla.in' => 'La pantalla seleccionada no es válida.',
 
             'modoEnvio.in' => 'Seleccioná una forma de envío válida.',
 
@@ -140,6 +150,7 @@ class Create extends Component
             'mensaje' => trim($this->mensaje),
             'tipo' => 'manual',
             'destinatario' => $this->destinatario,
+            'pantalla' => $this->pantalla,
             'estado' => 'pendiente',
             'programada_para' => $this->modoEnvio === 'programar'
                 ? $this->programadaPara
@@ -240,7 +251,7 @@ class Create extends Component
                     mensaje: trim($this->mensaje),
                     data: [
                         'tipo' => 'manual',
-                        'pantalla' => 'inicio',
+                        'pantalla' => $this->pantalla,
                         'notificacion_id' => (string) $notificacion->id,
                     ],
                 );

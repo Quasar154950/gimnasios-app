@@ -588,33 +588,16 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/ver-error-railway/{clave}', function (string $clave) {
-
-    $claveCorrecta = env('MIGRATION_KEY');
-
-    if (
-        ! $claveCorrecta ||
-        ! hash_equals($claveCorrecta, $clave)
-    ) {
+Route::get('/migrar/{clave}', function (string $clave) {
+    if ($clave !== env('MIGRATION_KEY')) {
         abort(403);
     }
 
-    $archivo = storage_path('logs/laravel.log');
+    \Artisan::call('migrate', [
+        '--force' => true,
+    ]);
 
-    if (! file_exists($archivo)) {
-        return response()->json([
-            'ok' => false,
-            'mensaje' => 'No existe storage/logs/laravel.log',
-        ]);
-    }
-
-    $lineas = file($archivo);
-
-    return response(
-        implode('', array_slice($lineas, -150)),
-        200,
-        ['Content-Type' => 'text/plain; charset=UTF-8']
-    );
+    return nl2br(e(\Artisan::output()));
 });
 
 require __DIR__ . '/settings.php';

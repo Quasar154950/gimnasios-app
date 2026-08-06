@@ -16,6 +16,7 @@ class NotificacionPush extends Model
         'mensaje',
         'tipo',
         'destinatario',
+        'pantalla',
         'estado',
         'programada_para',
         'enviada_at',
