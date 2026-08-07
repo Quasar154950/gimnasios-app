@@ -26,6 +26,10 @@ class GenerarNotificacionesAutomaticas extends Command
             $notificacionPushService
         );
 
+        $this->generarCuotasVencidas(
+            $notificacionPushService
+        );
+
         $this->info(
             'Proceso de notificaciones automáticas finalizado.'
         );
@@ -209,4 +213,90 @@ class GenerarNotificacionesAutomaticas extends Command
             );
         }
     }
+
+private function generarCuotasVencidas(
+    NotificacionPushService $notificacionPushService
+): void {
+    $fechaObjetivo = now()
+        ->subDay()
+        ->toDateString();
+
+    $clientes = Cliente::query()
+        ->where('archivado', false)
+        ->whereNotNull('fecha_vencimiento_cuota')
+        ->whereDate(
+            'fecha_vencimiento_cuota',
+            $fechaObjetivo
+        )
+        ->get();
+
+    if ($clientes->isEmpty()) {
+        $this->line(
+            '🚨 No hay cuotas vencidas desde ayer.'
+        );
+
+        return;
+    }
+
+    foreach ($clientes as $cliente) {
+        $claveAutomatica = sprintf(
+            'cuota_vencida:%d:%s',
+            $cliente->id,
+            $cliente->fecha_vencimiento_cuota
+                ->format('Y-m-d')
+        );
+
+        $yaExiste = NotificacionPush::query()
+            ->where(
+                'clave_automatica',
+                $claveAutomatica
+            )
+            ->exists();
+
+        if ($yaExiste) {
+            $this->line(
+                "🚨 Aviso de cuota vencida de {$cliente->nombre} ya procesado."
+            );
+
+            continue;
+        }
+
+        $fechaVencimiento = $cliente
+            ->fecha_vencimiento_cuota
+            ->format('d/m/Y');
+
+        $notificacion = NotificacionPush::create([
+            'user_id' => $cliente->abogado_id,
+            'cliente_id' => $cliente->id,
+            'titulo' => '🚨 Tu cuota está vencida',
+            'mensaje' => "Hola {$cliente->nombre}, tu cuota venció el {$fechaVencimiento}. Podés regularizarla desde Mi cuota.",
+            'tipo' => 'automatica',
+            'clave_automatica' => $claveAutomatica,
+            'destinatario' => 'cliente',
+            'pantalla' => 'cuota',
+            'estado' => 'pendiente',
+            'programada_para' => null,
+            'cantidad_enviada' => 0,
+        ]);
+
+        $resultado = $notificacionPushService->enviar(
+            $notificacion
+        );
+
+        if ($resultado['ok'] ?? false) {
+            $this->info(
+                "🚨 Aviso de cuota vencida enviado a {$cliente->nombre}."
+            );
+
+            continue;
+        }
+
+        $this->error(
+            "🚨 No se pudo enviar el aviso de cuota vencida a {$cliente->nombre}: "
+            . ($resultado['error'] ?? 'Error desconocido.')
+        );
+    }
 }
+
+}
+
