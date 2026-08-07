@@ -9,19 +9,10 @@ use Illuminate\Console\Command;
 
 class GenerarNotificacionesAutomaticas extends Command
 {
-    /**
-     * The name and signature of the console command.
-     */
     protected $signature = 'push:generar-automaticas';
 
-    /**
-     * The console command description.
-     */
     protected $description = 'Genera y envía las notificaciones push automáticas.';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(
         NotificacionPushService $notificacionPushService
     ): int {
@@ -35,14 +26,19 @@ class GenerarNotificacionesAutomaticas extends Command
             $notificacionPushService
         );
 
-        $this->info('Proceso de notificaciones automáticas finalizado.');
+        $this->info(
+            'Proceso de notificaciones automáticas finalizado.'
+        );
 
         return self::SUCCESS;
     }
 
-    /**
-     * Generar notificaciones automáticas de cumpleaños.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | CUMPLEAÑOS
+    |--------------------------------------------------------------------------
+    */
+
     private function generarCumpleanos(
         NotificacionPushService $notificacionPushService
     ): void {
@@ -119,6 +115,96 @@ class GenerarNotificacionesAutomaticas extends Command
 
             $this->error(
                 "🎂 No se pudo enviar el cumpleaños a {$cliente->nombre}: "
+                . ($resultado['error'] ?? 'Error desconocido.')
+            );
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUOTA POR VENCER
+    |--------------------------------------------------------------------------
+    */
+
+    private function generarCuotasPorVencer(
+        NotificacionPushService $notificacionPushService
+    ): void {
+        $fechaObjetivo = now()
+            ->addDays(3)
+            ->toDateString();
+
+        $clientes = Cliente::query()
+            ->where('archivado', false)
+            ->whereNotNull('fecha_vencimiento_cuota')
+            ->whereDate(
+                'fecha_vencimiento_cuota',
+                $fechaObjetivo
+            )
+            ->get();
+
+        if ($clientes->isEmpty()) {
+            $this->line(
+                '💳 No hay cuotas que venzan dentro de 3 días.'
+            );
+
+            return;
+        }
+
+        foreach ($clientes as $cliente) {
+            $claveAutomatica = sprintf(
+                'cuota_por_vencer:%d:%s',
+                $cliente->id,
+                $cliente->fecha_vencimiento_cuota
+                    ->format('Y-m-d')
+            );
+
+            $yaExiste = NotificacionPush::query()
+                ->where(
+                    'clave_automatica',
+                    $claveAutomatica
+                )
+                ->exists();
+
+            if ($yaExiste) {
+                $this->line(
+                    "💳 Aviso de cuota de {$cliente->nombre} ya procesado."
+                );
+
+                continue;
+            }
+
+            $fechaVencimiento = $cliente
+                ->fecha_vencimiento_cuota
+                ->format('d/m/Y');
+
+            $notificacion = NotificacionPush::create([
+                'user_id' => $cliente->abogado_id,
+                'cliente_id' => $cliente->id,
+                'titulo' => '💳 Tu cuota vence pronto',
+                'mensaje' => "Hola {$cliente->nombre}, tu cuota vence el {$fechaVencimiento}. Podés abonarla desde Mi cuota.",
+                'tipo' => 'automatica',
+                'clave_automatica' => $claveAutomatica,
+                'destinatario' => 'cliente',
+                'pantalla' => 'cuota',
+                'estado' => 'pendiente',
+                'programada_para' => null,
+                'cantidad_enviada' => 0,
+            ]);
+
+            $resultado = $notificacionPushService->enviar(
+                $notificacion
+            );
+
+            if ($resultado['ok'] ?? false) {
+                $this->info(
+                    "💳 Aviso de cuota enviado a {$cliente->nombre}."
+                );
+
+                continue;
+            }
+
+            $this->error(
+                "💳 No se pudo enviar el aviso de cuota a {$cliente->nombre}: "
                 . ($resultado['error'] ?? 'Error desconocido.')
             );
         }
