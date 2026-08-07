@@ -599,14 +599,21 @@ Route::get('/soporte/login', function () {
 })->name('login.soporte');
 
 Route::get('/temporal/probar-automaticas/X7k92-Abc20091-2026', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call(
+            'push:generar-automaticas'
+        );
 
-    \Illuminate\Support\Facades\Artisan::call(
-        'push:generar-automaticas'
-    );
-
-    return nl2br(
-        \Illuminate\Support\Facades\Artisan::output()
-    );
+        return nl2br(
+            \Illuminate\Support\Facades\Artisan::output()
+        );
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'archivo' => $e->getFile(),
+            'linea' => $e->getLine(),
+        ], 500);
+    }
 });
 
 require __DIR__ . '/settings.php';
