@@ -285,38 +285,74 @@
 
                         @endif
 
-                        {{-- ACCIONES --}}
-                        <div class="mt-auto grid grid-cols-2 gap-3 p-5">
+                       {{-- ACCIONES --}}
+<div class="mt-auto grid grid-cols-2 gap-3 p-5">
 
-                            <button
-    type="button"
-    wire:click="reenviar({{ $notificacion->id }})"
-    wire:confirm="¿Querés volver a enviar esta notificación?"
-    wire:loading.attr="disabled"
-    wire:target="reenviar({{ $notificacion->id }})"
-    class="inline-flex items-center justify-center rounded-xl border border-orange-800 bg-orange-950/80 px-4 py-2.5 text-sm font-semibold text-orange-300 transition hover:bg-orange-900 active:scale-95 disabled:cursor-wait disabled:opacity-60"
->
-    <span wire:loading.remove wire:target="reenviar({{ $notificacion->id }})">
-        🔁 Reenviar
-    </span>
+    {{-- VER --}}
+    <a
+        href="{{ route('notificaciones-push.show', $notificacion) }}"
+        wire:navigate
+        class="inline-flex items-center justify-center rounded-xl border border-sky-800 bg-sky-950/80 px-4 py-2.5 text-sm font-semibold text-sky-300 transition hover:bg-sky-900"
+    >
+        👁 Ver
+    </a>
 
-    <span wire:loading wire:target="reenviar({{ $notificacion->id }})">
-        Enviando...
-    </span>
-</button>
+    {{-- EDITAR --}}
+    @if($notificacion->estado === 'pendiente')
 
-                            <button
-                                type="button"
-                                wire:click="eliminar({{ $notificacion->id }})"
-                                wire:confirm="¿Seguro que querés eliminar esta notificación del historial?"
-                                wire:loading.attr="disabled"
-                                wire:target="eliminar({{ $notificacion->id }})"
-                                class="inline-flex items-center justify-center rounded-xl border border-red-900 bg-red-950/80 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-900 active:scale-95 disabled:cursor-wait disabled:opacity-60"
-                            >
-                                🗑 Eliminar
-                            </button>
+        <a
+            href="{{ route('notificaciones-push.edit', $notificacion) }}"
+            wire:navigate
+            class="inline-flex items-center justify-center rounded-xl border border-indigo-800 bg-indigo-950/80 px-4 py-2.5 text-sm font-semibold text-indigo-300 transition hover:bg-indigo-900"
+        >
+            ✏ Editar
+        </a>
 
-                        </div>
+    @else
+
+        <div></div>
+
+    @endif
+
+    {{-- ENVIAR AHORA --}}
+    @if($notificacion->estado === 'pendiente')
+
+        <button
+            type="button"
+            wire:click="enviarAhora({{ $notificacion->id }})"
+            wire:confirm="¿Enviar esta notificación ahora?"
+            class="inline-flex items-center justify-center rounded-xl border border-emerald-800 bg-emerald-950/80 px-4 py-2.5 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-900"
+        >
+            ▶ Enviar ahora
+        </button>
+
+    @endif
+
+    {{-- REENVIAR --}}
+    @if(in_array($notificacion->estado, ['enviada','error']))
+
+        <button
+            type="button"
+            wire:click="reenviar({{ $notificacion->id }})"
+            wire:confirm="¿Querés volver a enviar esta notificación?"
+            class="inline-flex items-center justify-center rounded-xl border border-orange-800 bg-orange-950/80 px-4 py-2.5 text-sm font-semibold text-orange-300 transition hover:bg-orange-900"
+        >
+            🔁 Reenviar
+        </button>
+
+    @endif
+
+    {{-- ELIMINAR --}}
+    <button
+        type="button"
+        wire:click="eliminar({{ $notificacion->id }})"
+        wire:confirm="¿Seguro que querés eliminar esta notificación?"
+        class="inline-flex items-center justify-center rounded-xl border border-red-900 bg-red-950/80 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-900"
+    >
+        🗑 Eliminar
+    </button>
+
+</div>
 
                     </article>
 

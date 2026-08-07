@@ -114,6 +114,16 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
             '/notificaciones-push/nueva',
             \App\Livewire\NotificacionesPush\Create::class
         )->name('notificaciones-push.create');
+
+        Route::get(
+            '/notificaciones-push/{notificacion}',
+            \App\Livewire\NotificacionesPush\Show::class
+        )->name('notificaciones-push.show');
+
+        Route::get(
+            '/notificaciones-push/{notificacion}/editar',
+            \App\Livewire\NotificacionesPush\Edit::class
+        )->name('notificaciones-push.edit');
                   
         // 🔥 SUSCRIPCIÓN
         Route::get('/suscripcion', function () {
