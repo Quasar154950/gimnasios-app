@@ -589,23 +589,11 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/cron/push/{token}', function (string $token) {
+Route::get('/cron/push/mi-token-super-secreto', function () {
 
-    abort_unless(
-        hash_equals(
-            config('app.key'),
-            $token
-        ),
-        403
-    );
+    Artisan::call('push:enviar-programadas');
 
-    Artisan::call(
-        'push:enviar-programadas'
-    );
-
-    return nl2br(
-        Artisan::output()
-    );
+    return nl2br(Artisan::output());
 
 });
 
