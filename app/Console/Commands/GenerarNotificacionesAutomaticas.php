@@ -31,6 +31,10 @@ class GenerarNotificacionesAutomaticas extends Command
             $notificacionPushService
         );
 
+        $this->generarCuotasPorVencer(
+            $notificacionPushService
+        );
+
         $this->info('Proceso de notificaciones automáticas finalizado.');
 
         return self::SUCCESS;
