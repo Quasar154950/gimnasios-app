@@ -616,4 +616,41 @@ Route::get('/temporal/probar-automaticas/X7k92-Abc20091-2026', function () {
     }
 });
 
+Route::get('/temporal/crear-turno-prueba/X7k92-Abc20091-2026', function () {
+
+    $cliente = \App\Models\Cliente::query()
+        ->where('nombre', 'Ramón García')
+        ->firstOrFail();
+
+    $inicio = now()->addMinutes(55);
+    $fin = $inicio->copy()->addHour();
+
+    $turno = \App\Models\Turno::create([
+        'actividad' => 'Spinning',
+        'profesor' => 'Prueba automática',
+        'fecha' => $inicio->toDateString(),
+        'hora_inicio' => $inicio->format('H:i:s'),
+        'hora_fin' => $fin->format('H:i:s'),
+        'cupo_maximo' => 10,
+        'activo' => true,
+        'abogado_id' => $cliente->abogado_id,
+    ]);
+
+    $reserva = \App\Models\ReservaTurno::create([
+        'cliente_id' => $cliente->id,
+        'turno_id' => $turno->id,
+        'estado' => 'reservado',
+    ]);
+
+    return response()->json([
+        'ok' => true,
+        'turno_id' => $turno->id,
+        'reserva_id' => $reserva->id,
+        'actividad' => $turno->actividad,
+        'fecha' => $turno->fecha,
+        'hora_inicio' => $turno->hora_inicio,
+        'cliente' => $cliente->nombre,
+    ]);
+});
+
 require __DIR__ . '/settings.php';
