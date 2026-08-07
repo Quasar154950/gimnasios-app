@@ -15,6 +15,7 @@ class NotificacionPush extends Model
         'titulo',
         'mensaje',
         'tipo',
+        'clave_automatica',
         'destinatario',
         'pantalla',
         'estado',

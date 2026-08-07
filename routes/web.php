@@ -598,4 +598,20 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
+/*
+|--------------------------------------------------------------------------
+| RUTA TEMPORAL - MIGRACIONES PRODUCCIÓN
+|--------------------------------------------------------------------------
+| BORRAR DESPUÉS DE USAR.
+*/
+
+Route::get('/temporal/migrar-notificaciones/migrar-X7k92-Abc95-2026', function () {
+
+    \Illuminate\Support\Facades\Artisan::call('migrate', [
+        '--force' => true,
+    ]);
+
+    return nl2br(\Illuminate\Support\Facades\Artisan::output());
+});
+
 require __DIR__ . '/settings.php';

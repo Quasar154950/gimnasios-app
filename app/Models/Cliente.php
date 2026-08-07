@@ -44,6 +44,14 @@ class Cliente extends Model implements HasMedia
 
     ];
 
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+        'fecha_vencimiento_cuota' => 'date',
+        'archivado' => 'boolean',
+        'peso' => 'decimal:2',
+        'altura' => 'decimal:2',
+    ];
+
     /**
      * Miniaturas de archivos
      */
