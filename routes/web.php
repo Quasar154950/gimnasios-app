@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ExpedienteController;
 use App\Http\Controllers\DashboardController;
@@ -588,13 +587,5 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
-
-Route::get('/cron/push/mi-token-super-secreto', function () {
-
-    Artisan::call('push:enviar-programadas');
-
-    return nl2br(Artisan::output());
-
-});
 
 require __DIR__ . '/settings.php';
