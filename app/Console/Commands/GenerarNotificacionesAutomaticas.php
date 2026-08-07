@@ -30,6 +30,10 @@ class GenerarNotificacionesAutomaticas extends Command
             $notificacionPushService
         );
 
+        $this->generarRecordatoriosTurnos(
+           $notificacionPushService
+        );
+
         $this->info(
             'Proceso de notificaciones automáticas finalizado.'
         );
@@ -293,6 +297,110 @@ private function generarCuotasVencidas(
 
         $this->error(
             "🚨 No se pudo enviar el aviso de cuota vencida a {$cliente->nombre}: "
+            . ($resultado['error'] ?? 'Error desconocido.')
+        );
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| RECORDATORIO DE TURNO
+|--------------------------------------------------------------------------
+*/
+
+private function generarRecordatoriosTurnos(
+    NotificacionPushService $notificacionPushService
+): void {
+    $ahora = now();
+
+    $desde = $ahora->copy()->addMinutes(50);
+    $hasta = $ahora->copy()->addMinutes(60);
+
+    $reservas = \App\Models\ReservaTurno::query()
+        ->with(['cliente', 'turno'])
+        ->where('estado', 'reservado')
+        ->whereHas('turno', function ($query) use ($desde, $hasta) {
+            $query
+                ->where('activo', true)
+                ->whereDate('fecha', $desde->toDateString())
+                ->whereRaw(
+                    "(fecha + hora_inicio::time) BETWEEN ? AND ?",
+                    [
+                        $desde->format('Y-m-d H:i:s'),
+                        $hasta->format('Y-m-d H:i:s'),
+                    ]
+                );
+        })
+        ->get();
+
+    if ($reservas->isEmpty()) {
+        $this->line(
+            '📅 No hay turnos para recordar en la próxima hora.'
+        );
+
+        return;
+    }
+
+    foreach ($reservas as $reserva) {
+        if (!$reserva->cliente || !$reserva->turno) {
+            continue;
+        }
+
+        $cliente = $reserva->cliente;
+        $turno = $reserva->turno;
+
+        $claveAutomatica = sprintf(
+            'recordatorio_turno:%d',
+            $reserva->id
+        );
+
+        $yaExiste = NotificacionPush::query()
+            ->where(
+                'clave_automatica',
+                $claveAutomatica
+            )
+            ->exists();
+
+        if ($yaExiste) {
+            $this->line(
+                "📅 Recordatorio de turno de {$cliente->nombre} ya procesado."
+            );
+
+            continue;
+        }
+
+        $hora = \Carbon\Carbon::parse(
+            $turno->hora_inicio
+        )->format('H:i');
+
+        $notificacion = NotificacionPush::create([
+            'user_id' => $cliente->abogado_id,
+            'cliente_id' => $cliente->id,
+            'titulo' => '📅 Tu clase empieza pronto',
+            'mensaje' => "Hola {$cliente->nombre}, tenés {$turno->actividad} a las {$hora}. ¡Te esperamos! 💪",
+            'tipo' => 'automatica',
+            'clave_automatica' => $claveAutomatica,
+            'destinatario' => 'cliente',
+            'pantalla' => 'reservas',
+            'estado' => 'pendiente',
+            'programada_para' => null,
+            'cantidad_enviada' => 0,
+        ]);
+
+        $resultado = $notificacionPushService->enviar(
+            $notificacion
+        );
+
+        if ($resultado['ok'] ?? false) {
+            $this->info(
+                "📅 Recordatorio de {$turno->actividad} enviado a {$cliente->nombre}."
+            );
+
+            continue;
+        }
+
+        $this->error(
+            "📅 No se pudo enviar el recordatorio de turno a {$cliente->nombre}: "
             . ($resultado['error'] ?? 'Error desconocido.')
         );
     }
