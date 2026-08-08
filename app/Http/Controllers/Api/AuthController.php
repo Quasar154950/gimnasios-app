@@ -17,6 +17,7 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+            'slug' => ['required', 'string', 'in:sportgym,demo'],
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
@@ -46,6 +47,22 @@ class AuthController extends Controller
                 'message' => 'No existe un socio asociado a esta cuenta.',
             ], 422);
         }
+
+        $gimnasio = $cliente->abogado;
+
+if (! $gimnasio) {
+    return response()->json([
+        'message' => 'No existe un gimnasio asociado a esta cuenta.',
+    ], 422);
+}
+
+$slugGimnasio = $gimnasio->slug_estudio;
+
+if ($slugGimnasio !== $credentials['slug']) {
+    return response()->json([
+        'message' => 'Este usuario no pertenece a este gimnasio.',
+    ], 403);
+}
 
         // Evita acumular tokens del mismo teléfono.
         $user->tokens()
