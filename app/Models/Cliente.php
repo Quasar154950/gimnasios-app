@@ -49,7 +49,7 @@ class Cliente extends Model implements HasMedia
         'fecha_vencimiento_cuota' => 'date',
         'archivado' => 'boolean',
         'peso' => 'decimal:2',
-        'altura' => 'decimal:2',
+        'altura' => 'integer',
     ];
 
     /**

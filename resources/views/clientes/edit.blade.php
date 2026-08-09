@@ -76,7 +76,7 @@
         type="date"
         name="fecha_nacimiento"
         id="fecha_nacimiento"
-        value="{{ old('fecha_nacimiento', $cliente->fecha_nacimiento) }}"
+        value="{{ old('fecha_nacimiento', $cliente->fecha_nacimiento?->format('Y-m-d')) }}"
         class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
     >
 </div>
@@ -202,7 +202,7 @@
                         type="date"
                         name="fecha_vencimiento_cuota"
                         id="fecha_vencimiento_cuota"
-                        value="{{ old('fecha_vencimiento_cuota', $cliente->fecha_vencimiento_cuota) }}"
+                        value="{{ old('fecha_vencimiento_cuota', $cliente->fecha_vencimiento_cuota?->format('Y-m-d')) }}"
                         class="mt-1 w-full rounded-xl border border-stone-300 bg-stone-100 px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-orange-500 transition"
                     >
 
