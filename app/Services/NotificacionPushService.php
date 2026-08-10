@@ -123,8 +123,21 @@ class NotificacionPushService
                     continue;
                 }
 
-                $errores[] = $resultado['error']
+                $errorFirebase = $resultado['error']
                     ?? 'Firebase devolvió un error desconocido.';
+
+                if (str_contains(
+                    strtolower($errorFirebase),
+                    'notregistered'
+                )) {
+                   $dispositivo->delete();
+
+                   continue;
+                }
+
+                $errores[] = $errorFirebase;
+
+                
             } catch (Throwable $e) {
                 $errores[] = $e->getMessage();
             }
