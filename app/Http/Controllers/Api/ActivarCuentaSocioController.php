@@ -68,12 +68,10 @@ class ActivarCuentaSocioController extends Controller
 
         if (! $cliente) {
             return response()->json([
-                'message' => 'No encontramos un socio activo con ese DNI o email en este gimnasio.',
-                'debug' => [
-                    'slug_recibido' => $slug,
-                    'gimnasio_id' => $gimnasio->id,
-                    'identificador_recibido' => $identificador,
-                ],
+                'message' =>
+                    'DEBUG | slug=' . $slug .
+                    ' | gimnasio_id=' . $gimnasio->id .
+                    ' | identificador=' . $identificador,
             ], 404);
         }
 
