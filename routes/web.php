@@ -598,32 +598,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/debug-socio-demo', function () {
-
-    $gimnasio = \App\Models\User::where('slug_estudio', 'demo')
-        ->first([
-            'id',
-            'name',
-            'email',
-            'role',
-            'slug_estudio',
-        ]);
-
-    $cliente = \App\Models\Cliente::where('email', 'mctandil@gmail.com')
-        ->first([
-            'id',
-            'nombre',
-            'email',
-            'dni',
-            'abogado_id',
-            'archivado',
-            'user_id',
-        ]);
-
-    return [
-        'gimnasio_demo' => $gimnasio,
-        'socio' => $cliente,
-    ];
-});
-
 require __DIR__ . '/settings.php';

@@ -68,10 +68,7 @@ class ActivarCuentaSocioController extends Controller
 
         if (! $cliente) {
             return response()->json([
-                'message' =>
-                    'DEBUG | slug=' . $slug .
-                    ' | gimnasio_id=' . $gimnasio->id .
-                    ' | identificador=' . $identificador,
+                'message' => 'No encontramos un socio activo con ese DNI o email en este gimnasio.',
             ], 404);
         }
 
@@ -107,7 +104,9 @@ class ActivarCuentaSocioController extends Controller
                     'user_id' => $user->id,
                 ]);
 
-                $token = $user->createToken('flutter-mobile')->plainTextToken;
+                $token = $user
+                    ->createToken('flutter-mobile')
+                    ->plainTextToken;
 
                 return [
                     'user' => $user,
@@ -123,8 +122,14 @@ class ActivarCuentaSocioController extends Controller
             ], 500);
         }
 
+        $nombreGimnasio = match ($slug) {
+            'demo' => 'DemoGym',
+            'sportgym' => 'SportGym',
+            default => $gimnasio->name ?? 'tu gimnasio',
+        };
+
         return response()->json([
-            'message' => '¡Cuenta activada correctamente! Bienvenido a SportGym Tandil.',
+            'message' => "¡Cuenta activada correctamente! Bienvenido a {$nombreGimnasio}.",
             'token' => $resultado['token'],
             'token_type' => 'Bearer',
             'user' => [
