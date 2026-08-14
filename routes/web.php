@@ -599,7 +599,7 @@ Route::get('/soporte/login', function () {
 })->name('login.soporte');
 
 Route::get('/debug-socio-demo', function () {
-    return \App\Models\Cliente::where('mctandil@gmail.com')
+    return \App\Models\Cliente::where('email', 'mctandil@gmail.com')
         ->first([
             'id',
             'nombre',
