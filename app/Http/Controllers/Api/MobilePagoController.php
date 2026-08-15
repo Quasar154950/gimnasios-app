@@ -36,11 +36,11 @@ class MobilePagoController extends Controller
 
         $montoCuota = (float) $cliente->monto_cuota;
 
-if ($montoCuota <= 0) {
-    return response()->json([
-        'message' => 'El administrador todavía no configuró el importe de tu cuota.',
-    ], 422);
-}
+        if ($montoCuota <= 0) {
+            return response()->json([
+                'message' => 'El administrador todavía no configuró el importe de tu cuota.',
+            ], 422);
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -59,6 +59,20 @@ if ($montoCuota <= 0) {
                 'message' => 'El gimnasio todavía no tiene habilitados los pagos online.',
             ], 422);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DEEP LINK SEGÚN LA MARCA
+        |--------------------------------------------------------------------------
+        |
+        | DemoGym  -> demogym://
+        | SportGym -> sportgym://
+        |
+        */
+
+        $scheme = $gimnasio->slug_estudio === 'demo'
+            ? 'demogym'
+            : 'sportgym';
 
         try {
             MercadoPagoConfig::setAccessToken(
@@ -83,14 +97,16 @@ if ($montoCuota <= 0) {
                 ],
 
                 'external_reference' => (string) $cliente->id,
-                
-                'notification_url' => route('webhooks.mercadopago.gimnasio'),
+
+                'notification_url' => route(
+                    'webhooks.mercadopago.gimnasio'
+                ),
 
                 'back_urls' => [
-                    'success' => 'sportgym://pago/exito',
-                    'failure' => 'sportgym://pago/error',
-                    'pending' => 'sportgym://pago/pendiente',
-            ],
+                    'success' => "{$scheme}://pago/exito",
+                    'failure' => "{$scheme}://pago/error",
+                    'pending' => "{$scheme}://pago/pendiente",
+                ],
 
                 'auto_return' => 'approved',
             ]);
