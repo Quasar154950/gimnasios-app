@@ -6,6 +6,15 @@
 | Las tarjetas con card-app usan su propia animación.
 */
 
+button:not(:disabled),
+a[href] {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
 .native-feel,
 button,
 a {
