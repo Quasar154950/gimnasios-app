@@ -34,12 +34,24 @@ class TurnoController extends Controller
         $cerradoFinDeSemana = $fecha->isSaturday() || $fecha->isSunday();
 
         $turnos = Turno::with('reservas.cliente')
-            ->where('abogado_id', $abogadoId)
-            ->where('activo', true)
-            ->whereDate('fecha', $fechaSeleccionada)
-            ->orderBy('hora_inicio')
-            ->orderBy('actividad')
-            ->get();
+                     ->where('abogado_id', $abogadoId)
+                     ->where('activo', true)
+                     ->whereDate('fecha', $fechaSeleccionada)
+
+                    ->when(
+                        Carbon::parse($fechaSeleccionada)->isToday(),
+                        function ($query) {
+                            $query->whereTime(
+                                'hora_fin',
+                                '>=',
+                                now()->format('H:i')
+                            );
+                        }
+                    )
+
+                    ->orderBy('hora_inicio')
+                    ->orderBy('actividad')
+                    ->get();
 
         $presentesAhora = Asistencia::where('presente', true)
             ->whereNull('hora_salida')
