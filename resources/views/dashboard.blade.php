@@ -593,26 +593,34 @@
 
                                 <div class="mt-4 border-t border-zinc-800 pt-3">
 
-                                    @if(isset($actividad->reservas_count))
+                                    <div class="flex flex-wrap items-center gap-2">
 
                                         <div class="inline-flex items-center rounded-full bg-orange-950 px-3 py-1.5 text-xs font-bold text-orange-300">
-                                            👥 {{ $actividad->reservas_count }}
-                                            reserva{{ $actividad->reservas_count == 1 ? '' : 's' }}
+                                            👥 {{ $actividad->reservas_count }} / {{ $actividad->cupo_maximo }} cupos
                                         </div>
 
-                                    @else
+                                        @if($actividad->cupo_maximo > 0)
 
-                                        <div class="inline-flex items-center rounded-full bg-orange-950 px-3 py-1.5 text-xs font-bold text-orange-300">
-                                            👥 Tiene reservas
-                                        </div>
+                                            @php
+                                                $porcentajeOcupacion = min(
+                                                    100,
+                                                    round(($actividad->reservas_count / $actividad->cupo_maximo) * 100)
+                                                );
+                                            @endphp
 
-                                    @endif
+                                            <div class="text-xs font-semibold text-zinc-500">
+                                                {{ $porcentajeOcupacion }}% ocupado
+                                            </div>
+
+                                        @endif
 
                                 </div>
 
                             </div>
 
-                        @empty
+                        </div>
+
+                    @empty
 
                             <div class="rounded-2xl border border-dashed border-zinc-700 bg-zinc-950 p-8 text-center">
 

@@ -48,6 +48,7 @@ class DashboardController extends Controller
             ->whereDate('fecha', '>', $hoy)
             ->whereDate('fecha', '<=', $hoy->copy()->addDays(6))
             ->whereIn('id', ReservaTurno::select('turno_id'))
+            ->withCount('reservas')
             ->orderBy('fecha')
             ->orderBy('hora_inicio')
             ->take(10)
