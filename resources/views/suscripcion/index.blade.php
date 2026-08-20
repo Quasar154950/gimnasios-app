@@ -1,138 +1,244 @@
 <x-layouts::app>
 
-    <div class="max-w-3xl mx-auto p-4 space-y-6">
+    <div class="min-h-screen bg-slate-950 px-4 py-6">
 
-        <h1 class="text-2xl font-bold" style="color: #111827 !important;">
-            Mi Suscripción
-        </h1>
+        <div class="mx-auto max-w-4xl space-y-6">
 
-        <div class="bg-stone-300 dark:bg-neutral-900 rounded-xl shadow p-6 space-y-4">
+            {{-- CABECERA --}}
+            <div class="rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-xl">
 
-            {{-- ESTADO --}}
-            <div>
-                <p class="text-sm" style="color: #6B7280 !important;">
-                    Estado
-                </p>
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                @if($user->activo)
-                    <span class="text-green-600 font-semibold">
-                        Activa
-                    </span>
-                @else
-                    <span class="text-red-600 font-semibold">
-                        Suspendida
-                    </span>
-                @endif
+                    <div>
+
+                        <div class="mb-2 inline-flex items-center rounded-full bg-blue-950 px-3 py-1 text-xs font-black uppercase text-blue-300">
+                            🔐 Suscripción
+                        </div>
+
+                        <h1 class="text-3xl font-black text-white">
+                            Mi Suscripción
+                        </h1>
+
+                        <p class="mt-2 text-sm text-zinc-400">
+                            Consultá el estado de tu plan y renovalo de forma segura.
+                        </p>
+
+                    </div>
+
+                    <div>
+                        @if($user->activo)
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-green-950 px-4 py-2 text-sm font-black text-green-300">
+                                ● Suscripción activa
+                            </span>
+
+                        @else
+
+                            <span class="inline-flex items-center gap-2 rounded-full bg-red-950 px-4 py-2 text-sm font-black text-red-300">
+                                ● Suscripción suspendida
+                            </span>
+
+                        @endif
+                    </div>
+
+                </div>
+
             </div>
 
-            {{-- FECHA --}}
-            <div>
-                <p class="text-sm" style="color: #6B7280 !important;">
-                    Fecha de vencimiento
-                </p>
 
-                <p class="font-semibold" style="color: #111827 !important;">
-                    {{ $user->fecha_vencimiento
-                        ? \Carbon\Carbon::parse($user->fecha_vencimiento)->format('d/m/Y')
-                        : 'Sin fecha' }}
-                </p>
+            @php
+                if ($user->fecha_vencimiento) {
+                    $dias = \Carbon\Carbon::now()->startOfDay()
+                        ->diffInDays(
+                            \Carbon\Carbon::parse($user->fecha_vencimiento)->startOfDay(),
+                            false
+                        );
+                } else {
+                    $dias = null;
+                }
+            @endphp
+
+
+            {{-- INFORMACIÓN DEL PLAN --}}
+            <div class="grid gap-4 md:grid-cols-2">
+
+                <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 shadow-lg">
+
+                    <div class="text-xs font-black uppercase text-zinc-500">
+                        Plan contratado
+                    </div>
+
+                    <div class="mt-3 text-2xl font-black text-white">
+                        {{ strtoupper($user->plan ?? 'Sin plan') }}
+                    </div>
+
+                </div>
+
+
+                <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 shadow-lg">
+
+                    <div class="text-xs font-black uppercase text-zinc-500">
+                        Precio mensual
+                    </div>
+
+                    <div class="mt-3 text-3xl font-black text-white">
+                        ${{ number_format($user->precio_suscripcion ?? 0, 0, ',', '.') }}
+                    </div>
+
+                </div>
+
+
+                <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 shadow-lg">
+
+                    <div class="text-xs font-black uppercase text-zinc-500">
+                        Fecha de vencimiento
+                    </div>
+
+                    <div class="mt-3 text-xl font-black text-white">
+                        {{ $user->fecha_vencimiento
+                            ? \Carbon\Carbon::parse($user->fecha_vencimiento)->format('d/m/Y')
+                            : 'Sin fecha' }}
+                    </div>
+
+                </div>
+
+
+                <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5 shadow-lg">
+
+                    <div class="text-xs font-black uppercase text-zinc-500">
+                        Tiempo restante
+                    </div>
+
+                    @if($dias === null)
+
+                        <div class="mt-3 text-xl font-black text-zinc-400">
+                            —
+                        </div>
+
+                    @elseif($dias < 0)
+
+                        <div class="mt-3 text-xl font-black text-red-400">
+                            Suscripción vencida
+                        </div>
+
+                    @elseif($dias <= 5)
+
+                        <div class="mt-3 text-xl font-black text-yellow-300">
+                            Te quedan {{ $dias }} días
+                        </div>
+
+                    @else
+
+                        <div class="mt-3 text-xl font-black text-green-300">
+                            Te quedan {{ $dias }} días
+                        </div>
+
+                    @endif
+
+                </div>
+
             </div>
 
-            {{-- PLAN --}}
-            <div>
-                <p class="text-sm" style="color: #6B7280 !important;">
-                    Plan
-                </p>
 
-                <p class="font-semibold" style="color: #111827 !important;">
-                    {{ strtoupper($user->plan ?? 'Sin plan') }}
-                </p>
-            </div>
-
-            {{-- PRECIO --}}
-            <div>
-                <p class="text-sm" style="color: #6B7280 !important;">
-                    Precio mensual
-                </p>
-
-                <p class="font-semibold" style="color: #111827 !important;">
-                    ${{ number_format($user->precio_suscripcion ?? 0, 0, ',', '.') }}
-                </p>
-            </div>
-
-            {{-- DÍAS RESTANTES --}}
-            <div>
-                <p class="text-sm" style="color: #6B7280 !important;">
-                    Días restantes
-                </p>
-
-                @php
-                    if ($user->fecha_vencimiento) {
-                        $dias = \Carbon\Carbon::now()->startOfDay()
-                            ->diffInDays(
-                                \Carbon\Carbon::parse($user->fecha_vencimiento)->startOfDay(),
-                                false
-                            );
-                    } else {
-                        $dias = null;
-                    }
-                @endphp
-
-                @if($dias === null)
-
-                    <p class="font-semibold" style="color: #111827 !important;">
-                        —
-                    </p>
-
-                @elseif($dias < 0)
-
-                    <p class="font-semibold text-red-600">
-                        Suscripción vencida
-                    </p>
-
-                @elseif($dias <= 5)
-
-                    <p class="font-semibold text-yellow-600">
-                        Te quedan {{ $dias }} días
-                    </p>
-
-                @else
-
-                    <p class="font-semibold text-green-600">
-                        Te quedan {{ $dias }} días
-                    </p>
-
-                @endif
-            </div>
-
-            {{-- PAGAR SUSCRIPCIÓN --}}
+            {{-- BLOQUE DE PAGO --}}
             @if($user->precio_suscripcion > 0)
 
-                <div class="pt-4">
+                <div class="rounded-3xl border border-blue-900/60 bg-zinc-900 p-6 shadow-xl">
 
-                    <form method="POST" action="{{ route('suscripcion.pagar') }}">
+                    <div class="mb-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-950 text-2xl">
+                                🛡️
+                            </div>
+
+                            <div>
+
+                                <h2 class="text-xl font-black text-white">
+                                    Renovar suscripción
+                                </h2>
+
+                                <p class="mt-1 text-sm text-zinc-400">
+                                    Pago procesado de forma segura mediante Mercado Pago.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                            <div>
+
+                                <div class="text-sm text-zinc-500">
+                                    Importe a pagar
+                                </div>
+
+                                <div class="mt-1 text-3xl font-black text-white">
+                                    ${{ number_format($user->precio_suscripcion ?? 0, 0, ',', '.') }}
+                                </div>
+
+                                <div class="mt-2 text-xs text-zinc-500">
+                                    Renovación mensual de tu plan.
+                                </div>
+
+                            </div>
+
+
+                            <div class="sm:text-right">
+
+                                <div class="inline-flex items-center gap-2 rounded-full bg-green-950 px-3 py-1.5 text-xs font-bold text-green-300">
+                                    🔒 Pago seguro
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ route('suscripcion.pagar') }}"
+                        class="mt-5"
+                    >
                         @csrf
 
                         <button
                             type="submit"
-                            class="flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl
-                                   border border-stone-300 dark:border-stone-600
-                                   bg-white px-4 shadow-sm
-                                   transition hover:shadow-md active:scale-[0.99]
-                                   cursor-pointer"
+                            class="group flex w-full cursor-pointer items-center justify-center rounded-2xl border border-blue-700 bg-white px-5 py-4 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.98]"
                         >
                             <img
                                 src="{{ asset('images/mp-logo-web.png') }}"
                                 alt="Pagar con Mercado Pago"
-                                class="w-64 max-h-16 object-contain"
+                                class="max-h-14 w-56 object-contain transition duration-200 group-hover:scale-105"
                             >
                         </button>
 
                     </form>
 
+
+                    <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-zinc-500">
+
+                        <span>🔐 Conexión segura</span>
+
+                        <span>💳 Mercado Pago</span>
+
+                        <span>✅ Confirmación automática</span>
+
+                    </div>
+
                 </div>
 
             @endif
+
 
         </div>
 
