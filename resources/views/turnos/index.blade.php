@@ -4,56 +4,60 @@
 
         {{-- ALERTAS --}}
         @if(session('success'))
-            <div style="border-radius:8px !important;"
-                 class="bg-green-500/20 border border-green-500/30 text-green-300 px-4 py-3 font-bold">
+            <div class="rounded-2xl border border-green-800 bg-green-950/40 px-4 py-3 font-bold text-green-300 shadow-lg">
                 ✅ {{ session('success') }}
             </div>
         @endif
 
         @if(session('error'))
-            <div style="border-radius:8px !important;"
-                 class="bg-red-500/20 border border-red-500/30 text-red-300 px-4 py-3 font-bold">
+            <div class="rounded-2xl border border-red-800 bg-red-950/40 px-4 py-3 font-bold text-red-300 shadow-lg">
                 ❌ {{ session('error') }}
             </div>
         @endif
 
-        {{-- ENCABEZADO --}}
-        <div style="border-radius:8px !important;"
-             class="border border-stone-300 bg-stone-200 p-5 md:p-6 shadow-sm">
 
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        {{-- ENCABEZADO --}}
+        <section class="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-xl md:p-6">
+
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
                 <div>
 
-                    <h1 class="text-2xl font-black text-neutral-800">
+                    <div class="mb-2 inline-flex items-center rounded-full bg-orange-950 px-3 py-1 text-xs font-black uppercase text-orange-300">
+                        📅 Reservas
+                    </div>
+
+                    <h1 class="text-3xl font-black text-white">
                         🏋️ Actividades y reservas
                     </h1>
 
-                    <p class="mt-2 text-sm text-neutral-600">
+                    <p class="mt-2 text-sm text-zinc-400">
                         Gestión de clases, reservas, cupos y disponibilidad del gimnasio.
                     </p>
 
                 </div>
 
-                <div class="inline-flex items-center rounded-full bg-orange-500/20 px-4 py-2 text-xs font-black text-orange-600 border border-orange-500/30">
+                <div class="inline-flex items-center rounded-full border border-orange-800 bg-orange-950/40 px-4 py-2 text-xs font-black text-orange-300">
                     📅 {{ \Carbon\Carbon::parse($fechaSeleccionada)->format('d/m/Y') }}
                 </div>
 
             </div>
 
-        </div>
+        </section>
+
 
         {{-- FILTRO FECHA --}}
-        <div style="border-radius:8px !important;"
-             class="border border-stone-300 bg-stone-200 shadow-sm p-5">
+        <section class="rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-xl">
 
-            <form method="GET"
-                  action="{{ auth()->user()->role === 'cliente' ? route('cliente.turnos') : route('turnos.index') }}"
-                  class="flex flex-col md:flex-row md:items-end gap-4">
+            <form
+                method="GET"
+                action="{{ auth()->user()->role === 'cliente' ? route('cliente.turnos') : route('turnos.index') }}"
+                class="flex flex-col gap-4 md:flex-row md:items-end"
+            >
 
                 <div>
 
-                    <label class="block text-sm font-bold text-neutral-700 mb-1">
+                    <label class="mb-1 block text-sm font-bold text-zinc-300">
                         📅 Seleccionar fecha
                     </label>
 
@@ -62,135 +66,124 @@
                         name="fecha"
                         value="{{ $fechaSeleccionada }}"
                         min="{{ now()->toDateString() }}"
-                        style="border-radius:12px !important;"
-                        class="border border-stone-300 bg-stone-100 px-4 py-2 text-sm text-neutral-800"
+                        class="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
                     >
 
                 </div>
 
                 <button
                     type="submit"
-
                     onclick="
-                     this.disabled = true;
-                     this.innerHTML = '⏳ Cargando actividades...';
-                     this.style.opacity = '0.75';
-                     this.form.submit();
+                        this.disabled = true;
+                        this.innerHTML = '⏳ Cargando actividades...';
+                        this.classList.add('cursor-wait', 'opacity-75');
+                        this.form.submit();
                     "
-
-                    style="
-                        background:black;
-                        color:white;
-                        border-radius:14px;
-                        padding:10px 18px;
-                        font-size:14px;
-                        font-weight:bold;
-                        display:inline-flex;
-                        align-items:center;
-                        justify-content:center;
-                        border:none;
-                        transition:0.2s;
-                        cursor:pointer;
-                    "
+                    class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white
+                           shadow-md transition duration-150
+                           hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-xl
+                           active:scale-[0.97]
+                           disabled:pointer-events-none"
                 >
-                    Ver actividades
+                    📅 Ver actividades
                 </button>
 
             </form>
 
-        </div>
+        </section>
+
 
         {{-- FIN DE SEMANA --}}
         @if(\Carbon\Carbon::parse($fechaSeleccionada)->isSunday())
 
-            <div style="border-radius:8px !important;"
-                 class="border border-orange-500/30 bg-orange-500/20 text-orange-200 p-6 font-bold text-center shadow-sm">
-
+            <div class="rounded-2xl border border-orange-800 bg-orange-950/30 p-6 text-center font-bold text-orange-300 shadow-lg">
                 🏖️ Gimnasio cerrado. Los domingos no hay actividades disponibles.
-
             </div>
 
         @endif
 
+
         @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isSunday())
 
             {{-- MUSCULACIÓN --}}
-            <div style="border-radius:8px !important;"
-                 class="border border-stone-300 bg-stone-200 shadow-sm p-5">
+            <section
+                class="group rounded-3xl border border-zinc-800 bg-zinc-900 p-5 shadow-xl
+                       transition duration-200 hover:-translate-y-0.5 hover:shadow-2xl"
+            >
 
                 <div class="flex items-center justify-between gap-3">
 
                     <div>
 
-                        <h2 class="text-xl font-black text-neutral-800">
+                        <h2 class="text-xl font-black text-white">
                             🏋️ Musculación
                         </h2>
 
-                        <p class="text-sm text-neutral-600 mt-1">
+                        <p class="mt-1 text-sm text-zinc-400">
                             Acceso libre sin reserva previa.
                         </p>
 
                     </div>
 
-                    <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                    <span class="inline-flex items-center rounded-full bg-green-950 px-3 py-1 text-xs font-bold text-green-300">
                         🟢 Libre
                     </span>
 
                 </div>
 
-                <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
 
                     {{-- HORARIO --}}
-                    <div style="border-radius:8px !important;"
-                         class="bg-stone-100 p-4 border border-stone-300">
+                    <div class="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
 
                         <p class="text-sm text-zinc-500">
                             Horario
                         </p>
 
-                        <p class="font-black text-zinc-800 mt-1">
+                        <p class="mt-1 font-black text-white">
                             🕒 06:00 a 23:00
                         </p>
 
                     </div>
 
+
                     {{-- MODALIDAD --}}
-                    <div style="border-radius:8px !important;"
-                         class="bg-stone-100 p-4 border border-stone-300">
+                    <div class="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
 
                         <p class="text-sm text-zinc-500">
                             Modalidad
                         </p>
 
-                        <p class="font-black text-zinc-800 mt-1">
+                        <p class="mt-1 font-black text-white">
                             🔓 Libre
                         </p>
 
                     </div>
 
-                    {{-- DISPONIBILIDAD --}}
-                    <div style="border-radius:8px !important;"
-                         class="bg-stone-100 p-4 border border-stone-300">
 
-                        <p class="text-sm text-zinc-500">
+                    {{-- DISPONIBILIDAD --}}
+                    <div class="rounded-2xl border border-green-900/50 bg-green-950/30 p-4">
+
+                        <p class="text-sm text-green-400">
                             Disponibilidad
                         </p>
 
-                        <p class="font-black text-green-700 mt-1">
+                        <p class="mt-1 font-black text-green-300">
                             🟢 Disponible
                         </p>
 
                     </div>
 
-                    {{-- PRESENTES --}}
-                    <div style="border-radius:8px !important;"
-                         class="bg-orange-100 p-4 border border-orange-300">
 
-                        <p class="text-sm text-orange-700 font-bold">
+                    {{-- PRESENTES --}}
+                    <div class="rounded-2xl border border-orange-900/50 bg-orange-950/30 p-4">
+
+                        <p class="text-sm font-bold text-orange-400">
                             Presentes ahora
                         </p>
 
-                        <p class="font-black text-orange-700 mt-1 text-lg">
+                        <p class="mt-1 text-lg font-black text-orange-300">
                             👥 {{ $presentesAhora ?? 0 }} socios
                         </p>
 
@@ -198,62 +191,86 @@
 
                 </div>
 
-            </div>
-            
-                @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isSaturday())
+            </section>
 
-    {{-- LISTADO DE ACTIVIDADES --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
 
-        @foreach($turnos as $turno)
+            @if(!\Carbon\Carbon::parse($fechaSeleccionada)->isSaturday())
 
-            <livewire:turno-card :turno="$turno" :key="'turno-card-'.$turno->id" />
+                {{-- LISTADO DE ACTIVIDADES --}}
+                <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-        @endforeach
+                    @foreach($turnos as $turno)
+
+                        <livewire:turno-card
+                            :turno="$turno"
+                            :key="'turno-card-'.$turno->id"
+                        />
+
+                    @endforeach
+
+                </div>
+
+            @endif
+
+        @endif
 
     </div>
 
-@endif
 
-{{-- Cierra el bloque de NO DOMINGO --}}
-@endif
+    @if(auth()->user()->role === 'cliente')
 
-</div>
+        {{-- BARRA INFERIOR --}}
+        <div class="fixed bottom-0 left-0 right-0 z-50">
 
-  @if(auth()->user()->role === 'cliente')
-    {{-- BARRA INFERIOR --}}
-    <div class="fixed bottom-0 left-0 right-0 z-50">
-        <div class="max-w-md mx-auto px-5 pb-4">
-            <div class="relative rounded-[2rem] bg-white text-zinc-900 shadow-2xl px-5 py-3 flex items-center justify-between">
+            <div class="mx-auto max-w-md px-5 pb-4">
 
-                <a href="{{ route('cliente.dashboard') }}" class="text-center text-xs font-bold">
-                    <div class="text-xl">🏠</div>
-                    Inicio
-                </a>
+                <div class="relative flex items-center justify-between rounded-[2rem] bg-white px-5 py-3 text-zinc-900 shadow-2xl">
 
-                <a href="{{ route('cliente.turnos') }}" class="text-center text-xs font-bold">
-                    <div class="text-xl">📅</div>
-                    Reservas
-                </a>
+                    <a
+                        href="{{ route('cliente.dashboard') }}"
+                        class="cursor-pointer text-center text-xs font-bold transition hover:scale-105 active:scale-[0.96]"
+                    >
+                        <div class="text-xl">🏠</div>
+                        Inicio
+                    </a>
 
-                <a href="{{ route('cliente.mi-qr') }}"
-                   class="absolute left-1/2 -translate-x-1/2 -top-7 h-16 w-16 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl shadow-xl border-4 border-[#071015]">
-                    📱
-                </a>
+                    <a
+                        href="{{ route('cliente.turnos') }}"
+                        class="cursor-pointer text-center text-xs font-bold transition hover:scale-105 active:scale-[0.96]"
+                    >
+                        <div class="text-xl">📅</div>
+                        Reservas
+                    </a>
 
-                <a href="{{ route('cliente.mensajes') }}" class="text-center text-xs font-bold ml-14">
-                    <div class="text-xl">🔔</div>
-                    Avisos
-                </a>
+                    <a
+                        href="{{ route('cliente.mi-qr') }}"
+                        class="absolute left-1/2 -top-7 flex h-16 w-16 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border-4 border-[#071015] bg-orange-500 text-3xl text-white shadow-xl transition hover:scale-105 active:scale-[0.95]"
+                    >
+                        📱
+                    </a>
 
-                <a href="#" class="text-center text-xs font-bold">
-                    <div class="text-xl">👤</div>
-                    Perfil
-                </a>
+                    <a
+                        href="{{ route('cliente.mensajes') }}"
+                        class="ml-14 cursor-pointer text-center text-xs font-bold transition hover:scale-105 active:scale-[0.96]"
+                    >
+                        <div class="text-xl">🔔</div>
+                        Avisos
+                    </a>
+
+                    <a
+                        href="#"
+                        class="cursor-pointer text-center text-xs font-bold transition hover:scale-105 active:scale-[0.96]"
+                    >
+                        <div class="text-xl">👤</div>
+                        Perfil
+                    </a>
+
+                </div>
 
             </div>
+
         </div>
-    </div>
-@endif  
+
+    @endif
 
 </x-layouts::app>
