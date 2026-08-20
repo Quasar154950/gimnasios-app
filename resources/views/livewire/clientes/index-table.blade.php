@@ -21,7 +21,6 @@
             </div>
         </div>
 
-
         <button
             type="button"
             wire:click="$set('busqueda', '')"
@@ -83,7 +82,7 @@
 
         <div class="overflow-x-auto rounded-2xl border border-zinc-800">
 
-            <table class="w-full border-collapse">
+            <table class="w-full min-w-[980px] border-collapse">
 
                 <thead class="bg-zinc-950">
                     <tr class="border-b border-zinc-800 text-[11px] font-black uppercase tracking-wider text-zinc-500">
@@ -209,121 +208,123 @@
                             {{-- ACCIONES --}}
                             <td class="p-3 text-right">
 
-                                <div class="flex flex-wrap items-center justify-end gap-1.5">
+                                <div class="max-w-[390px] overflow-x-auto overflow-y-hidden pb-1 ml-auto">
 
-                                    <a
-                                        href="{{ route('clientes.show', $cliente->id) }}"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-blue-950 hover:text-blue-300
-                                               active:scale-[0.92]"
-                                        title="Ver detalle"
-                                    >
-                                        👁️
-                                    </a>
+                                    <div class="flex min-w-max flex-nowrap items-center justify-end gap-1.5 whitespace-nowrap">
 
-                                    <a
-                                        href="{{ route('clientes.edit', $cliente->id) }}"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-yellow-950 hover:text-yellow-300
-                                               active:scale-[0.92]"
-                                        title="Editar socio"
-                                    >
-                                        ✏️
-                                    </a>
+                                        <a
+                                            href="{{ route('clientes.show', $cliente->id) }}"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-blue-950 hover:text-blue-300
+                                                   active:scale-[0.92]"
+                                            title="Ver detalle"
+                                        >
+                                            👁️
+                                        </a>
 
-
-                                    {{-- RENOVAR Y REGISTRAR PAGO --}}
-                                    <button
-                                        type="button"
-                                        wire:click="abrirRenovacion({{ $cliente->id }})"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-green-950 hover:text-green-300
-                                               active:scale-[0.92]"
-                                        title="Registrar pago y renovar cuota"
-                                    >
-                                        💳
-                                    </button>
+                                        <a
+                                            href="{{ route('clientes.edit', $cliente->id) }}"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-yellow-950 hover:text-yellow-300
+                                                   active:scale-[0.92]"
+                                            title="Editar socio"
+                                        >
+                                            ✏️
+                                        </a>
 
 
-                                    {{-- EDITAR VENCIMIENTO MANUALMENTE --}}
-                                    <button
-                                        type="button"
-                                        wire:click="abrirEdicionVencimiento({{ $cliente->id }})"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-purple-950 hover:text-purple-300
-                                               active:scale-[0.92]"
-                                        title="Editar fecha de vencimiento"
-                                    >
-                                        📅
-                                    </button>
+                                        <button
+                                            type="button"
+                                            wire:click="abrirRenovacion({{ $cliente->id }})"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-green-950 hover:text-green-300
+                                                   active:scale-[0.92]"
+                                            title="Registrar pago y renovar cuota"
+                                        >
+                                            💳
+                                        </button>
 
 
-                                    <a
-                                        href="{{ route('clientes.pagos', $cliente->id) }}"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-emerald-950 hover:text-emerald-300
-                                               active:scale-[0.92]"
-                                        title="Historial de pagos"
-                                    >
-                                        💰
-                                    </a>
+                                        <button
+                                            type="button"
+                                            wire:click="abrirEdicionVencimiento({{ $cliente->id }})"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-purple-950 hover:text-purple-300
+                                                   active:scale-[0.92]"
+                                            title="Editar fecha de vencimiento"
+                                        >
+                                            📅
+                                        </button>
 
 
-                                    <a
-                                        href="{{ route('clientes.rutina', $cliente->id) }}"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-green-950 hover:text-green-300
-                                               active:scale-[0.92]"
-                                        title="Rutina del socio"
-                                    >
-                                        💪
-                                    </a>
+                                        <a
+                                            href="{{ route('clientes.pagos', $cliente->id) }}"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-emerald-950 hover:text-emerald-300
+                                                   active:scale-[0.92]"
+                                            title="Historial de pagos"
+                                        >
+                                            💰
+                                        </a>
 
 
-                                    <a
-                                        href="{{ route('clientes.entrenamientos', $cliente->id) }}"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-indigo-950 hover:text-indigo-300
-                                               active:scale-[0.92]"
-                                        title="Historial de entrenamientos"
-                                    >
-                                        🏋️
-                                    </a>
+                                        <a
+                                            href="{{ route('clientes.rutina', $cliente->id) }}"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-green-950 hover:text-green-300
+                                                   active:scale-[0.92]"
+                                            title="Rutina del socio"
+                                        >
+                                            💪
+                                        </a>
 
 
-                                    <button
-                                        type="button"
-                                        wire:click="archivar({{ $cliente->id }})"
-                                        wire:confirm="¿Quieres dar de baja a este socio?"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-amber-950 hover:text-amber-300
-                                               active:scale-[0.92]"
-                                        title="Dar de baja socio"
-                                    >
-                                        📦
-                                    </button>
+                                        <a
+                                            href="{{ route('clientes.entrenamientos', $cliente->id) }}"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-indigo-950 hover:text-indigo-300
+                                                   active:scale-[0.92]"
+                                            title="Historial de entrenamientos"
+                                        >
+                                            🏋️
+                                        </a>
 
 
-                                    <button
-                                        type="button"
-                                        wire:click="delete({{ $cliente->id }})"
-                                        wire:confirm="¿Estás seguro de que deseas eliminar permanentemente a este socio?"
-                                        style="cursor: pointer !important;"
-                                        class="rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
-                                               hover:-translate-y-0.5 hover:bg-red-950 hover:text-red-300
-                                               active:scale-[0.92]"
-                                        title="Eliminar permanentemente"
-                                    >
-                                        🗑️
-                                    </button>
+                                        <button
+                                            type="button"
+                                            wire:click="archivar({{ $cliente->id }})"
+                                            wire:confirm="¿Quieres dar de baja a este socio?"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-amber-950 hover:text-amber-300
+                                                   active:scale-[0.92]"
+                                            title="Dar de baja socio"
+                                        >
+                                            📦
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            wire:click="delete({{ $cliente->id }})"
+                                            wire:confirm="¿Estás seguro de que deseas eliminar permanentemente a este socio?"
+                                            style="cursor: pointer !important;"
+                                            class="shrink-0 rounded-xl bg-zinc-800 p-2 text-zinc-300 shadow-sm transition duration-150
+                                                   hover:-translate-y-0.5 hover:bg-red-950 hover:text-red-300
+                                                   active:scale-[0.92]"
+                                            title="Eliminar permanentemente"
+                                        >
+                                            🗑️
+                                        </button>
+
+                                    </div>
 
                                 </div>
 
@@ -378,7 +379,6 @@
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
 
-                {{-- MONTO --}}
                 <div>
 
                     <label class="mb-1 block text-sm font-bold text-zinc-300">
@@ -404,7 +404,6 @@
                 </div>
 
 
-                {{-- MÉTODO --}}
                 <div>
 
                     <label class="mb-1 block text-sm font-bold text-zinc-300">
@@ -432,7 +431,6 @@
                 </div>
 
 
-                {{-- FECHA BASE --}}
                 <div>
 
                     <label class="mb-1 block text-sm font-bold text-zinc-300">
@@ -456,7 +454,6 @@
                 </div>
 
 
-                {{-- NUEVO VENCIMIENTO --}}
                 <div>
 
                     <label class="mb-1 block text-sm font-bold text-zinc-300">
@@ -482,7 +479,6 @@
             </div>
 
 
-            {{-- OBSERVACIÓN --}}
             <div class="mt-4">
 
                 <label class="mb-1 block text-sm font-bold text-zinc-300">
@@ -506,7 +502,6 @@
             </div>
 
 
-            {{-- RESUMEN --}}
             @if($fechaBasePago && $nuevoVencimientoCalculado)
 
                 <div class="mt-4 rounded-2xl border border-blue-900 bg-blue-950/30 p-4 text-sm text-blue-300">
@@ -532,7 +527,6 @@
             @endif
 
 
-            {{-- BOTONES --}}
             <div class="mt-5 flex flex-wrap gap-2">
 
                 <button
@@ -685,11 +679,33 @@
     @endif
 
 
-    {{-- CURSOR PAGINACIÓN --}}
     <style>
         nav[role="navigation"] a,
         nav[role="navigation"] button {
             cursor: pointer !important;
+        }
+
+        /* Scroll fino para la fila de acciones */
+        td .overflow-x-auto {
+            scrollbar-width: thin;
+            scrollbar-color: #52525b transparent;
+        }
+
+        td .overflow-x-auto::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        td .overflow-x-auto::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        td .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #52525b;
+            border-radius: 999px;
+        }
+
+        td .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #71717a;
         }
     </style>
 
