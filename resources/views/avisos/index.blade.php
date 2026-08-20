@@ -3,7 +3,11 @@
     <div class="-m-4 min-h-screen space-y-6 bg-slate-950 p-4 sm:-m-6 sm:p-6">
 
         {{-- ENCABEZADO --}}
-        <div class="rounded-xl border border-stone-300 bg-stone-200 p-6 shadow-sm dark:border-stone-600 dark:bg-stone-800">
+        <div
+            class="rounded-xl border border-stone-300 bg-stone-200 p-6 shadow-sm
+                   transition duration-200 hover:-translate-y-0.5 hover:shadow-lg
+                   dark:border-stone-600 dark:bg-stone-800"
+        >
 
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
@@ -21,13 +25,24 @@
 
                 <div class="flex flex-wrap items-center gap-3">
 
-                    <div class="inline-flex items-center rounded-full border border-orange-500/30 bg-orange-500/20 px-4 py-2 text-xs font-black text-orange-500">
+                    {{-- CONTADOR --}}
+                    <div
+                        class="inline-flex items-center rounded-full border border-orange-500/30
+                               bg-orange-500/20 px-4 py-2 text-xs font-black text-orange-500"
+                    >
                         📋 {{ $avisos->count() }} avisos
                     </div>
 
+
+                    {{-- NUEVO AVISO --}}
                     <a
                         href="{{ route('avisos.create') }}"
-                        class="inline-flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-sm font-black text-white transition hover:bg-orange-600"
+                        style="cursor: pointer !important;"
+                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap
+                               rounded-xl bg-orange-500 px-4 py-3 text-sm font-black text-white
+                               shadow-md transition duration-150
+                               hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl
+                               active:scale-[0.96]"
                     >
                         ➕ Nuevo aviso
                     </a>
@@ -38,19 +53,29 @@
 
         </div>
 
+
         {{-- MENSAJES --}}
         @if(session('success'))
 
-            <div class="rounded-xl border border-green-500/30 bg-green-500/20 px-5 py-4 text-sm font-bold text-green-700 dark:text-green-300">
+            <div
+                class="rounded-xl border border-green-500/30 bg-green-500/20
+                       px-5 py-4 text-sm font-bold text-green-700 shadow-sm
+                       dark:text-green-300"
+            >
                 ✅ {{ session('success') }}
             </div>
 
         @endif
 
+
         {{-- LISTADO --}}
         @if($avisos->isEmpty())
 
-            <div class="rounded-xl border border-stone-300 bg-stone-200 p-8 text-center shadow-sm dark:border-stone-600 dark:bg-stone-800">
+            <div
+                class="rounded-xl border border-stone-300 bg-stone-200 p-8 text-center shadow-sm
+                       transition duration-200 hover:-translate-y-0.5 hover:shadow-lg
+                       dark:border-stone-600 dark:bg-stone-800"
+            >
 
                 <div class="text-5xl">
                     📭
@@ -66,7 +91,12 @@
 
                 <a
                     href="{{ route('avisos.create') }}"
-                    class="mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-sm font-black text-white transition hover:bg-orange-600"
+                    style="cursor: pointer !important;"
+                    class="mt-5 inline-flex items-center justify-center gap-2
+                           rounded-xl bg-orange-500 px-4 py-3 text-sm font-black text-white
+                           shadow-md transition duration-150
+                           hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl
+                           active:scale-[0.96]"
                 >
                     ➕ Crear primer aviso
                 </a>
@@ -108,6 +138,7 @@
 
                         }
 
+
                         switch ($aviso->prioridad) {
 
                             case 'urgente':
@@ -132,7 +163,14 @@
 
                     @endphp
 
-                    <div class="rounded-xl border border-stone-300 bg-stone-200 p-5 shadow-sm dark:border-stone-600 dark:bg-stone-800">
+
+                    {{-- TARJETA AVISO --}}
+                    <div
+                        class="group rounded-xl border border-stone-300 bg-stone-200 p-5 shadow-sm
+                               transition duration-200
+                               hover:-translate-y-1 hover:border-orange-400 hover:shadow-xl
+                               dark:border-stone-600 dark:bg-stone-800 dark:hover:border-orange-600"
+                    >
 
                         {{-- CABECERA --}}
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -141,17 +179,30 @@
 
                                 <div class="flex flex-wrap items-center gap-2">
 
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-black {{ $prioridadBadge }}">
+                                    {{-- PRIORIDAD --}}
+                                    <span
+                                        class="inline-flex items-center rounded-full px-3 py-1.5
+                                               text-[11px] font-black shadow-sm {{ $prioridadBadge }}"
+                                    >
                                         {{ $prioridadIcono }} {{ $prioridadTexto }}
                                     </span>
 
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-black {{ $estadoBadge }}">
+
+                                    {{-- ESTADO --}}
+                                    <span
+                                        class="inline-flex items-center rounded-full px-3 py-1.5
+                                               text-[11px] font-black shadow-sm {{ $estadoBadge }}"
+                                    >
                                         {{ $estadoTexto }}
                                     </span>
 
                                 </div>
 
-                                <h2 class="mt-3 break-words text-lg font-black text-stone-900 dark:text-stone-100">
+
+                                <h2
+                                    class="mt-3 break-words text-lg font-black
+                                           text-stone-900 dark:text-stone-100"
+                                >
                                     {{ $aviso->titulo }}
                                 </h2>
 
@@ -159,17 +210,31 @@
 
                         </div>
 
-                        {{-- MENSAJE --}}
-                        <div class="mt-4 rounded-xl border border-stone-300 bg-stone-100 p-4 dark:border-stone-600 dark:bg-stone-700">
 
-                            <p class="whitespace-pre-line break-words text-sm leading-6 text-stone-700 dark:text-stone-200">{{ $aviso->mensaje }}</p>
+                        {{-- MENSAJE --}}
+                        <div
+                            class="mt-4 rounded-xl border border-stone-300 bg-stone-100 p-4
+                                   transition duration-200 group-hover:shadow-sm
+                                   dark:border-stone-600 dark:bg-stone-700"
+                        >
+
+                            <p
+                                class="whitespace-pre-line break-words text-sm leading-6
+                                       text-stone-700 dark:text-stone-200"
+                            >{{ $aviso->mensaje }}</p>
 
                         </div>
+
 
                         {{-- FECHAS --}}
                         <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-                            <div class="rounded-xl border border-stone-300 bg-stone-100 p-4 dark:border-stone-600 dark:bg-stone-700">
+                            {{-- PUBLICACIÓN --}}
+                            <div
+                                class="rounded-xl border border-stone-300 bg-stone-100 p-4
+                                       transition duration-200 group-hover:shadow-sm
+                                       dark:border-stone-600 dark:bg-stone-700"
+                            >
 
                                 <p class="text-[11px] font-black uppercase text-stone-500 dark:text-stone-300">
                                     Publicación
@@ -178,16 +243,26 @@
                                 <p class="mt-1 text-sm font-black text-stone-900 dark:text-stone-100">
 
                                     @if($publicacion)
+
                                         📅 {{ $publicacion->format('d/m/Y H:i') }}
+
                                     @else
+
                                         📅 Inmediata
+
                                     @endif
 
                                 </p>
 
                             </div>
 
-                            <div class="rounded-xl border border-stone-300 bg-stone-100 p-4 dark:border-stone-600 dark:bg-stone-700">
+
+                            {{-- VENCIMIENTO --}}
+                            <div
+                                class="rounded-xl border border-stone-300 bg-stone-100 p-4
+                                       transition duration-200 group-hover:shadow-sm
+                                       dark:border-stone-600 dark:bg-stone-700"
+                            >
 
                                 <p class="text-[11px] font-black uppercase text-stone-500 dark:text-stone-300">
                                     Visible hasta
@@ -196,9 +271,13 @@
                                 <p class="mt-1 text-sm font-black text-stone-900 dark:text-stone-100">
 
                                     @if($vencimiento)
+
                                         ⏰ {{ $vencimiento->format('d/m/Y H:i') }}
+
                                     @else
+
                                         ⏰ Sin vencimiento
+
                                     @endif
 
                                 </p>
@@ -207,27 +286,43 @@
 
                         </div>
 
-                        {{-- ACCIONES --}}
-                        <div class="mt-5 flex flex-wrap gap-2">
 
+                        {{-- ACCIONES --}}
+                        <div class="mt-5 flex flex-nowrap items-center gap-2 overflow-x-auto pb-1">
+
+                            {{-- EDITAR --}}
                             <a
                                 href="{{ route('avisos.edit', $aviso) }}"
-                                class="inline-flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-3 py-2 text-xs font-black text-white transition hover:bg-orange-600"
+                                style="cursor: pointer !important;"
+                                class="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap
+                                       rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-black text-white
+                                       shadow-md transition duration-150
+                                       hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl
+                                       active:scale-[0.96]"
                             >
                                 ✏️ Editar
                             </a>
 
+
+                            {{-- ELIMINAR --}}
                             <form
                                 method="POST"
                                 action="{{ route('avisos.destroy', $aviso) }}"
                                 onsubmit="return confirm('¿Seguro que querés eliminar este aviso?');"
+                                class="shrink-0"
                             >
+
                                 @csrf
                                 @method('DELETE')
 
                                 <button
                                     type="submit"
-                                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-xs font-black text-white transition hover:bg-red-700"
+                                    style="cursor: pointer !important;"
+                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap
+                                           rounded-xl bg-red-600 px-4 py-2.5 text-xs font-black text-white
+                                           shadow-md transition duration-150
+                                           hover:-translate-y-0.5 hover:bg-red-500 hover:shadow-xl
+                                           active:scale-[0.96]"
                                 >
                                     🗑️ Eliminar
                                 </button>
@@ -245,5 +340,38 @@
         @endif
 
     </div>
+
+
+    <style>
+
+        /*
+        |--------------------------------------------------------------------------
+        | SCROLL FINO DE ACCIONES
+        |--------------------------------------------------------------------------
+        */
+
+        .overflow-x-auto {
+            scrollbar-width: thin;
+            scrollbar-color: #f97316 transparent;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 999px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #fb923c;
+        }
+
+    </style>
 
 </x-layouts::app>
