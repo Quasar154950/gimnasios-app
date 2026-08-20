@@ -213,11 +213,12 @@
                     wire:click="reservar"
                     wire:loading.attr="disabled"
                     wire:target="reservar"
+                    style="cursor: pointer !important;"
                     class="w-full cursor-pointer rounded-xl bg-orange-600 px-4 py-3 text-sm font-bold text-white
                            shadow-md transition duration-150
                            hover:-translate-y-0.5 hover:bg-orange-500 hover:shadow-xl
                            active:scale-[0.97]
-                           disabled:pointer-events-none disabled:opacity-70"
+                           disabled:opacity-70"
                 >
 
                     <span wire:loading.remove wire:target="reservar">

@@ -73,17 +73,17 @@
 
                 <button
                     type="submit"
+                    style="cursor: pointer !important;"
                     onclick="
                         this.disabled = true;
                         this.innerHTML = '⏳ Cargando actividades...';
-                        this.classList.add('cursor-wait', 'opacity-75');
                         this.form.submit();
                     "
                     class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white
                            shadow-md transition duration-150
                            hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-xl
-                           active:scale-[0.97]
-                           disabled:pointer-events-none"
+                           active:scale-[0.97]"
+                           
                 >
                     📅 Ver actividades
                 </button>
