@@ -16,6 +16,7 @@ use App\Http\Controllers\MercadoPagoWebhookController;
 use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Http\Controllers\AvisoController;
 use App\Http\Controllers\NovedadController;
+use App\Http\Controllers\CajaController;
 use App\Livewire\Ejercicios\Index as EjerciciosIndex;
 use App\Livewire\Ejercicios\Create as EjerciciosCreate;
 use App\Livewire\Ejercicios\Edit as EjerciciosEdit;
@@ -159,6 +160,10 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
 
         return view('pagos.index', compact('clientes'));
         })->name('pagos.index');
+
+        // 💰 CAJA
+        Route::get('caja', [CajaController::class, 'index'])
+        ->name('caja.index');
 
         // 💳 MERCADO PAGO
         Route::get('mercadopago', [MercadoPagoController::class, 'index'])
