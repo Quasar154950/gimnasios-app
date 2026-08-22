@@ -285,6 +285,10 @@
                                     Origen
                                 </th>
 
+                                <th class="px-3 py-3 text-[11px] font-black uppercase text-stone-500 dark:text-stone-300">
+                                    Comprobante
+                                </th>    
+
                                 <th class="px-3 py-3 text-right text-[11px] font-black uppercase text-stone-500 dark:text-stone-300">
                                     Importe
                                 </th>
@@ -296,42 +300,77 @@
 
                             @foreach($movimientos as $movimiento)
 
-                                <tr
-                                    class="border-b border-stone-300/70 transition
-                                           hover:bg-orange-500/10
-                                           dark:border-stone-700"
-                                >
+    <tr
+        class="border-b border-stone-300/70 transition
+               hover:bg-orange-500/10
+               dark:border-stone-700"
+    >
 
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm font-bold text-stone-700 dark:text-stone-200">
-                                        📅 {{ $movimiento->fecha_pago?->format('d/m/Y') }}
-                                    </td>
+        {{-- FECHA --}}
+        <td class="whitespace-nowrap px-3 py-4 text-sm font-bold text-stone-700 dark:text-stone-200">
+            📅 {{ $movimiento->fecha_pago?->format('d/m/Y') }}
+        </td>
 
-                                    <td class="px-3 py-4 text-sm font-black text-stone-900 dark:text-stone-100">
-                                        {{ $movimiento->cliente?->nombre ?? 'Socio no disponible' }}
-                                    </td>
+        {{-- SOCIO --}}
+        <td class="px-3 py-4 text-sm font-black text-stone-900 dark:text-stone-100">
+            {{ $movimiento->cliente?->nombre ?? 'Socio no disponible' }}
+        </td>
 
-                                    <td class="px-3 py-4 text-sm text-stone-700 dark:text-stone-300">
-                                        {{ $movimiento->metodo_pago ?: 'Sin especificar' }}
-                                    </td>
+        {{-- MEDIO DE PAGO --}}
+        <td class="px-3 py-4 text-sm text-stone-700 dark:text-stone-300">
+            {{ $movimiento->metodo_pago ?: 'Sin especificar' }}
+        </td>
 
-                                    <td class="px-3 py-4">
-                                        <span
-                                            class="inline-flex rounded-full border border-orange-500/30
-                                                   bg-orange-500/15 px-2.5 py-1 text-[10px]
-                                                   font-black uppercase text-orange-500"
-                                        >
-                                            {{ $movimiento->origen ?: 'manual' }}
-                                        </span>
-                                    </td>
+        {{-- ORIGEN --}}
+        <td class="px-3 py-4">
+            <span
+                class="inline-flex rounded-full border border-orange-500/30
+                       bg-orange-500/15 px-2.5 py-1 text-[10px]
+                       font-black uppercase text-orange-500"
+            >
+                {{ $movimiento->origen ?: 'manual' }}
+            </span>
+        </td>
 
-                                    <td class="whitespace-nowrap px-3 py-4 text-right text-sm font-black text-stone-900 dark:text-stone-100">
-                                        $ {{ number_format((float) $movimiento->monto, 2, ',', '.') }}
-                                    </td>
+        {{-- COMPROBANTE --}}
+        <td class="whitespace-nowrap px-3 py-4 text-sm">
 
-                                </tr>
+            @if($movimiento->numero_comprobante)
 
-                            @endforeach
+                <div class="flex flex-col items-start gap-1">
 
+                    <span class="font-black text-stone-900 dark:text-stone-100">
+                        N.º {{ str_pad($movimiento->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
+                    </span>
+
+                    <a
+                        href="{{ route('comprobantes.show', $movimiento) }}"
+                        class="text-xs font-black text-orange-500 transition
+                               hover:text-orange-600 hover:underline"
+                    >
+                        Ver comprobante →
+                    </a>
+
+                </div>
+
+            @else
+
+                <span class="text-xs font-bold text-stone-400">
+                    Pago anterior
+                </span>
+
+            @endif
+
+        </td>
+
+        {{-- IMPORTE --}}
+        <td class="whitespace-nowrap px-3 py-4 text-right text-sm font-black text-stone-900 dark:text-stone-100">
+            $ {{ number_format((float) $movimiento->monto, 2, ',', '.') }}
+        </td>
+
+    </tr>
+
+@endforeach
                         </tbody>
 
                     </table>
