@@ -169,6 +169,9 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         // 🧾 COMPROBANTES
         Route::get('comprobantes/{pago}', [ComprobanteController::class, 'show'])
             ->name('comprobantes.show');
+            
+        Route::get('comprobantes/{pago}/descargar', [ComprobanteController::class, 'descargar'])
+            ->name('comprobantes.descargar');
 
         // 💳 MERCADO PAGO
         Route::get('mercadopago', [MercadoPagoController::class, 'index'])

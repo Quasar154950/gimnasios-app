@@ -166,17 +166,28 @@
             </div>
 
 
-            {{-- VOLVER --}}
-            <div>
-                <a
-                    href="{{ route('clientes.pagos', $pago->cliente_id) }}"
-                    class="inline-flex items-center rounded-xl bg-orange-500 px-5 py-3
-                           text-sm font-black text-white shadow-md transition
-                           hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl"
-                >
-                    ← Volver al historial
-                </a>
-            </div>
+            {{-- ACCIONES --}}
+<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+    <a
+        href="{{ route('clientes.pagos', $pago->cliente_id) }}"
+        class="inline-flex items-center justify-center rounded-xl bg-stone-700 px-5 py-3
+               text-sm font-black text-white shadow-md transition
+               hover:-translate-y-0.5 hover:bg-stone-600 hover:shadow-xl"
+    >
+        ← Volver al historial
+    </a>
+
+    <a
+        href="{{ route('comprobantes.descargar', $pago) }}"
+        class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3
+               text-sm font-black text-white shadow-md transition
+               hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-xl"
+    >
+        ⬇ Descargar PDF
+    </a>
+
+</div>
 
         </div>
 
