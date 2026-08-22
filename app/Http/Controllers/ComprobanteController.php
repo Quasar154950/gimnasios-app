@@ -14,10 +14,12 @@ class ComprobanteController extends Controller
         $this->validarPago($pago);
 
         $logo = $this->obtenerLogo();
+        $nombreGimnasio = $this->obtenerNombreGimnasio();
 
         return view('comprobantes.show', compact(
             'pago',
-            'logo'
+            'logo',
+            'nombreGimnasio'
         ));
     }
 
@@ -28,10 +30,12 @@ class ComprobanteController extends Controller
         $this->validarPago($pago);
 
         $logo = $this->obtenerLogo();
+        $nombreGimnasio = $this->obtenerNombreGimnasio();
 
         $pdf = Pdf::loadView('comprobantes.pdf', compact(
             'pago',
-            'logo'
+            'logo',
+            'nombreGimnasio'
         ));
 
         $numero = str_pad(
@@ -68,6 +72,17 @@ class ComprobanteController extends Controller
             'demo' => public_path('images/logo-demo.png'),
             'sportgym' => public_path('images/logo-sportgym.png'),
             default => null,
+        };
+    }
+
+    private function obtenerNombreGimnasio(): string
+    {
+        $slug = auth()->user()->slug_estudio ?? 'sportgym';
+
+        return match ($slug) {
+            'demo' => 'DemoGym',
+            'sportgym' => 'SportGym',
+            default => auth()->user()->name,
         };
     }
 }

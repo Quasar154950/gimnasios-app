@@ -151,6 +151,16 @@ Route::prefix('mobile')->group(function () {
             [MobilePagoController::class, 'crearPago']
         );
 
+        Route::get(
+            '/comprobantes',
+            [MobilePagoController::class, 'comprobantes']
+        );
+
+        Route::get(
+            '/comprobantes/{pago}/pdf',
+            [MobilePagoController::class, 'descargarComprobante']
+        );
+
         /*
         |--------------------------------------------------------------------------
         | PUSH NOTIFICATIONS

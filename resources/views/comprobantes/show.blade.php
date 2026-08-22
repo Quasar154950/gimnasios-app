@@ -50,7 +50,7 @@
                         ? 'images/logo-demo.png'
                         : 'images/logo-sportgym.png'
                 ) }}"
-                alt="Logo {{ auth()->user()->name }}"
+                alt="Logo {{ $nombreGimnasio }}"
                 class="mx-auto max-h-28 max-w-[240px] object-contain"
             >
 

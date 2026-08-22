@@ -147,7 +147,7 @@
     @endif
 
     <p class="gimnasio">
-        {{ auth()->user()->name }}
+        {{ $nombreGimnasio ?? auth()->user()->name }}
     </p>
 
     <div class="tipo">
