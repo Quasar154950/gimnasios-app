@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ExpedienteController;
 use App\Http\Controllers\DashboardController;
@@ -603,19 +602,5 @@ Route::get('/soporte/login', function () {
         ->cookie('last_login_context', 'soporte', 60 * 24 * 30);
 
 })->name('login.soporte');
-
-Route::get('/ejecutar-migraciones-temp', function () {
-    $user = auth()->user();
-
-    if (!$user || $user->email !== 'soporte@tuempresa.com') {
-        abort(403);
-    }
-
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
-
-    return nl2br(Artisan::output());
-})->middleware('auth');
 
 require __DIR__ . '/settings.php';
