@@ -8,6 +8,7 @@ class Pago extends Model
 {
     protected $fillable = [
         'cliente_id',
+        'numero_comprobante',
         'monto',
         'metodo_pago',
         'observacion',

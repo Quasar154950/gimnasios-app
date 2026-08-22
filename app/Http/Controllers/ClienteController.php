@@ -382,7 +382,8 @@ $user = User::create([
 
     public function pagos(string $id)
     {
-        $cliente = Cliente::findOrFail($id);
+        $cliente = Cliente::where('abogado_id', auth()->id())
+            ->findOrFail($id);
 
         $pagos = Pago::where('cliente_id', $cliente->id)
             ->latest()

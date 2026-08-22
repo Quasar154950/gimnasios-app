@@ -45,12 +45,65 @@ class PagoService
             $estado,
             $mercadopagoPaymentId
         ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | BLOQUEO DE NUMERACIÓN POR GIMNASIO
+            |--------------------------------------------------------------------------
+            |
+            | Bloqueamos temporalmente al administrador del gimnasio durante
+            | la generación del número para evitar que dos pagos simultáneos
+            | reciban el mismo comprobante.
+            |
+            */
+
+            DB::table('users')
+                ->where('id', $cliente->abogado_id)
+                ->lockForUpdate()
+                ->first();
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRÓXIMO NÚMERO DE COMPROBANTE
+            |--------------------------------------------------------------------------
+            |
+            | Cada gimnasio mantiene su propia secuencia:
+            |
+            | Gimnasio A: 1, 2, 3...
+            | Gimnasio B: 1, 2, 3...
+            |
+            | Los ceros a la izquierda se agregarán solamente al mostrarlo:
+            | 1 => 000001
+            |
+            */
+
+            $ultimoNumero = Pago::whereHas('cliente', function ($query) use ($cliente) {
+                    $query->where('abogado_id', $cliente->abogado_id);
+                })
+                ->whereNotNull('numero_comprobante')
+                ->max('numero_comprobante');
+
+            $numeroComprobante = ((int) $ultimoNumero) + 1;
+
+            /*
+            |--------------------------------------------------------------------------
+            | RENOVAR CUOTA
+            |--------------------------------------------------------------------------
+            */
+
             $cliente->update([
                 'fecha_vencimiento_cuota' => $nuevoVencimiento->toDateString(),
             ]);
 
+            /*
+            |--------------------------------------------------------------------------
+            | REGISTRAR PAGO
+            |--------------------------------------------------------------------------
+            */
+
             return Pago::create([
                 'cliente_id' => $cliente->id,
+                'numero_comprobante' => $numeroComprobante,
                 'monto' => $monto,
                 'metodo_pago' => $metodoPago,
                 'origen' => $origen,
