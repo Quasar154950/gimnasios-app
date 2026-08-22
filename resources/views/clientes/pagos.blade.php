@@ -36,6 +36,10 @@
                         <tr class="border-b border-stone-300 text-xs uppercase text-stone-500">
 
                             <th class="p-4 text-left">
+                                Comprobante
+                            </th>
+
+                            <th class="p-4 text-left">
                                 Fecha de pago
                             </th>
 
@@ -76,6 +80,32 @@
                         @foreach($pagos as $pago)
 
                             <tr class="transition hover:bg-stone-100">
+
+                                {{-- COMPROBANTE --}}
+                                <td class="whitespace-nowrap p-4 text-sm">
+
+                                    @if($pago->numero_comprobante)
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1
+                                                   text-xs font-black text-orange-700"
+                                        >
+                                            N.º {{ str_pad($pago->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
+                                        </span>
+
+                                    @else
+
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-stone-300 px-2 py-1
+                                                   text-[10px] font-bold text-stone-600"
+                                            title="Pago registrado antes de incorporar comprobantes numerados"
+                                        >
+                                            Pago anterior
+                                        </span>
+
+                                    @endif
+
+                                </td>
 
                                 {{-- FECHA DE PAGO --}}
                                 <td class="whitespace-nowrap p-4 text-sm text-stone-700">
