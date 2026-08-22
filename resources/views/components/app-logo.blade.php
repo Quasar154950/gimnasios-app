@@ -21,10 +21,10 @@
     $esDemoGym = $slug === 'demo';
 
     $nombreEstudio = $nombreEstudio
-        ?? ($esDemoGym ? 'DemoGym' : 'SportGym Tandil');
+        ?? ($esDemoGym ? 'DemoGym' : 'SportGym');
 
     $logo = $esDemoGym
-        ? asset('images/logo-demogym.png')
+        ? asset('images/logo-demo.png')
         : asset('images/logo-sportgym.png');
 @endphp
 
@@ -36,7 +36,8 @@
 
             <img
                 src="{{ $logo }}"
-                class="h-15 w-15 object-contain"
+                alt="{{ $nombreEstudio }}"
+                class="h-14 w-14 object-contain"
             />
 
         </x-slot>
@@ -51,6 +52,7 @@
 
             <img
                 src="{{ $logo }}"
+                alt="{{ $nombreEstudio }}"
                 class="h-10 w-10 object-contain"
             />
 

@@ -28,7 +28,7 @@
         $esDemoGym = (auth()->user()->slug_estudio ?? null) === 'demo';
 
         $logoDashboard = $esDemoGym
-            ? asset('images/logo-demogym.png')
+            ? asset('images/logo-demo.png')
             : asset('images/logo-sportgym.png');
 
         $nombreGym = $esDemoGym
