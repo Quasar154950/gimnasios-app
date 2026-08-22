@@ -37,17 +37,26 @@
             >
 
                 {{-- CABECERA DEL RECIBO --}}
-                <div class="border-b border-stone-300 bg-stone-200 p-6 text-center">
+<div class="border-b border-stone-300 bg-stone-200 p-6 text-center">
 
-                    <h2 class="text-2xl font-black text-stone-900">
-                        {{ auth()->user()->name }}
-                    </h2>
+    {{-- LOGO DEL GIMNASIO --}}
+    @if($logo && file_exists($logo))
 
-                    <p class="mt-1 text-sm font-bold text-stone-500">
-                        Comprobante interno de pago
-                    </p>
+        <div class="mb-4 flex justify-center">
 
-                </div>
+            <img
+                src="{{ asset(
+                    auth()->user()->slug_estudio === 'demo'
+                        ? 'images/logo-demo.png'
+                        : 'images/logo-sportgym.png'
+                ) }}"
+                alt="Logo {{ auth()->user()->name }}"
+                class="mx-auto max-h-28 max-w-[240px] object-contain"
+            >
+
+        </div>
+
+    @endif
 
 
                 {{-- DATOS --}}

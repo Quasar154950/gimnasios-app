@@ -11,42 +11,23 @@ class ComprobanteController extends Controller
     {
         $pago->load('cliente');
 
-        if (
-            !$pago->cliente ||
-            $pago->cliente->abogado_id !== auth()->id()
-        ) {
-            abort(403);
-        }
+        $this->validarPago($pago);
 
-        if (!$pago->numero_comprobante) {
-            abort(404);
-        }
+        $logo = $this->obtenerLogo();
 
-        return view('comprobantes.show', compact('pago'));
+        return view('comprobantes.show', compact(
+            'pago',
+            'logo'
+        ));
     }
 
     public function descargar(Pago $pago)
     {
         $pago->load('cliente');
 
-        if (
-            !$pago->cliente ||
-            $pago->cliente->abogado_id !== auth()->id()
-        ) {
-            abort(403);
-        }
+        $this->validarPago($pago);
 
-        if (!$pago->numero_comprobante) {
-            abort(404);
-        }
-
-        $slug = auth()->user()->slug_estudio ?? 'sportgym';
-
-        $logo = match ($slug) {
-            'demo' => public_path('images/logo-demo.png'),
-            'sportgym' => public_path('images/logo-sportgym.png'),
-            default => null,
-        };
+        $logo = $this->obtenerLogo();
 
         $pdf = Pdf::loadView('comprobantes.pdf', compact(
             'pago',
@@ -63,5 +44,30 @@ class ComprobanteController extends Controller
         return $pdf->download(
             'comprobante-' . $numero . '.pdf'
         );
+    }
+
+    private function validarPago(Pago $pago): void
+    {
+        if (
+            !$pago->cliente ||
+            $pago->cliente->abogado_id !== auth()->id()
+        ) {
+            abort(403);
+        }
+
+        if (!$pago->numero_comprobante) {
+            abort(404);
+        }
+    }
+
+    private function obtenerLogo(): ?string
+    {
+        $slug = auth()->user()->slug_estudio ?? 'sportgym';
+
+        return match ($slug) {
+            'demo' => public_path('images/logo-demo.png'),
+            'sportgym' => public_path('images/logo-sportgym.png'),
+            default => null,
+        };
     }
 }
