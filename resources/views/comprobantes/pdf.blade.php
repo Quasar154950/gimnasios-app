@@ -138,19 +138,27 @@
         {{-- CABECERA --}}
         <div class="cabecera">
 
-            <p class="gimnasio">
-                {{ auth()->user()->name }}
-            </p>
+    @if($logo && file_exists($logo))
+        <img
+            src="{{ $logo }}"
+            alt="Logo"
+            style="max-width: 220px; max-height: 110px; margin-bottom: 15px;"
+        >
+    @endif
 
-            <div class="tipo">
-                Comprobante interno de pago
-            </div>
+    <p class="gimnasio">
+        {{ auth()->user()->name }}
+    </p>
 
-            <div class="numero">
-                N.º {{ str_pad($pago->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
-            </div>
+    <div class="tipo">
+        Comprobante interno de pago
+    </div>
 
-        </div>
+    <div class="numero">
+        N.º {{ str_pad($pago->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
+    </div>
+
+</div>
 
 
         {{-- CONTENIDO --}}

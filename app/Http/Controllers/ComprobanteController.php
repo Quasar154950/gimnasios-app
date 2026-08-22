@@ -40,7 +40,18 @@ class ComprobanteController extends Controller
             abort(404);
         }
 
-        $pdf = Pdf::loadView('comprobantes.pdf', compact('pago'));
+        $slug = auth()->user()->slug_estudio ?? 'sportgym';
+
+        $logo = match ($slug) {
+            'demo' => public_path('images/logo-demo.png'),
+            'sportgym' => public_path('images/logo-sportgym.png'),
+            default => null,
+        };
+
+        $pdf = Pdf::loadView('comprobantes.pdf', compact(
+            'pago',
+            'logo'
+        ));
 
         $numero = str_pad(
             $pago->numero_comprobante,
