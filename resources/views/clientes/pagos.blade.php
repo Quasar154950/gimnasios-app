@@ -86,12 +86,23 @@
 
                                     @if($pago->numero_comprobante)
 
-                                        <span
-                                            class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1
-                                                   text-xs font-black text-orange-700"
-                                        >
-                                            N.º {{ str_pad($pago->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
-                                        </span>
+                                        <div class="flex flex-col items-start gap-2">
+
+                                            <span
+                                                class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1
+                                                       text-xs font-black text-orange-700"
+                                            >
+                                                N.º {{ str_pad($pago->numero_comprobante, 6, '0', STR_PAD_LEFT) }}
+                                            </span>
+
+                                            <a
+                                                href="{{ route('comprobantes.show', $pago) }}"
+                                                class="text-xs font-black text-orange-600 transition hover:text-orange-700 hover:underline"
+                                            >
+                                                Ver comprobante →
+                                            </a>
+
+                                        </div>
 
                                     @else
 

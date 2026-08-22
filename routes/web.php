@@ -17,6 +17,7 @@ use App\Http\Controllers\ActivarCuentaSocioController;
 use App\Http\Controllers\AvisoController;
 use App\Http\Controllers\NovedadController;
 use App\Http\Controllers\CajaController;
+use App\Http\Controllers\ComprobanteController;
 use App\Livewire\Ejercicios\Index as EjerciciosIndex;
 use App\Livewire\Ejercicios\Create as EjerciciosCreate;
 use App\Livewire\Ejercicios\Edit as EjerciciosEdit;
@@ -164,6 +165,10 @@ Route::middleware(['auth', 'verified', 'activo'])->group(function () {
         // 💰 CAJA
         Route::get('caja', [CajaController::class, 'index'])
         ->name('caja.index');
+
+        // 🧾 COMPROBANTES
+        Route::get('comprobantes/{pago}', [ComprobanteController::class, 'show'])
+            ->name('comprobantes.show');
 
         // 💳 MERCADO PAGO
         Route::get('mercadopago', [MercadoPagoController::class, 'index'])
