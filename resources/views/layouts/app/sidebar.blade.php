@@ -197,6 +197,16 @@
                         </flux:sidebar.item>
 
                         <flux:sidebar.item
+                            icon="calculator"
+                            :href="route('caja.index')"
+                            :current="request()->routeIs('caja.*')"
+                            wire:navigate
+                        >
+                            Caja
+                        </flux:sidebar.item>
+
+
+                        <flux:sidebar.item
                             icon="megaphone"
                             :href="route('avisos.index')"
                             :current="request()->routeIs('avisos.*')"
