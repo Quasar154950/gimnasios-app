@@ -93,7 +93,7 @@
     $esDemoGym = ($abogado?->slug_estudio ?? null) === 'demo';
 
     $logoSocio = $esDemoGym
-        ? asset('images/logo-demogym.png')
+        ? asset('images/logo-demogym-v2.png')
         : asset('images/logo-sportgym.png');
 
     $nombreGym = $esDemoGym ? 'DemoGym' : 'SportGym';
