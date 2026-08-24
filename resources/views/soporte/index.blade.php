@@ -602,6 +602,16 @@
 
                                 </form>
 
+                                {{-- CONFIGURAR ADMINISTRADOR --}}
+                                <a
+                                    href="{{ route('soporte.configurar.administrador', $user) }}"
+                                    style="cursor: pointer !important;"
+                                    class="shrink-0 inline-flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-bold text-white shadow-md
+                                           transition duration-150 hover:-translate-y-0.5 hover:bg-sky-500 hover:shadow-xl
+                                           active:scale-[0.95]"
+                                >
+                                   ⚙️ Administrador
+                                </a>
 
                                 {{-- RESET --}}
                                 <form

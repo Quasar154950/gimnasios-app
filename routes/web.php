@@ -459,6 +459,69 @@ Route::middleware(['auth'])->post('/soporte/{user}/guardar-vencimiento', functio
 
 })->name('soporte.guardar.vencimiento');
 
+// ⚙️ CONFIGURAR ADMINISTRADOR
+Route::middleware(['auth'])->get('/soporte/{user}/configurar-administrador', function (User $user) {
+
+    $userAuth = auth()->user();
+
+    if (!$userAuth || $userAuth->email !== 'soporte@tuempresa.com') {
+        abort(403);
+    }
+
+    if ($user->role !== 'abogado') {
+        abort(403);
+    }
+
+    return view('soporte.configurar-administrador', compact('user'));
+
+})->name('soporte.configurar.administrador');
+
+
+// 💾 GUARDAR ADMINISTRADOR
+Route::middleware(['auth'])->post('/soporte/{user}/configurar-administrador', function (
+    User $user,
+    \Illuminate\Http\Request $request
+) {
+
+    $userAuth = auth()->user();
+
+    if (!$userAuth || $userAuth->email !== 'soporte@tuempresa.com') {
+        abort(403);
+    }
+
+    if ($user->role !== 'abogado') {
+        abort(403);
+    }
+
+    $datos = $request->validate([
+        'name' => [
+            'required',
+            'string',
+            'max:255',
+        ],
+
+        'email' => [
+            'required',
+            'email',
+            'max:255',
+            \Illuminate\Validation\Rule::unique('users', 'email')
+                ->ignore($user->id),
+        ],
+    ]);
+
+    $user->update([
+        'name' => $datos['name'],
+        'email' => strtolower(trim($datos['email'])),
+    ]);
+
+    return redirect('/soporte')
+        ->with(
+            'success',
+            'Administrador actualizado correctamente.'
+        );
+
+})->name('soporte.guardar.administrador');
+
 // 💾 BACKUP DEL SISTEMA
 Route::middleware(['auth'])->post('/soporte/backup', function () {
 
