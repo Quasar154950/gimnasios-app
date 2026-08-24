@@ -70,6 +70,7 @@ new #[Title('Configuración de contraseña')] class extends Component {
             <flux:input
                 wire:model="current_password"
                 label="Contraseña actual"
+                label:class="text-zinc-400"
                 type="password"
                 required
                 autocomplete="current-password"
@@ -78,6 +79,7 @@ new #[Title('Configuración de contraseña')] class extends Component {
             <flux:input
                 wire:model="password"
                 label="Nueva contraseña"
+                label:class="text-zinc-400"
                 type="password"
                 required
                 autocomplete="new-password"
@@ -86,6 +88,7 @@ new #[Title('Configuración de contraseña')] class extends Component {
             <flux:input
                 wire:model="password_confirmation"
                 label="Confirmar nueva contraseña"
+                label:class="text-zinc-400"
                 type="password"
                 required
                 autocomplete="new-password"
