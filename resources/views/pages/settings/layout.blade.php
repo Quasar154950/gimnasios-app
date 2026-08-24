@@ -77,9 +77,28 @@
             </div>
 
             {{-- CONTENIDO DE LA PANTALLA --}}
-            <div class="w-full max-w-xl">
-                {{ $slot }}
-            </div>
+            <div class="settings-content w-full max-w-xl">
+    {{ $slot }}
+</div>
+
+<style>
+    .settings-content label {
+        color: #e4e4e7 !important;
+        font-weight: 700 !important;
+    }
+
+    .settings-content input {
+        color: #ffffff !important;
+    }
+
+    .settings-content [data-flux-heading] {
+        color: #ffffff !important;
+    }
+
+    .settings-content [data-flux-subheading] {
+        color: #a1a1aa !important;
+    }
+</style>
 
         </div>
 
