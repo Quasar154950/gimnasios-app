@@ -6,7 +6,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-new #[Title('Password settings')] class extends Component {
+new #[Title('Configuración de contraseña')] class extends Component {
     use PasswordValidationRules;
 
     public string $current_password = '';
@@ -14,7 +14,7 @@ new #[Title('Password settings')] class extends Component {
     public string $password_confirmation = '';
 
     /**
-     * Update the password for the currently authenticated user.
+     * Actualiza la contraseña del usuario autenticado.
      */
     public function updatePassword(): void
     {
@@ -24,7 +24,11 @@ new #[Title('Password settings')] class extends Component {
                 'password' => $this->passwordRules(),
             ]);
         } catch (ValidationException $e) {
-            $this->reset('current_password', 'password', 'password_confirmation');
+            $this->reset(
+                'current_password',
+                'password',
+                'password_confirmation'
+            );
 
             throw $e;
         }
@@ -33,52 +37,86 @@ new #[Title('Password settings')] class extends Component {
             'password' => $validated['password'],
         ]);
 
-        $this->reset('current_password', 'password', 'password_confirmation');
+        $this->reset(
+            'current_password',
+            'password',
+            'password_confirmation'
+        );
 
         $this->dispatch('password-updated');
     }
-}; ?>
+};
+?>
 
 <section class="w-full">
+
     @include('partials.settings-heading')
 
-    <flux:heading class="sr-only">{{ __('Password settings') }}</flux:heading>
+    <flux:heading class="sr-only">
+        Configuración de contraseña
+    </flux:heading>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
+    <x-pages::settings.layout
+        heading="Contraseña"
+        subheading="Actualizá tu contraseña para mantener tu cuenta segura"
+    >
+
+        <form
+            method="POST"
+            wire:submit="updatePassword"
+            class="mt-6 space-y-6"
+        >
+
             <flux:input
                 wire:model="current_password"
-                :label="__('Current password')"
+                label="Contraseña actual"
                 type="password"
                 required
                 autocomplete="current-password"
             />
+
             <flux:input
                 wire:model="password"
-                :label="__('New password')"
+                label="Nueva contraseña"
                 type="password"
                 required
                 autocomplete="new-password"
             />
+
             <flux:input
                 wire:model="password_confirmation"
-                :label="__('Confirm password')"
+                label="Confirmar nueva contraseña"
                 type="password"
                 required
                 autocomplete="new-password"
             />
 
             <div class="flex items-center gap-4">
+
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full" data-test="update-password-button">
-                        {{ __('Save') }}
+
+                    <flux:button
+                        variant="primary"
+                        type="submit"
+                        class="w-full"
+                        data-test="update-password-button"
+                    >
+                        Guardar cambios
                     </flux:button>
+
                 </div>
 
-                <x-action-message class="me-3" on="password-updated">
-                    {{ __('Saved.') }}
+                <x-action-message
+                    class="me-3"
+                    on="password-updated"
+                >
+                    Contraseña actualizada correctamente.
                 </x-action-message>
+
             </div>
+
         </form>
+
     </x-pages::settings.layout>
+
 </section>
