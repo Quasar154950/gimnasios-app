@@ -104,6 +104,7 @@ new #[Title('Configuración del perfil')] class extends Component {
             <flux:input
                 wire:model="name"
                 label="Nombre"
+                label:class="text-zinc-400"
                 type="text"
                 required
                 autofocus
@@ -115,6 +116,7 @@ new #[Title('Configuración del perfil')] class extends Component {
                 <flux:input
                     wire:model="email"
                     label="Correo electrónico"
+                    label:class="text-zinc-400"
                     type="email"
                     required
                     autocomplete="email"
