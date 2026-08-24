@@ -676,19 +676,9 @@ Route::get('/soporte/login', function () {
 
 Route::get('/diagnostico-reset-temporal', function () {
 
-    $registro = \DB::table('password_reset_tokens')
-        ->where('email', 'garciafe55@yahoo.com.ar')
-        ->first();
-
-    if (!$registro) {
-        return 'NO HAY TOKEN guardado para ese email';
-    }
-
-    return [
-        'email' => $registro->email,
-        'created_at' => $registro->created_at,
-        'token_guardado' => true,
-    ];
+    return \DB::table('password_reset_tokens')
+        ->select('email', 'created_at')
+        ->orderByDesc('created_at')
+        ->get();
 });
-
 require __DIR__ . '/settings.php';
