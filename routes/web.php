@@ -674,11 +674,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/diagnostico-reset-temporal', function () {
-
-    return \DB::table('password_reset_tokens')
-        ->select('email', 'created_at')
-        ->orderByDesc('created_at')
-        ->get();
-});
 require __DIR__ . '/settings.php';
