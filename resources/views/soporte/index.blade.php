@@ -865,7 +865,6 @@
 
             button.innerHTML = processingText;
 
-            button.disabled = true;
         }
 
 
