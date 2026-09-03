@@ -22,12 +22,16 @@ class MobileRutinaController extends Controller
             ], 422);
         }
 
+        $hoy = now()->toDateString();
+
         $cliente = Cliente::query()
             ->whereKey($cliente->id)
             ->with([
-                'rutinaAsignaciones' => function ($query) {
+                'rutinaAsignaciones' => function ($query) use ($hoy) {
                     $query
                         ->where('activa', true)
+                        ->whereDate('fecha_inicio', '<=', $hoy)
+                        ->whereDate('fecha_fin', '>=', $hoy)
                         ->with([
                             'rutina.dias.ejercicios.ejercicioBiblioteca',
                         ]);
