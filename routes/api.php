@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\MobileReservaController;
 use App\Http\Controllers\Api\MobileRutinaController;
 use App\Http\Controllers\Api\MobilePagoController;
 use App\Http\Controllers\Api\MobilePushTokenController;
+use App\Http\Controllers\Api\SoporteApiController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('mobile')->group(function () {
@@ -184,3 +185,15 @@ Route::prefix('mobile')->group(function () {
         );
     });
 });
+
+// 🛠 API SOPORTE MCTANDIL
+Route::prefix('soporte')
+    ->middleware('mctandil.support')
+    ->group(function () {
+
+        Route::get(
+            '/gimnasios',
+            [SoporteApiController::class, 'gimnasios']
+        );
+
+    });

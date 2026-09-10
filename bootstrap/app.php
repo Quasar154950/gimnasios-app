@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'activo' => \App\Http\Middleware\CheckEstudioActivo::class,
+            'mctandil.support' => \App\Http\Middleware\VerifyMctandilSupportKey::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

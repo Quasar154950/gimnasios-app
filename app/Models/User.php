@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->hasOne(Cliente::class);
     }
 
+    public function clientesAdministrados(): HasMany
+    {
+    return $this->hasMany(Cliente::class, 'abogado_id');
+    }
+
     public function mensajesEnviados()
     {
         return $this->hasMany(MensajeCliente::class);
