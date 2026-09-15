@@ -208,4 +208,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'toggleActivo']
         );
 
+        // ⚙️ ACTUALIZAR ADMINISTRADOR GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/administrador',
+            [SoporteApiController::class, 'actualizarAdministrador']
+        );
+
     });

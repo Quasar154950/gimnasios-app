@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SoporteApiController extends Controller
 {
@@ -47,7 +49,7 @@ class SoporteApiController extends Controller
         ]);
     }
 
-        /**
+    /**
      * Renueva 30 días la suscripción de un gimnasio.
      */
     public function renovar(User $gimnasio): JsonResponse
@@ -76,7 +78,6 @@ class SoporteApiController extends Controller
         ]);
     }
 
-
     /**
      * Suspende o activa un gimnasio.
      */
@@ -104,6 +105,55 @@ class SoporteApiController extends Controller
             'gimnasio' => [
                 'id' => $gimnasio->id,
                 'activo' => $gimnasio->activo,
+            ],
+        ]);
+    }
+
+    /**
+     * Actualiza los datos del administrador de un gimnasio.
+     */
+    public function actualizarAdministrador(
+        Request $request,
+        User $gimnasio
+    ): JsonResponse {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $datos = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($gimnasio->id),
+            ],
+        ]);
+
+        $gimnasio->update([
+            'name' => $datos['name'],
+            'email' => $datos['email'],
+        ]);
+
+        $gimnasio->refresh();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Administrador actualizado correctamente.',
+            'gimnasio' => [
+                'id' => $gimnasio->id,
+                'name' => $gimnasio->name,
+                'email' => $gimnasio->email,
             ],
         ]);
     }
