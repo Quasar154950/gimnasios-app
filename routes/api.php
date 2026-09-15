@@ -196,4 +196,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'gimnasios']
         );
 
+        // 🔄 RENOVAR SUSCRIPCIÓN +30 DÍAS
+        Route::post(
+            '/gimnasios/{gimnasio}/renovar',
+            [SoporteApiController::class, 'renovar']
+        );
+
     });

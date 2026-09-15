@@ -46,4 +46,33 @@ class SoporteApiController extends Controller
             'gimnasios' => $gimnasios,
         ]);
     }
+
+    /**
+     * Renueva 30 días la suscripción de un gimnasio.
+     */
+    public function renovar(User $gimnasio): JsonResponse
+    {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $gimnasio->renovarSuscripcion(30);
+        $gimnasio->refresh();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Suscripción renovada +30 días.',
+            'gimnasio' => [
+                'id' => $gimnasio->id,
+                'activo' => $gimnasio->activo,
+                'fecha_vencimiento' => $gimnasio->fecha_vencimiento,
+            ],
+        ]);
+    }
 }
