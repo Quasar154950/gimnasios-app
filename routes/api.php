@@ -202,4 +202,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'renovar']
         );
 
+        // ⛔ SUSPENDER / ✅ ACTIVAR GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/toggle-activo',
+            [SoporteApiController::class, 'toggleActivo']
+        );
+
     });

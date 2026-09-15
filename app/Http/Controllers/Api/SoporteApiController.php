@@ -47,7 +47,7 @@ class SoporteApiController extends Controller
         ]);
     }
 
-    /**
+        /**
      * Renueva 30 días la suscripción de un gimnasio.
      */
     public function renovar(User $gimnasio): JsonResponse
@@ -72,6 +72,38 @@ class SoporteApiController extends Controller
                 'id' => $gimnasio->id,
                 'activo' => $gimnasio->activo,
                 'fecha_vencimiento' => $gimnasio->fecha_vencimiento,
+            ],
+        ]);
+    }
+
+
+    /**
+     * Suspende o activa un gimnasio.
+     */
+    public function toggleActivo(User $gimnasio): JsonResponse
+    {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $gimnasio->activo = !$gimnasio->activo;
+        $gimnasio->save();
+        $gimnasio->refresh();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => $gimnasio->activo
+                ? 'Gimnasio activado correctamente.'
+                : 'Gimnasio suspendido correctamente.',
+            'gimnasio' => [
+                'id' => $gimnasio->id,
+                'activo' => $gimnasio->activo,
             ],
         ]);
     }
