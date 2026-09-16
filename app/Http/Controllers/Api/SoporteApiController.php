@@ -157,4 +157,33 @@ class SoporteApiController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Resetea la contraseña del administrador de un gimnasio.
+     */
+    public function resetPassword(User $gimnasio): JsonResponse
+    {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $nuevaPassword = $gimnasio->resetearPassword();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Contraseña reseteada correctamente.',
+            'password' => $nuevaPassword,
+            'gimnasio' => [
+                'id' => $gimnasio->id,
+                'name' => $gimnasio->name,
+                'email' => $gimnasio->email,
+            ],
+        ]);
+    }
 }

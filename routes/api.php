@@ -214,4 +214,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'actualizarAdministrador']
         );
 
+        // 🔑 RESET PASSWORD GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/reset-password',
+            [SoporteApiController::class, 'resetPassword']
+        );
+
     });
