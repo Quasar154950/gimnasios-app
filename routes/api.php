@@ -220,4 +220,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'resetPassword']
         );
 
+        // ✏️ ACTUALIZAR SUSCRIPCIÓN GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/suscripcion',
+            [SoporteApiController::class, 'actualizarSuscripcion']
+        );
+
     });

@@ -186,4 +186,62 @@ class SoporteApiController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Actualiza la suscripción de un gimnasio.
+     */
+    public function actualizarSuscripcion(
+        Request $request,
+        User $gimnasio
+    ): JsonResponse {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $datos = $request->validate([
+            'fecha_vencimiento' => [
+                'nullable',
+                'date',
+            ],
+            'plan' => [
+                'required',
+                Rule::in([
+                    'basico',
+                    'pro',
+                    'premium',
+                    'personalizado',
+                ]),
+            ],
+            'precio_suscripcion' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+        ]);
+
+        $gimnasio->update([
+            'fecha_vencimiento' => $datos['fecha_vencimiento'] ?? null,
+            'plan' => $datos['plan'],
+            'precio_suscripcion' => $datos['precio_suscripcion'],
+        ]);
+
+        $gimnasio->refresh();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Suscripción actualizada correctamente.',
+            'gimnasio' => [
+                'id' => $gimnasio->id,
+                'fecha_vencimiento' => $gimnasio->fecha_vencimiento,
+                'plan' => $gimnasio->plan,
+                'precio_suscripcion' => $gimnasio->precio_suscripcion,
+            ],
+        ]);
+    }
 }
