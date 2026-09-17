@@ -31,6 +31,7 @@ class SoporteApiController extends Controller
                     'name' => $gimnasio->name,
                     'email' => $gimnasio->email,
                     'slug' => $gimnasio->slug_estudio,
+                    'acceso_url' => url('/estudio/' . $gimnasio->slug_estudio),
                     'activo' => $gimnasio->activo,
                     'fecha_vencimiento' => $gimnasio->fecha_vencimiento,
                     'plan' => $gimnasio->plan,
