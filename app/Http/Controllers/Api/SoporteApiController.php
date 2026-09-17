@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\SaasPago;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
+use MercadoPago\MercadoPagoConfig;
 
 class SoporteApiController extends Controller
 {
@@ -276,5 +281,137 @@ class SoporteApiController extends Controller
             'mensaje' => 'Acceso temporal generado correctamente.',
             'url' => $url,
         ]);
+    }
+
+    /**
+     * Genera un nuevo link de pago SaaS para un gimnasio
+     * desde el soporte central.
+     */
+    public function cobrarSaas(User $gimnasio): JsonResponse
+    {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        if (
+            !$gimnasio->precio_suscripcion
+            || $gimnasio->precio_suscripcion <= 0
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Este gimnasio no tiene precio de suscripción configurado.',
+            ], 422);
+        }
+
+        $accessToken = env('MERCADOPAGO_SAAS_ACCESS_TOKEN');
+
+        if (!$accessToken) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Falta configurar Mercado Pago SaaS.',
+            ], 500);
+        }
+
+        $pago = SaasPago::create([
+            'user_id' => $gimnasio->id,
+            'plan' => $gimnasio->plan,
+            'monto' => $gimnasio->precio_suscripcion,
+            'estado' => 'pendiente',
+            'external_reference' =>
+                'saas_pago_' . $gimnasio->id . '_' . now()->timestamp,
+        ]);
+
+        MercadoPagoConfig::setAccessToken($accessToken);
+
+        $client = new PreferenceClient();
+
+        $baseUrl = rtrim(config('app.url'), '/');
+
+        $payload = [
+            'items' => [[
+                'title' =>
+                    'Suscripción SaaS MCTandil - '
+                    . strtoupper($gimnasio->plan ?? 'PLAN'),
+                'quantity' => 1,
+                'currency_id' => 'ARS',
+                'unit_price' => (int) $gimnasio->precio_suscripcion,
+            ]],
+
+            'external_reference' => $pago->external_reference,
+
+            'back_urls' => [
+                'success' => $baseUrl . '/suscripcion',
+                'failure' => $baseUrl . '/suscripcion',
+                'pending' => $baseUrl . '/suscripcion',
+            ],
+
+            'auto_return' => 'approved',
+
+            'notification_url' =>
+                $baseUrl . '/webhooks/mercadopago/saas',
+        ];
+
+        Log::info('MP SaaS payload soporte central Gimnasios', $payload);
+
+        try {
+            $preference = $client->create($payload);
+
+            $checkoutUrl = $preference->init_point;
+
+            $pago->update([
+                'checkout_url' => $checkoutUrl,
+            ]);
+
+            return response()->json([
+                'ok' => true,
+                'mensaje' => 'Link de pago SaaS generado correctamente.',
+                'pago' => [
+                    'id' => $pago->id,
+                    'gimnasio_id' => $gimnasio->id,
+                    'gimnasio' => $gimnasio->name,
+                    'plan' => $gimnasio->plan,
+                    'monto' => $gimnasio->precio_suscripcion,
+                    'estado' => $pago->estado,
+                    'checkout_url' => $checkoutUrl,
+                ],
+            ]);
+
+        } catch (MPApiException $e) {
+            Log::error('MP SaaS API error soporte central Gimnasios', [
+                'message' => $e->getMessage(),
+                'api_response' => method_exists($e, 'getApiResponse')
+                    ? $e->getApiResponse()
+                    : null,
+            ]);
+
+            $pago->update([
+                'estado' => 'error',
+            ]);
+
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Mercado Pago respondió con error al crear el link.',
+            ], 502);
+
+        } catch (\Throwable $e) {
+            Log::error('MP SaaS error general soporte central Gimnasios', [
+                'message' => $e->getMessage(),
+            ]);
+
+            $pago->update([
+                'estado' => 'error',
+            ]);
+
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'No se pudo generar el link de pago.',
+            ], 500);
+        }
     }
 }

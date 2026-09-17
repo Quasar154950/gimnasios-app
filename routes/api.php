@@ -140,7 +140,7 @@ Route::prefix('mobile')->group(function () {
             '/novedades',
             [MobileNovedadController::class, 'index']
         );
-        
+
         /*
         |--------------------------------------------------------------------------
         | PAGOS
@@ -230,6 +230,12 @@ Route::prefix('soporte')
         Route::post(
             '/gimnasios/{gimnasio}/ver-como',
             [SoporteApiController::class, 'verComo']
+        );
+
+        // 💳 COBRAR SAAS GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/cobrar-saas',
+            [SoporteApiController::class, 'cobrarSaas']
         );
 
     });
