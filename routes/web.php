@@ -574,6 +574,57 @@ Route::middleware(['auth'])->post('/soporte/backup', function () {
 
 })->name('soporte.backup');
 
+// 👁 ACCESO TEMPORAL DESDE SOPORTE CENTRAL
+Route::get('/soporte-central/ver-como/{gimnasio}', function (User $gimnasio) {
+
+    // Solo administradores de Gimnasios.
+    if (
+        $gimnasio->role !== 'abogado'
+        || $gimnasio->tipo_app !== 'gimnasios'
+    ) {
+        abort(403);
+    }
+
+    // Cerramos cualquier sesión anterior de Gimnasios.
+    if (auth()->check()) {
+        auth()->logout();
+    }
+
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    // Marcamos que entramos desde el soporte central.
+    session([
+        'soporte_central_impersonando' => true,
+    ]);
+
+    // Iniciamos sesión como administrador del gimnasio.
+    auth()->login($gimnasio);
+
+    request()->session()->regenerate();
+
+    return redirect()->route('dashboard');
+
+})->middleware('signed')->name('soporte.gimnasios.impersonar');
+
+// ↩ VOLVER AL SOPORTE CENTRAL
+Route::middleware(['auth'])->get('/soporte-central/volver', function () {
+
+    if (!session('soporte_central_impersonando')) {
+        abort(403);
+    }
+
+    auth()->logout();
+
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    return redirect()->away(
+        'https://mctandil-soporte-production.up.railway.app/gimnasios'
+    );
+
+})->name('soporte.gimnasios.volver-central');
+
 // 👁 VER COMO USUARIO
 Route::middleware(['auth'])->post('/soporte/ver-como/{user}', function (User $user) {
 

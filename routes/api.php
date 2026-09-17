@@ -226,4 +226,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'actualizarSuscripcion']
         );
 
+        // 👁 GENERAR ACCESO TEMPORAL COMO GIMNASIO
+        Route::post(
+            '/gimnasios/{gimnasio}/ver-como',
+            [SoporteApiController::class, 'verComo']
+        );
+
     });

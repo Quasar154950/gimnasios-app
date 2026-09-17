@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 
 class SoporteApiController extends Controller
@@ -243,6 +244,37 @@ class SoporteApiController extends Controller
                 'plan' => $gimnasio->plan,
                 'precio_suscripcion' => $gimnasio->precio_suscripcion,
             ],
+        ]);
+    }
+
+    /**
+     * Genera un acceso temporal firmado para ingresar como
+     * administrador de un gimnasio desde el soporte central.
+     */
+    public function verComo(User $gimnasio): JsonResponse
+    {
+        if (
+            $gimnasio->role !== 'abogado'
+            || $gimnasio->tipo_app !== 'gimnasios'
+        ) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El usuario indicado no corresponde a un gimnasio.',
+            ], 404);
+        }
+
+        $url = URL::temporarySignedRoute(
+            'soporte.gimnasios.impersonar',
+            now()->addMinutes(5),
+            [
+                'gimnasio' => $gimnasio->id,
+            ]
+        );
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Acceso temporal generado correctamente.',
+            'url' => $url,
         ]);
     }
 }
