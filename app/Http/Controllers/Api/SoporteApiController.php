@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use MercadoPago\Client\Preference\PreferenceClient;
@@ -419,6 +420,92 @@ class SoporteApiController extends Controller
             return response()->json([
                 'ok' => false,
                 'mensaje' => 'No se pudo generar el link de pago.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Genera un backup completo de la base de datos de Gimnasios.
+     */
+    public function backup()
+    {
+        $directorio = storage_path('app/backups');
+
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0775, true);
+        }
+
+        $filename = 'backup-gimnasios-' . now()->format('Y-m-d-H-i-s') . '.sql';
+        $filepath = $directorio . DIRECTORY_SEPARATOR . $filename;
+
+        $host = env('DB_HOST');
+        $port = env('DB_PORT', 5432);
+        $database = env('DB_DATABASE');
+        $username = env('DB_USERNAME');
+        $password = env('DB_PASSWORD');
+
+        $command = [
+            'pg_dump',
+            '-h',
+            $host,
+            '-p',
+            (string) $port,
+            '-U',
+            $username,
+            '-d',
+            $database,
+            '-f',
+            $filepath,
+        ];
+
+        try {
+            $result = Process::env([
+                'PGPASSWORD' => $password,
+            ])
+                ->timeout(120)
+                ->run($command);
+
+            if ($result->failed()) {
+                Log::error('Error al generar backup de Gimnasios', [
+                    'error' => $result->errorOutput(),
+                    'salida' => $result->output(),
+                ]);
+
+                return response()->json([
+                    'ok' => false,
+                    'mensaje' => 'No se pudo generar el backup de Gimnasios.',
+                ], 500);
+            }
+
+            if (!file_exists($filepath) || filesize($filepath) === 0) {
+                return response()->json([
+                    'ok' => false,
+                    'mensaje' => 'El archivo de backup se generó vacío.',
+                ], 500);
+            }
+
+            return response()
+                ->download(
+                    $filepath,
+                    $filename,
+                    [
+                        'Content-Type' => 'application/sql',
+                    ]
+                )
+                ->deleteFileAfterSend(true);
+
+        } catch (\Throwable $e) {
+            Log::error('Error general al generar backup de Gimnasios', [
+                'message' => $e->getMessage(),
+            ]);
+
+            if (file_exists($filepath)) {
+                @unlink($filepath);
+            }
+
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Ocurrió un error al generar el backup de Gimnasios.',
             ], 500);
         }
     }
