@@ -238,4 +238,10 @@ Route::prefix('soporte')
             [SoporteApiController::class, 'cobrarSaas']
         );
 
+        // 💾 BACKUP COMPLETO GIMNASIOS
+        Route::get(
+            '/backup',
+            [SoporteApiController::class, 'backup']
+        );
+
     });
