@@ -32,6 +32,13 @@ class SoporteApiController extends Controller
             ->orderBy('name')
             ->get()
             ->map(function ($gimnasio) {
+
+                $checkoutUrl = SaasPago::query()
+                    ->where('user_id', $gimnasio->id)
+                    ->whereNotNull('checkout_url')
+                    ->latest('id')
+                    ->value('checkout_url');
+
                 return [
                     'id' => $gimnasio->id,
                     'name' => $gimnasio->name,
@@ -44,6 +51,7 @@ class SoporteApiController extends Controller
                     'precio_suscripcion' => $gimnasio->precio_suscripcion,
                     'ultimo_login_at' => $gimnasio->ultimo_login_at,
                     'total_socios' => $gimnasio->total_socios,
+                    'checkout_url' => $checkoutUrl,
                 ];
             });
 
