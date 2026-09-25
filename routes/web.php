@@ -725,23 +725,4 @@ Route::get('/soporte/login', function () {
 
 })->name('login.soporte');
 
-Route::get('/migrar-rutinas-duracion-distancia-20260925', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--force' => true,
-        ]);
-
-        return '<pre>MIGRACIÓN EJECUTADA
-
-' . e(\Illuminate\Support\Facades\Artisan::output()) . '</pre>';
-    } catch (\Throwable $e) {
-        return response(
-            '<pre>ERROR EN MIGRACIÓN
-
-' . e($e->getMessage()) . '</pre>',
-            500
-        );
-    }
-});
-
 require __DIR__ . '/settings.php';
