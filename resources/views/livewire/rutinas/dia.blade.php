@@ -68,17 +68,29 @@
         </div>
 
         {{-- MENSAJES --}}
-        @if (session()->has('mensaje'))
-            <div class="mb-6 rounded-xl border border-green-800 bg-green-950/60 px-4 py-3 text-sm font-semibold text-green-300">
-                {{ session('mensaje') }}
-            </div>
-        @endif
+@if (session()->has('mensaje'))
+    <div
+        x-data="{ visible: true }"
+        x-init="setTimeout(() => visible = false, 4000)"
+        x-show="visible"
+        x-transition.opacity.duration.500ms
+        class="mb-6 rounded-xl border border-green-800 bg-green-950/60 px-4 py-3 text-sm font-semibold text-green-300"
+    >
+        {{ session('mensaje') }}
+    </div>
+@endif
 
-        @if (session()->has('error'))
-            <div class="mb-6 rounded-xl border border-red-800 bg-red-950/60 px-4 py-3 text-sm font-semibold text-red-300">
-                {{ session('error') }}
-            </div>
-        @endif
+@if (session()->has('error'))
+    <div
+        x-data="{ visible: true }"
+        x-init="setTimeout(() => visible = false, 4000)"
+        x-show="visible"
+        x-transition.opacity.duration.500ms
+        class="mb-6 rounded-xl border border-red-800 bg-red-950/60 px-4 py-3 text-sm font-semibold text-red-300"
+    >
+        {{ session('error') }}
+    </div>
+@endif
 
         {{-- EJERCICIOS DEL DÍA --}}
         <div class="space-y-4">
