@@ -96,23 +96,35 @@
 
 
     {{-- MENSAJE ÉXITO --}}
-    @if($mensajeExito)
+@if($mensajeExito)
 
-        <div class="mt-4 rounded-xl border border-green-800 bg-green-950/40 px-3 py-2 text-xs font-bold text-green-300">
-            ✅ {{ $mensajeExito }}
-        </div>
+    <div
+        x-data="{ visible: true }"
+        x-init="setTimeout(() => visible = false, 4000)"
+        x-show="visible"
+        x-transition.opacity.duration.500ms
+        class="mt-4 rounded-xl border border-green-800 bg-green-950/40 px-3 py-2 text-xs font-bold text-green-300"
+    >
+        ✅ {{ $mensajeExito }}
+    </div>
 
-    @endif
+@endif
 
 
-    {{-- MENSAJE ERROR --}}
-    @if($mensajeError)
+{{-- MENSAJE ERROR --}}
+@if($mensajeError)
 
-        <div class="mt-4 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2 text-xs font-bold text-red-300">
-            ❌ {{ $mensajeError }}
-        </div>
+    <div
+        x-data="{ visible: true }"
+        x-init="setTimeout(() => visible = false, 4000)"
+        x-show="visible"
+        x-transition.opacity.duration.500ms
+        class="mt-4 rounded-xl border border-red-800 bg-red-950/40 px-3 py-2 text-xs font-bold text-red-300"
+    >
+        ❌ {{ $mensajeError }}
+    </div>
 
-    @endif
+@endif
 
 
     {{-- RESERVA MANUAL --}}
