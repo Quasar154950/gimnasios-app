@@ -120,47 +120,84 @@
 
                         <div class="flex flex-wrap items-center gap-3">
 
-                            <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
-                                <p class="text-xs uppercase tracking-wide text-zinc-500">
-                                    Series
-                                </p>
+    {{-- SERIES --}}
+    <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+        <p class="text-xs uppercase tracking-wide text-zinc-500">
+            Series
+        </p>
 
-                                <p class="mt-1 font-bold text-white">
-                                    {{ $rutinaEjercicio->series }}
-                                </p>
-                            </div>
+        <p class="mt-1 font-bold text-white">
+            {{ $rutinaEjercicio->series }}
+        </p>
+    </div>
 
-                            <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
-                                <p class="text-xs uppercase tracking-wide text-zinc-500">
-                                    Repeticiones
-                                </p>
 
-                                <p class="mt-1 font-bold text-white">
-                                    {{ $rutinaEjercicio->repeticiones }}
-                                </p>
-                            </div>
+    {{-- REPETICIONES --}}
+    @if ($rutinaEjercicio->repeticiones !== null)
+        <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+            <p class="text-xs uppercase tracking-wide text-zinc-500">
+                Repeticiones
+            </p>
 
-                            <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
-                                <p class="text-xs uppercase tracking-wide text-zinc-500">
-                                    Descanso
-                                </p>
+            <p class="mt-1 font-bold text-white">
+                {{ $rutinaEjercicio->repeticiones }}
+            </p>
+        </div>
+    @endif
 
-                                <p class="mt-1 font-bold text-white">
-                                    {{ $rutinaEjercicio->descanso_segundos }} s
-                                </p>
-                            </div>
 
-                            @if ($rutinaEjercicio->peso !== null)
-                                <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
-                                    <p class="text-xs uppercase tracking-wide text-zinc-500">
-                                        Peso
-                                    </p>
+    {{-- PESO --}}
+    @if ($rutinaEjercicio->peso !== null)
+        <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+            <p class="text-xs uppercase tracking-wide text-zinc-500">
+                Peso
+            </p>
 
-                                    <p class="mt-1 font-bold text-white">
-                                        {{ $rutinaEjercicio->peso }} kg
-                                    </p>
-                                </div>
-                            @endif
+            <p class="mt-1 font-bold text-white">
+                {{ $rutinaEjercicio->peso }} kg
+            </p>
+        </div>
+    @endif
+
+
+    {{-- DURACIÓN --}}
+    @if ($rutinaEjercicio->duracion_segundos !== null)
+        <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+            <p class="text-xs uppercase tracking-wide text-zinc-500">
+                Duración
+            </p>
+
+            <p class="mt-1 font-bold text-white">
+                {{ $rutinaEjercicio->duracion_segundos }} s
+            </p>
+        </div>
+    @endif
+
+
+    {{-- DISTANCIA --}}
+    @if ($rutinaEjercicio->distancia_metros !== null)
+        <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+            <p class="text-xs uppercase tracking-wide text-zinc-500">
+                Distancia
+            </p>
+
+            <p class="mt-1 font-bold text-white">
+                {{ $rutinaEjercicio->distancia_metros }} m
+            </p>
+        </div>
+    @endif
+
+
+    {{-- DESCANSO --}}
+    <div class="rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-center">
+        <p class="text-xs uppercase tracking-wide text-zinc-500">
+            Descanso
+        </p>
+
+        <p class="mt-1 font-bold text-white">
+            {{ $rutinaEjercicio->descanso_segundos }} s
+        </p>
+    </div>
 
                             {{-- EDITAR --}}
                             <button
@@ -325,29 +362,34 @@
                             </div>
 
                             {{-- REPETICIONES --}}
-                            <div>
-                                <label
-                                    for="repeticiones"
-                                    class="mb-2 block text-sm font-semibold text-zinc-300"
-                                >
-                                    Repeticiones
-                                </label>
+<div>
+    <label
+        for="repeticiones"
+        class="mb-2 block text-sm font-semibold text-zinc-300"
+    >
+        Repeticiones
+    </label>
 
-                                <input
-                                    id="repeticiones"
-                                    type="number"
-                                    min="1"
-                                    max="500"
-                                    wire:model="repeticiones"
-                                    class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-green-600"
-                                >
+    <input
+        id="repeticiones"
+        type="number"
+        min="1"
+        max="500"
+        wire:model="repeticiones"
+        placeholder="Opcional"
+        class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-green-600"
+    >
 
-                                @error('repeticiones')
-                                    <p class="mt-2 text-sm font-semibold text-red-400">
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-                            </div>
+    <p class="mt-2 text-xs text-zinc-500">
+        Puede dejarse vacío si el ejercicio se mide por tiempo o distancia.
+    </p>
+
+    @error('repeticiones')
+        <p class="mt-2 text-sm font-semibold text-red-400">
+            {{ $message }}
+        </p>
+    @enderror
+</div>
 
                             {{-- PESO --}}
                             <div>
@@ -379,6 +421,67 @@
                                     </p>
                                 @enderror
                             </div>
+
+                            {{-- DURACIÓN --}}
+<div>
+    <label
+        for="duracionSegundos"
+        class="mb-2 block text-sm font-semibold text-zinc-300"
+    >
+        Duración en segundos
+    </label>
+
+    <input
+        id="duracionSegundos"
+        type="number"
+        min="1"
+        max="86400"
+        wire:model="duracionSegundos"
+        placeholder="Opcional"
+        class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-green-600"
+    >
+
+    <p class="mt-2 text-xs text-zinc-500">
+        Ejemplo: 30 para una plancha de 30 segundos.
+    </p>
+
+    @error('duracionSegundos')
+        <p class="mt-2 text-sm font-semibold text-red-400">
+            {{ $message }}
+        </p>
+    @enderror
+</div>
+
+
+{{-- DISTANCIA --}}
+<div>
+    <label
+        for="distanciaMetros"
+        class="mb-2 block text-sm font-semibold text-zinc-300"
+    >
+        Distancia en metros
+    </label>
+
+    <input
+        id="distanciaMetros"
+        type="number"
+        min="1"
+        max="1000000"
+        wire:model="distanciaMetros"
+        placeholder="Opcional"
+        class="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition placeholder:text-zinc-600 focus:border-green-600"
+    >
+
+    <p class="mt-2 text-xs text-zinc-500">
+        Ejemplo: 40 para recorrer 40 metros.
+    </p>
+
+    @error('distanciaMetros')
+        <p class="mt-2 text-sm font-semibold text-red-400">
+            {{ $message }}
+        </p>
+    @enderror
+</div>
 
                             {{-- DESCANSO --}}
                             <div>

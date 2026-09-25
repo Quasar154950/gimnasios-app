@@ -16,6 +16,8 @@ class RutinaEjercicio extends Model
         'series',
         'repeticiones',
         'peso',
+        'duracion_segundos',
+        'distancia_metros',
         'descanso_segundos',
         'observaciones',
         'orden',
@@ -25,6 +27,8 @@ class RutinaEjercicio extends Model
     protected $casts = [
         'series' => 'integer',
         'repeticiones' => 'integer',
+        'duracion_segundos' => 'integer',
+        'distancia_metros' => 'integer',
         'descanso_segundos' => 'integer',
         'orden' => 'integer',
         'activo' => 'boolean',

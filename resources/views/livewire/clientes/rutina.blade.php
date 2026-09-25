@@ -361,65 +361,83 @@
     </p>
 @endif
 
-                                                <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                                <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
 
-                                                    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+    {{-- SERIES --}}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+            Series
+        </p>
 
-                                                        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                                                            Series
-                                                        </p>
+        <p class="mt-1 font-black text-white">
+            {{ $ejercicio->series ?? '—' }}
+        </p>
+    </div>
 
-                                                        <p class="mt-1 font-black text-white">
-                                                            {{ $ejercicio->series ?? '—' }}
-                                                        </p>
+    {{-- REPETICIONES --}}
+    @if($ejercicio->repeticiones !== null)
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Repeticiones
+            </p>
 
-                                                    </div>
+            <p class="mt-1 font-black text-white">
+                {{ $ejercicio->repeticiones }}
+            </p>
+        </div>
+    @endif
 
-                                                    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+    {{-- PESO --}}
+    @if($ejercicio->peso !== null)
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Peso
+            </p>
 
-                                                        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                                                            Repeticiones
-                                                        </p>
+            <p class="mt-1 font-black text-white">
+                {{ $ejercicio->peso }} kg
+            </p>
+        </div>
+    @endif
 
-                                                        <p class="mt-1 font-black text-white">
-                                                            {{ $ejercicio->repeticiones ?? '—' }}
-                                                        </p>
+    {{-- DURACIÓN --}}
+    @if($ejercicio->duracion_segundos !== null)
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Duración
+            </p>
 
-                                                    </div>
+            <p class="mt-1 font-black text-white">
+                {{ $ejercicio->duracion_segundos }} s
+            </p>
+        </div>
+    @endif
 
-                                                    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+    {{-- DISTANCIA --}}
+    @if($ejercicio->distancia_metros !== null)
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Distancia
+            </p>
 
-                                                        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                                                            Descanso
-                                                        </p>
+            <p class="mt-1 font-black text-white">
+                {{ $ejercicio->distancia_metros }} m
+            </p>
+        </div>
+    @endif
 
-                                                        <p class="mt-1 font-black text-white">
-                                                            @if($ejercicio->descanso_segundos ?? null)
-                                                                {{ $ejercicio->descanso_segundos }} s
-                                                            @else
-                                                                —
-                                                            @endif
-                                                        </p>
+    {{-- DESCANSO --}}
+    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
+        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+            Descanso
+        </p>
 
-                                                    </div>
+        <p class="mt-1 font-black text-white">
+            {{ $ejercicio->descanso_segundos ?? 0 }} s
+        </p>
+    </div>
 
-                                                    <div class="rounded-xl border border-zinc-800 bg-zinc-950/70 px-3 py-3">
-
-                                                        <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                                                            Peso
-                                                        </p>
-
-                                                        <p class="mt-1 font-black text-white">
-                                                            @if($ejercicio->peso ?? null)
-                                                                {{ $ejercicio->peso }} kg
-                                                            @else
-                                                                —
-                                                            @endif
-                                                        </p>
-
-                                                    </div>
-
-                                                </div>
+</div>
 
                                                 @if($ejercicio->observaciones ?? null)
 

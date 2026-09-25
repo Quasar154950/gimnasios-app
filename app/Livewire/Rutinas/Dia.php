@@ -33,9 +33,13 @@ class Dia extends Component
 
     public int $series = 3;
 
-    public int $repeticiones = 10;
+    public ?int $repeticiones = null;
 
     public ?float $peso = null;
+
+    public ?int $duracionSegundos = null;
+
+    public ?int $distanciaMetros = null;
 
     public int $descansoSegundos = 60;
 
@@ -110,6 +114,8 @@ class Dia extends Component
             'series' => 3,
             'repeticiones' => 10,
             'peso' => null,
+            'duracion_segundos' => null,
+            'distancia_metros' => null,
             'descanso_segundos' => 60,
             'observaciones' => null,
             'orden' => $ultimoOrden + 1,
@@ -138,12 +144,20 @@ class Dia extends Component
 
         $this->series = (int) ($rutinaEjercicio->series ?? 3);
 
-        $this->repeticiones = (int) (
-            $rutinaEjercicio->repeticiones ?? 10
-        );
+        $this->repeticiones = $rutinaEjercicio->repeticiones !== null
+            ? (int) $rutinaEjercicio->repeticiones
+            : null;
 
         $this->peso = $rutinaEjercicio->peso !== null
             ? (float) $rutinaEjercicio->peso
+            : null;
+
+        $this->duracionSegundos = $rutinaEjercicio->duracion_segundos !== null
+            ? (int) $rutinaEjercicio->duracion_segundos
+            : null;
+
+        $this->distanciaMetros = $rutinaEjercicio->distancia_metros !== null
+            ? (int) $rutinaEjercicio->distancia_metros
             : null;
 
         $this->descansoSegundos = (int) (
@@ -169,7 +183,7 @@ class Dia extends Component
                 'max:50',
             ],
             'repeticiones' => [
-                'required',
+                'nullable',
                 'integer',
                 'min:1',
                 'max:500',
@@ -179,6 +193,18 @@ class Dia extends Component
                 'numeric',
                 'min:0',
                 'max:9999',
+            ],
+            'duracionSegundos' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'max:86400',
+            ],
+            'distanciaMetros' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'max:1000000',
             ],
             'descansoSegundos' => [
                 'required',
@@ -197,7 +223,6 @@ class Dia extends Component
             'series.min' => 'Debe haber al menos una serie.',
             'series.max' => 'La cantidad máxima es de 50 series.',
 
-            'repeticiones.required' => 'Ingresá las repeticiones.',
             'repeticiones.integer' =>
                 'Las repeticiones deben ser un número entero.',
             'repeticiones.min' =>
@@ -208,6 +233,20 @@ class Dia extends Component
             'peso.numeric' => 'El peso debe ser un número.',
             'peso.min' => 'El peso no puede ser negativo.',
             'peso.max' => 'El peso ingresado es demasiado alto.',
+
+            'duracionSegundos.integer' =>
+                'La duración debe expresarse en segundos.',
+            'duracionSegundos.min' =>
+                'La duración debe ser de al menos un segundo.',
+            'duracionSegundos.max' =>
+                'La duración ingresada es demasiado alta.',
+
+            'distanciaMetros.integer' =>
+                'La distancia debe expresarse en metros.',
+            'distanciaMetros.min' =>
+                'La distancia debe ser de al menos un metro.',
+            'distanciaMetros.max' =>
+                'La distancia ingresada es demasiado alta.',
 
             'descansoSegundos.required' =>
                 'Ingresá el tiempo de descanso.',
@@ -233,10 +272,12 @@ class Dia extends Component
 
         $rutinaEjercicio->update([
             'series' => $datos['series'],
-            'repeticiones' => $datos['repeticiones'],
-            'peso' => $datos['peso'],
+            'repeticiones' => $datos['repeticiones'] ?? null,
+            'peso' => $datos['peso'] ?? null,
+            'duracion_segundos' => $datos['duracionSegundos'] ?? null,
+            'distancia_metros' => $datos['distanciaMetros'] ?? null,
             'descanso_segundos' => $datos['descansoSegundos'],
-            'observaciones' => filled($datos['observaciones'])
+            'observaciones' => filled($datos['observaciones'] ?? null)
                 ? trim($datos['observaciones'])
                 : null,
         ]);
@@ -258,12 +299,14 @@ class Dia extends Component
             'series',
             'repeticiones',
             'peso',
+            'duracionSegundos',
+            'distanciaMetros',
             'descansoSegundos',
             'observaciones',
         ]);
 
         $this->series = 3;
-        $this->repeticiones = 10;
+        $this->repeticiones = null;
         $this->descansoSegundos = 60;
 
         $this->resetValidation();
