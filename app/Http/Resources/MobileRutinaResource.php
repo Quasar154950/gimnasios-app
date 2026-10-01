@@ -99,6 +99,12 @@ class MobileRutinaResource extends JsonResource
                                     'peso' =>
                                         $ejercicio->peso,
 
+                                    'duration_segundos' =>
+                                        $ejercicio->duration_segundos,
+
+                                    'distancia_metros' =>
+                                        $ejercicio->distancia_metros,
+
                                     'descanso_segundos' =>
                                         $ejercicio->descanso_segundos,
 
