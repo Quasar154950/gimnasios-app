@@ -100,7 +100,7 @@ class MobileRutinaResource extends JsonResource
                                         $ejercicio->peso,
 
                                     'duration_segundos' =>
-                                        $ejercicio->duration_segundos,
+                                        $ejercicio->duracion_segundos,
 
                                     'distancia_metros' =>
                                         $ejercicio->distancia_metros,
